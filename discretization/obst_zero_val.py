@@ -1,3 +1,7 @@
+"""
+Set values of an unknown to zero inside the obstacle.
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -8,12 +12,12 @@ from operators.all import *
 # =============================================================================
 def obst_zero_val(d, val, obst):
 # -----------------------------------------------------------------------------
-# Set value to zero inside obstacle.
-# 
-# d    - position of the variable, C, X, Y or Z
-# val  - value to be zeroed in obstacle
-# obst - matrix holding positions of obstacle
-# -----------------------------------------------------------------------------
+  """
+  Args:
+    d:    position of the variable (C, X, Y or Z)
+    val:  value to be set in the obstacle
+    obst: obstacle
+  """
 
   if d == C:  
     val = val * lnot(obst)

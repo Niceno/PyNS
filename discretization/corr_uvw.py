@@ -1,3 +1,8 @@
+"""
+Projects velocity into a divergence-free velocity field with the pressure 
+correction gradient (provided pressure correction is accuratelly solved).
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -10,6 +15,20 @@ from discretization.obst_zero_val import obst_zero_val
 # =============================================================================
 def corr_uvw(uvw, p, rho, dt, dxyz, obst):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    uvw:  a tuple with three staggered or centered velocity components 
+          (each component is created with "scrins.create_unknown" function.
+    p:    unknown holding the pressure correction.     
+    rho:  three-dimensional matrix holding density for all cells.
+    dt:   time step
+    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
+          Each cell dimension is a three-dimensional array.
+    obst: obstacle
+    
+  Returns:
+    none, but input argument uvw is modified.
+  """
 
   # Unpack received tuples
   dx, dy, dz = dxyz

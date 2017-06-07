@@ -1,3 +1,7 @@
+"""
+Discretizes and solves equation for pressure (pressure Poisson equaiton).
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -11,8 +15,22 @@ from discretization.vol_balance    import vol_balance
 from discretization.obst_zero_val  import obst_zero_val
 
 # =============================================================================
-def calc_p(p, uvwf, rho, dt, dxyz, obst ):
+def calc_p(p, uvwf, rho, dt, dxyz, obst):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    p:    pressure unknown (created with "pyns.create_unknown" function)
+    uvwf: a tuple with three staggered velocity components (where each 
+          component is created with "scrins.create_unknown" function.
+    rho:  three-dimensional matrix holding density for all cells.
+    dt:   time step
+    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
+          Each cell dimension is a three-dimensional array.
+    obst: obstacle
+
+  Returns:
+    none, but input argument p is modified!      
+  """
 
   # Fetch the resolution  
   rc = p.val.shape 

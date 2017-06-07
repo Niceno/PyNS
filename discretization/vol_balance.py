@@ -1,3 +1,8 @@
+"""
+Computes the volume balance, which is essentially a right hand side in
+the Poisson's equation for pressure.
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -10,13 +15,19 @@ from discretization.obst_zero_val  import obst_zero_val
 # =============================================================================
 def vol_balance(uvwf, dxyz, obst):
 # -----------------------------------------------------------------------------
-# Computes the volume balance, which is essentially a right hand side in
-# the Poisson's equation for pressure.
-#
-# Note that "obst" is an optional parameter.  If it is not sent, the source
-# won't be zeroed inside the obstacle.  That is important for calculation
-# of pressure, see function "calc_p".
-# -----------------------------------------------------------------------------
+  """
+  Args:
+    uvwf: a tuple with three staggered velocity components (where each 
+          component is created with "scrins.create_unknown" function.
+    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
+          Each cell dimension is a three-dimensional array.
+    obst:obstacle      
+    
+  Note:  
+    "obst" is an optional parameter.  If it is not sent, the source won't be 
+    set to zero inside the obstacle.  That is important for calculation of 
+    pressure, see function "pyns.calc_p" as well.
+  """
 
   # Unpack tuples
   dx, dy, dz = dxyz

@@ -1,3 +1,7 @@
+"""
+Computes maximum Courant-Friedrich-Levy (CFD) number for the given velocity. 
+"""
+
 # ScriNS modules
 from constants.all      import *
 from operators.all      import *
@@ -5,6 +9,21 @@ from operators.all      import *
 # =============================================================================
 def cfl_max(uvw, dt, dxyz):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    uvw: a tuple with three staggered or centered velocity components 
+         (each component is created with "scrins.create_unknown" function.
+    dt:  time step
+    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
+          Each cell dimension is a three-dimensional array.
+
+  Returns:
+    cfl: a floating point number holding the maximum value of CFL.
+
+  Note:
+    It could be written in a more compact way, without unpacking the tuples,
+    but that would only lead to poorer readability of the code.    
+  """
 
   # Unpack received tuples
   u,  v,  w  = uvw

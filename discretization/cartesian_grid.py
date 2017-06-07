@@ -1,3 +1,7 @@
+"""
+Spawns a 3D Cartesian grid from three arrays with node coordinates.
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -8,8 +12,28 @@ from operators.all      import *
 # =============================================================================
 def cartesian_grid(xn, yn, zn):
 # -----------------------------------------------------------------------------
-# Spawns a 3D Cartesian grid from three arrays with node coordinates.
-# -----------------------------------------------------------------------------
+  """
+  Args:
+    xn: one-dimensional array with node coordinates in "x" direction
+    yn: one-dimensional array with node coordinates in "y" direction
+    zn: one-dimensional array with node coordinates in "z" direction
+    
+  Returns:
+    nx: number of cells (one less than nodes) in "x" direction
+    ny: number of cells (one less than nodes) in "y" direction
+    nz: number of cells (one less than nodes) in "z" direction
+    dx: three-dimensional matrix holding "dx" for all cells.
+    dy: three-dimensional matrix holding "dy" for all cells.
+    dz: three-dimensional matrix holding "dz" for all cells.
+    rc: resolution tuple (nx, ny and nz) for centered variable
+    rx: resolution tuple (nx, ny and nz) for variable staggered in "x"
+    ry: resolution tuple (nx, ny and nz) for variable staggered in "y"
+    rz: resolution tuple (nx, ny and nz) for variable staggered in "z"
+    
+  Note:
+    Cell resolutions are for one smaller than node resolutions for each 
+    direction.  Staggered cell resolutions are smaller than centered.
+  """
 
   # Compute cell resolutions
   nx = len(xn)-1

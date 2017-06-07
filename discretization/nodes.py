@@ -1,3 +1,13 @@
+"""
+Creates uniform or non-uniform node coordinates in one dimension.  
+
+Uniform distribution is obtained if only three parameters are sent (for 
+starting and ending coordinate and the number of cells).
+
+Non-uniform distribution is obtained if, in addition to the above, two more
+parameters are sent (starting and ending cell size).
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -8,15 +18,44 @@ from operators.all      import *
 # =============================================================================
 def nodes(*args):
 # -----------------------------------------------------------------------------
-# Creates node coordinates in one dimension
-#
-# Input arguments:
-#   s     - starting coordinate
-#   e     - end coordinate
-#   n     - number of cells (number of nodes is greater than one than this)
-#   del_s - (optional) starting cell size
-#   del_e - (optional) ending cell size 
-# -----------------------------------------------------------------------------
+  """
+  Number of input arguments can be three or five, depending if uniform
+  or non-uniform node distribution is desired.  
+
+  Args:
+
+    Three arguments provided (for uniform meshes)      
+      args[0] - starting coordinate
+      args[1] - ending coordinate
+      args[2] - number of cells (number of nodes is greater than one than this)
+  
+    Five arguments provided (for non-uniform meshes)      
+      args[0] - same as above
+      args[1] - same as above
+      args[2] - same as above
+      args[3] - starting cell size
+      args[4] - ending cell size
+    
+  Returns:
+    An array with node coordinates (size is numbner of cells plus one)
+    
+  Examples:  
+    
+    An example of the node distribution for a mesh with five cells 
+    is given here:
+    
+     starting                                                    ending 
+    coordinate                                                coordinate    
+          |                                                         |
+    ----->|                                                     --->| 
+    
+          0     1         2           3             4               5 => nodes
+          |--o--|----o----|-----o-----|------o------|-------o-------|          
+             0       1          2            3              4         => cells
+          |     |                                   |               |
+          |<--->|                                   |<------------->|
+      starting cell size                            ending cell size
+    """
  
   # --------------------------------------------
   # Just a simple constant-spacing distribution

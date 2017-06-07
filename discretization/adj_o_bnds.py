@@ -1,3 +1,8 @@
+"""
+Update velocities in boundary cells with outlet boundary condition by applying
+the convective outflow method.
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -8,6 +13,27 @@ from operators.all import *
 # =============================================================================
 def adj_o_bnds(uvw, dxyz, dt):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    uvw:  a tuple with three velocity components (where each component is 
+          created with "scrins.create_unknown" function.
+    dxyz: a tuple with cell dimensions in "x", "y" and "z" direction
+          (where each dimension is a three-dimensional array)
+    dt:   time step
+
+  Returns:
+    none
+    
+  In order to apply convective outlfow, the function needs bulk velocities
+  in the domain, which is computed from volume fluxes coming and and out
+  of the computational domain.  Clearly, areas of inlets and outlets is
+  computed along the way as well.  
+  
+  In addition to that, the volume balance must be ensured to make sure that
+  the volume which enters the domain is exactly the same as the volume which
+  leaves it.  Convective outflow doesn't ensure it, so the outflow velocities
+  are scaled to enforce it.        
+  """
 
   # Unpack tuples  
   u,  v,  w  = uvw

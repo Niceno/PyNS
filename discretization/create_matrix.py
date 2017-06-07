@@ -1,3 +1,8 @@
+"""
+Creates system matrix and right hand side for both cell-centered and 
+staggered variables.
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -10,15 +15,26 @@ from discretization.obst_mod_matrix import obst_mod_matrix
 # =============================================================================
 def create_matrix(phi, inn, mu, dxyz, obst, obc):
 # -----------------------------------------------------------------------------
-# pos   - position of variable (C - central, 
-#                               X - staggered in x direction,
-#                               Y - staggered in y direction,
-#                               Z - staggered in z direction)
-# inn         - innertial term
-# mu         - viscous coefficient
-# dx, dy, dz - cell size in x, y and z directions
-# obc        - obstacles's boundary condition, (NEUMANN or DIRICHLET)
-# -----------------------------------------------------------------------------
+  """
+  Args:
+    phi:  unknown (created by "pyns.create_unknown") for which we need the 
+          system matrix.  It is needed for its resolution, essentially.  
+    inn:  three-dimensional matrix holding the innertial term (innertial term
+          is whatever multiplies the time derivative)
+    mu:   three-dimensional array holding diffusion coefficient. 
+    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
+          Each cell dimension is a three-dimensional matrix.
+    obst: obstacle
+    obc:  obstacle's boundary condition (NEUMANN or DIRICHLET)
+    
+  Returns:
+    A: matrix in sparse diagonal format.
+    b: three-dimensional matrix for the right hand side.
+    
+  Note:
+    It is a bir of missnomer, it is called "create_matrix", but it also 
+    creates right hand side.
+  """
 
   # Unpack tuples
   dx, dy, dz = dxyz

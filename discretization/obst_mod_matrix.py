@@ -1,3 +1,7 @@
+"""
+Adjusts the system matrix for obstacles.
+"""
+
 # Standard Python modules
 from standard import *
 
@@ -8,14 +12,19 @@ from operators.all import *
 # =============================================================================
 def obst_mod_matrix(phi, c, obst, obc):
 # -----------------------------------------------------------------------------
-# Adjusts the system matrix for obstacles and cell centered varaibles 
-# (such as pressure)
-# 
-# phi  - variable
-# c    - coefficients in system matrix
-# obst - obstacle array
-# obc  - obstacles's boundary condition, (NEUMANN or DIRICHLET)
-# -----------------------------------------------------------------------------
+  """
+  Args:
+    phi:  unknown (created with "pyns.create_unknown" function)
+    c:    coefficients in system matrix
+    obst: obstacle
+    obc:  obstacle's boundary condition (NEUMANN or DIRICHLET)
+    
+  Returns:
+    c: modified system matrix.
+    
+  Note:
+    The format of the system matrix is clear from function: "create_matrix"
+  """
 
   pos = phi.pos
   
