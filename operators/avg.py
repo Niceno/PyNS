@@ -19,7 +19,6 @@ Example:
                      
   Element 0 in the returning array will be the average between the values
   in elements 1 and 0 in the sending array.
-
 """
 
 # PyNS modules
