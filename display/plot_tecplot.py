@@ -7,7 +7,13 @@ from standard import *
 
 # ScriNS modules
 from scrins.operators.avg import avg
+from scrins.operators.avg_x import avg_x 
+from scrins.operators.avg_y import avg_y
+from scrins.operators.avg_z import avg_z
 from scrins.operators.cat import cat
+from scrins.operators.cat_x import cat_x
+from scrins.operators.cat_y import cat_y
+from scrins.operators.cat_z import cat_z
 from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import C
 
@@ -98,14 +104,11 @@ def plot_tecplot(file_name, xyzn, variables):
         if v.pos == C:
             val = v.val
         elif v.pos == X:
-            val = avg(
-                X, cat(X, (v.bnd[W].val[:1, :, :], v.val, v.bnd[E].val[:1, :, :])))
+            val = avg_x(cat_x((v.bnd[W].val[:1, :, :], v.val, v.bnd[E].val[:1, :, :])))
         elif v.pos == Y:
-            val = avg(
-                Y, cat(Y, (v.bnd[S].val[:, :1, :], v.val, v.bnd[N].val[:, :1, :])))
+            val = avg_y(cat_y((v.bnd[S].val[:, :1, :], v.val, v.bnd[N].val[:, :1, :])))
         elif v.pos == Z:
-            val = avg(
-                Z, cat(Z, (v.bnd[B].val[:, :, :1], v.val, v.bnd[T].val[:, :, :1])))
+            val = avg_z(cat_z((v.bnd[B].val[:, :, :1], v.val, v.bnd[T].val[:, :, :1])))
 
         file_id.write("\n# %s \n" % v.name)
         c = 0

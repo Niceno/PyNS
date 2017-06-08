@@ -6,6 +6,9 @@ Computes maximum Courant-Friedrich-Levy (CFD) number for the given velocity.
 from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.operators.avg import avg
+from scrins.operators.avg_x import avg_x 
+from scrins.operators.avg_y import avg_y
+from scrins.operators.avg_z import avg_z
 
 # =============================================================================
 
@@ -43,8 +46,8 @@ def cfl_max(uvw, dt, dxyz):
 
     # Mesh is staggered
     else:
-        cfl = dt * max(abs(u.val / avg(X, dx)).max(),
-                       abs(v.val / avg(Y, dy)).max(),
-                       abs(w.val / avg(Z, dz)).max())
+        cfl = dt * max(abs(u.val / avg_x(dx)).max(),
+                       abs(v.val / avg_y(dy)).max(),
+                       abs(w.val / avg_z(dz)).max())
 
     return cfl

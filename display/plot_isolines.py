@@ -10,12 +10,19 @@ from standard import *
 from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.operators.avg import avg
+from scrins.operators.avg_x import avg_x 
+from scrins.operators.avg_y import avg_y
+from scrins.operators.avg_z import avg_z
 from scrins.operators.cat import cat
+from scrins.operators.cat_x import cat_x
+from scrins.operators.cat_y import cat_y
+from scrins.operators.cat_z import cat_z
+
 
 # =============================================================================
 
 
-def plot_isolines(phi, uvw, xyzn, d):
+def plot_isolines(phi, uvw, xyzn, dir):
     # -----------------------------------------------------------------------------
     """
     Args:
@@ -24,7 +31,7 @@ def plot_isolines(phi, uvw, xyzn, d):
             collocated or staggered.
       xyzn: Tuple containing one-dimensional arrays with "x", "y" and "z"
             coordinates.
-      d:    Direction for cutting, can be X, Y or Z.
+      dir:    Direction for cutting, can be X, Y or Z.
 
     Returns:
       none!
@@ -46,20 +53,20 @@ def plot_isolines(phi, uvw, xyzn, d):
         wc = w.val
     else:
         uc = avg(
-            X, cat(X, (u.bnd[W].val[:1, :, :], u.val, u.bnd[E].val[:1, :, :])))
+            X, cat_x((u.bnd[W].val[:1, :, :], u.val, u.bnd[E].val[:1, :, :])))
         vc = avg(
-            Y, cat(Y, (v.bnd[S].val[:, :1, :], v.val, v.bnd[N].val[:, :1, :])))
+            Y, cat_y((v.bnd[S].val[:, :1, :], v.val, v.bnd[N].val[:, :1, :])))
         wc = avg(
-            Z, cat(Z, (w.bnd[B].val[:, :, :1], w.val, w.bnd[T].val[:, :, :1])))
+            Z, cat_z((w.bnd[B].val[:, :, :1], w.val, w.bnd[T].val[:, :, :1])))
 
     # Pick coordinates for plotting (xp, yp) and values for plotting
-    if d == Y:
+    if dir == Y:
         jp = floor(yc.size / 2)
         xp, yp = meshgrid(xc, zc)
         zp = transpose(phi[:, jp, :], (1, 0))
         up = transpose(uc[:, jp, :], (1, 0))
         vp = transpose(wc[:, jp, :], (1, 0))
-    if d == Z:
+    if dir == Z:
         kp = floor(zc.size / 2)
         xp, yp = meshgrid(xc, yc)
         zp = transpose(phi[:, :, kp], (1, 0))

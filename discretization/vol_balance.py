@@ -11,7 +11,13 @@ from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.discretization.obst_zero_val import obst_zero_val
 from scrins.operators.cat import cat
+from scrins.operators.cat_x import cat_x
+from scrins.operators.cat_y import cat_y
+from scrins.operators.cat_z import cat_z
 from scrins.operators.dif import dif
+from scrins.operators.dif_x import dif_x
+from scrins.operators.dif_y import dif_y
+from scrins.operators.dif_z import dif_z
 
 # =============================================================================
 
@@ -36,9 +42,9 @@ def vol_balance(uvwf, dxyz, obst):
     uf, vf, wf = uvwf
 
     # Compute it throughout the domain
-    src = - dif(X, cat(X, (uf.bnd[W].val, uf.val, uf.bnd[E].val))) * dy * dz  \
-          - dif(Y, cat(Y, (vf.bnd[S].val, vf.val, vf.bnd[N].val))) * dx * dz  \
-          - dif(Z, cat(Z, (wf.bnd[B].val, wf.val, wf.bnd[T].val))) * dx * dy
+    src = - dif_x(cat_x((uf.bnd[W].val, uf.val, uf.bnd[E].val))) * dy * dz  \
+          - dif_y(cat_y((vf.bnd[S].val, vf.val, vf.bnd[N].val))) * dx * dz  \
+          - dif_z(cat_z((wf.bnd[B].val, wf.val, wf.bnd[T].val))) * dx * dy
 
     # Zero it inside obstacles, if obstacle is sent as parameter
     if obst.any() != 0:

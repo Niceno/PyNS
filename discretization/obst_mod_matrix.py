@@ -10,6 +10,9 @@ from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.constants.boundary_conditions import DIRICHLET, NEUMANN, OUTLET
 from scrins.operators.dif import dif
+from scrins.operators.dif_x import dif_x
+from scrins.operators.dif_y import dif_y
+from scrins.operators.dif_z import dif_z
 
 # =============================================================================
 
@@ -45,21 +48,21 @@ def obst_mod_matrix(phi, c, obst, obc):
         if obc == 'n':
 
             # Correct west and east
-            sol_x = dif(X, obst)  # will be +1 east of obst, -1 west of obst
+            sol_x = dif_x(obst)  # will be +1 east of obst, -1 west of obst
             corr = 1 - (sol_x < 0)
             c.W[1:, :, :] = c.W[1:, :, :] * corr
             corr = 1 - (sol_x > 0)
             c.E[:-1, :, :] = c.E[:-1, :, :] * corr
 
             # Correct south and north
-            sol_y = dif(Y, obst)  # will be +1 north of obst, -1 south of obst
+            sol_y = dif_y(obst)  # will be +1 north of obst, -1 south of obst
             corr = 1 - (sol_y < 0)
             c.S[:, 1:, :] = c.S[:, 1:, :] * corr
             corr = 1 - (sol_y > 0)
             c.N[:, :-1, :] = c.N[:, :-1, :] * corr
 
             # Correct bottom and top
-            sol_z = dif(Z, obst)  # will be +1 north of obst, -1 south of obst
+            sol_z = dif_z(obst)  # will be +1 north of obst, -1 south of obst
             corr = 1 - (sol_z < 0)
             c.B[:, :, 1:] = c.B[:, :, 1:] * corr
             corr = 1 - (sol_z > 0)
@@ -82,19 +85,19 @@ def obst_mod_matrix(phi, c, obst, obc):
             c.T[:] = c.T[:] * lnot(obst)
 
             # Increase coefficients close to obst (makes sense for momentum)
-            sol_x = dif(X, obst)  # will be +1 east of obst, -1 west of obst
+            sol_x = dif_x(obst)  # will be +1 east of obst, -1 west of obst
             corr = 1 + (sol_x > 0)
             c.E[:-1, :, :] = c.E[:-1, :, :] * corr
             corr = 1 + (sol_x < 0)
             c.W[1:, :, :] = c.W[1:, :, :] * corr
 
-            sol_y = dif(Y, obst)  # will be +1 north of obst, -1 south of obst
+            sol_y = dif_y(obst)  # will be +1 north of obst, -1 south of obst
             corr = 1 + (sol_y > 0)
             c.N[:, :-1, :] = c.N[:, :-1, :] * corr
             corr = 1 + (sol_y < 0)
             c.S[:, 1:, :] = c.S[:, 1:, :] * corr
 
-            sol_z = dif(Z, obst)  # will be +1 top of obst, -1 bottom of obst
+            sol_z = dif_z(obst)  # will be +1 top of obst, -1 bottom of obst
             corr = 1 + (sol_z > 0)
             c.T[:, :, :-1] = c.T[:, :, :-1] * corr
             corr = 1 + (sol_z < 0)
@@ -120,13 +123,13 @@ def obst_mod_matrix(phi, c, obst, obc):
         c.T[:] = c.T[:] * lnot(obst_x)
 
         # Increase coefficients close to obst (makes sense for momentum)
-        sol_y = dif(Y, obst_x)  # will be +1 north of obst, -1 south of obst
+        sol_y = dif_y(obst_x)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_y > 0)
         c.N[:, :-1, :] = c.N[:, :-1, :] * corr
         corr = 1 + (sol_y < 0)
         c.S[:, 1:, :] = c.S[:, 1:, :] * corr
 
-        sol_z = dif(Z, obst_x)  # will be +1 top of obst, -1 bottom of obst
+        sol_z = dif_z(obst_x)  # will be +1 top of obst, -1 bottom of obst
         corr = 1 + (sol_z > 0)
         c.T[:, :, :-1] = c.T[:, :, :-1] * corr
         corr = 1 + (sol_z < 0)
@@ -147,13 +150,13 @@ def obst_mod_matrix(phi, c, obst, obc):
         c.T[:] = c.T[:] * lnot(obst_y)
 
         # Increase coefficients close to obst (makes sense for momentum)
-        sol_x = dif(X, obst_y)  # will be +1 north of obst, -1 south of obst
+        sol_x = dif_x(obst_y)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_x > 0)
         c.E[:-1, :, :] = c.E[:-1, :, :] * corr
         corr = 1 + (sol_x < 0)
         c.W[1:, :, :] = c.W[1:, :, :] * corr
 
-        sol_z = dif(Z, obst_y)  # will be +1 north of obst, -1 south of obst
+        sol_z = dif_z(obst_y)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_z > 0)
         c.T[:, :, :-1] = c.T[:, :, :-1] * corr
         corr = 1 + (sol_z < 0)
@@ -174,13 +177,13 @@ def obst_mod_matrix(phi, c, obst, obc):
         c.T[:] = c.T[:] * lnot(obst_z)
 
         # Increase coefficients close to obst (makes sense for momentum)
-        sol_x = dif(X, obst_z)  # will be +1 north of obst, -1 south of obst
+        sol_x = dif_x(obst_z)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_x > 0)
         c.E[:-1, :, :] = c.E[:-1, :, :] * corr
         corr = 1 + (sol_x < 0)
         c.W[1:, :, :] = c.W[1:, :, :] * corr
 
-        sol_y = dif(Y, obst_z)  # will be +1 north of obst, -1 south of obst
+        sol_y = dif_y(obst_z)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_y > 0)
         c.N[:, :-1, :] = c.N[:, :-1, :] * corr
         corr = 1 + (sol_y < 0)
