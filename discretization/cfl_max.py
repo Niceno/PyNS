@@ -40,8 +40,8 @@ def cfl_max(uvw, dt, dxyz):
   
   # Mesh is staggered
   else:
-    cfl = dt * max( abs(u.val/avg(X,dx)).max(),   \
-                    abs(v.val/avg(Y,dy)).max(),   \
-                    abs(w.val/avg(Z,dz)).max() )
+    cfl = dt * max( abs(u.val/avg_x(dx)).max(),   \
+                    abs(v.val/avg_y(dy)).max(),   \
+                    abs(w.val/avg_z(dz)).max() )
   
   return cfl

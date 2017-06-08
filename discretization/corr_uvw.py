@@ -35,9 +35,9 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst):
   dx, dy, dz = dxyz
 
   # Compute pressure correction gradients
-  p_x = dif(X, p.val) / avg(X, dx)  
-  p_y = dif(Y, p.val) / avg(Y, dy)  
-  p_z = dif(Z, p.val) / avg(Z, dz)  
+  p_x = dif_x(p.val) / avg_x(dx)  
+  p_y = dif_y(p.val) / avg_y(dy)  
+  p_z = dif_z(p.val) / avg_z(dz)  
   
   # Set to zero in obst
   if obst.any() != 0:
@@ -48,9 +48,9 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst):
   # Pad with boundary values by expanding from interior 
   # (This is done only for collocated formulation)
   if uvw[X].pos == C:
-    p_x = avg(X, cat(X, (p_x[:1,:,:], p_x, p_x[-1:,:,:])))
-    p_y = avg(Y, cat(Y, (p_y[:,:1,:], p_y, p_y[:,-1:,:])))
-    p_z = avg(Z, cat(Z, (p_z[:,:,:1], p_z, p_z[:,:,-1:])))
+    p_x = avg_x(cat_x((p_x[:1,:,:], p_x, p_x[-1:,:,:])))
+    p_y = avg_y(cat_y((p_y[:,:1,:], p_y, p_y[:,-1:,:])))
+    p_z = avg_z(cat_z((p_z[:,:,:1], p_z, p_z[:,:,-1:])))
   
   # Correct the velocities
   uvw[X].val[:] = uvw[X].val[:] - dt / avg(uvw[X].pos, rho) * p_x
