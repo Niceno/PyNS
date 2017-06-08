@@ -11,7 +11,7 @@ from constants.all      import *
 from operators.all      import *
 
 # =============================================================================
-def plot_isolines(phi, uvw, xyzn, d):
+def plot_isolines(phi, uvw, xyzn, dir):
 # -----------------------------------------------------------------------------
   """
   Args:
@@ -20,7 +20,7 @@ def plot_isolines(phi, uvw, xyzn, d):
           collocated or staggered.
     xyzn: Tuple containing one-dimensional arrays with "x", "y" and "z" 
           coordinates.
-    d:    Direction for cutting, can be X, Y or Z.
+    dir:  Direction for cutting, can be X, Y or Z.
       
   Returns:
     none!       
@@ -41,18 +41,18 @@ def plot_isolines(phi, uvw, xyzn, d):
     vc = v.val
     wc = w.val
   else:  
-    uc = avg(X,cat(X,(u.bnd[W].val[:1,:,:], u.val, u.bnd[E].val[:1,:,:])))
-    vc = avg(Y,cat(Y,(v.bnd[S].val[:,:1,:], v.val, v.bnd[N].val[:,:1,:])))
-    wc = avg(Z,cat(Z,(w.bnd[B].val[:,:,:1], w.val, w.bnd[T].val[:,:,:1])))
+    uc = avg_x(cat_x((u.bnd[W].val[:1,:,:], u.val, u.bnd[E].val[:1,:,:])))
+    vc = avg_y(cat_y((v.bnd[S].val[:,:1,:], v.val, v.bnd[N].val[:,:1,:])))
+    wc = avg_z(cat_z((w.bnd[B].val[:,:,:1], w.val, w.bnd[T].val[:,:,:1])))
     
   # Pick coordinates for plotting (xp, yp) and values for plotting
-  if d == Y:
+  if dir == Y:
     jp = floor(yc.size/2)
     xp, yp = meshgrid(xc, zc)
     zp = transpose(phi[:,jp,:], (1,0))
     up = transpose(uc [:,jp,:], (1,0))
     vp = transpose(wc [:,jp,:], (1,0))
-  if d == Z:
+  if dir == Z:
     kp = floor(zc.size/2)
     xp, yp = meshgrid(xc, yc)
     zp = transpose(phi[:,:,kp], (1,0))
