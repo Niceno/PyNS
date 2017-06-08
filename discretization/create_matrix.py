@@ -65,36 +65,71 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
   sy = dx * dz
   sz = dx * dy
 
+  # In the following lines, coefficients are computed simply by multiplying
+  # diffusivity (mu) with cell-face areas (sx, sy and sz) and dividing by
+  # distance between cells (dx, dy and dz).  Near the boundaries, only 
+  # half-distance between cells is taken into account.
+  #
+  #    +-----------+-----------+//
+  #    |           |           |//
+  #    |     o     |     o     |//  wall
+  #    |           |           |//
+  #    +-----------+-----------+//
+  #          |           |     |
+  #          |    dx     | dx/2|  
+  #          |<--------->|<--->|
+  #
   if d != X:
-    c.W[:] = cat(X, (                                                     \
-     avg(d,mu[ :1,:,:]) * avg(d,sx[ :1,:,:]) / avg(d,(dx[ :1,:,:])/2.0),  \
-     avg(d,avg(X, mu))  * avg(d,avg(X, sx))  / avg(d,avg(X, dx)) ) ) 
+    c.W[:] = cat_x((                                   \
+     avg(d,mu[ :1,:,:]) * avg(d, sx[ :1,:,:])          \
+                        / avg(d,(dx[ :1,:,:])/2.0),    \
+     avg(d,avg_x(mu))   * avg(d,avg_x(sx))             \
+                        / avg(d,avg_x(dx)) ) ) 
   
-    c.E[:] = cat(X, (                                                     \
-     avg(d,avg(X, mu))  * avg(d,avg(X, sx))  / avg(d,avg(X, dx)),         \
-     avg(d,mu[-1:,:,:]) * avg(d,sx[-1:,:,:]) / avg(d,(dx[-1:,:,:])/2.0) ) )
+    c.E[:] = cat_x((                                   \
+     avg(d,avg_x(mu))   * avg(d,avg_x(sx))             \
+                        / avg(d,avg_x(dx)),            \
+     avg(d,mu[-1:,:,:]) * avg(d, sx[-1:,:,:])          \
+                        / avg(d,(dx[-1:,:,:])/2.0) ) )
 
   if d != Y:
-    c.S[:] = cat(Y, (                                                     \
-     avg(d,mu[:, :1,:]) * avg(d,sy[:, :1,:]) / avg(d,(dy[:, :1,:])/2.0),  \
-     avg(d,avg(Y, mu))  * avg(d,avg(Y, sy))  / avg(d,avg(Y, dy)) ) ) 
+    c.S[:] = cat_y((                                   \
+     avg(d,mu[:, :1,:]) * avg(d, sy[:, :1,:])          \
+                        / avg(d,(dy[:, :1,:])/2.0),    \
+     avg(d,avg_y(mu))   * avg(d,avg_y(sy))             \
+                        / avg(d,avg_y(dy)) ) ) 
   
-    c.N[:] = cat(Y, (                                                     \
-     avg(d,avg(Y, mu))  * avg(d,avg(Y, sy))  / avg(d,avg(Y, dy)),         \
-     avg(d,mu[:,-1:,:]) * avg(d,sy[:,-1:,:]) / avg(d,(dy[:,-1:,:])/2.0) ) ) 
+    c.N[:] = cat_y((                                   \
+     avg(d,avg_y(mu))   * avg(d,avg_y(sy))             \
+                        / avg(d,avg_y(dy)),            \
+     avg(d,mu[:,-1:,:]) * avg(d,sy[:,-1:,:])           \
+                        / avg(d,(dy[:,-1:,:])/2.0) ) ) 
   
   if d != Z:
-    c.B[:] = cat(Z, (                                                     \
-     avg(d,mu[:,:, :1]) * avg(d,sz[:,:, :1]) / avg(d,(dz[:,:, :1])/2.0),  \
-     avg(d,avg(Z, mu))  * avg(d,avg(Z, sz))  / avg(d,avg(Z, dz)) ) ) 
+    c.B[:] = cat_z((                                   \
+     avg(d,mu[:,:, :1]) * avg(d, sz[:,:, :1])          \
+                        / avg(d,(dz[:,:, :1])/2.0),    \
+     avg(d,avg_z(mu))   * avg(d,avg_z(sz))             \
+                        / avg(d,avg_z(dz)) ) ) 
   
-    c.T[:] = cat(Z, (                                                     \
-     avg(d,avg(Z, mu))  * avg(d,avg(Z, sz))  / avg(d,avg(Z, dz)),         \
-     avg(d,mu[:,:,-1:]) * avg(d,sz[:,:,-1:]) / avg(d,(dz[:,:,-1:])/2.0) ) ) 
+    c.T[:] = cat_z((                                   \
+     avg(d,avg_z(mu))   * avg(d,avg_z(sz))             \
+                        / avg(d,avg_z(dz)),            \
+     avg(d,mu[:,:,-1:]) * avg(d, sz[:,:,-1:])          \
+                        / avg(d,(dz[:,:,-1:])/2.0) ) ) 
 
-  # --------------------------------
-  # Correct for staggered variables
-  # --------------------------------
+  # Correct for staggered variables.  For staggered variables, near wall
+  # cells are not at a half-distance from the wall, but at full distance.
+  #
+  #    +-----------+-----------+//
+  #    |           |           |//
+  #   -->         -->          |//  wall
+  #    |           |           |//
+  #    +-----------+-----------+//
+  #    |           |           |
+  #    |    dx     |     dx    |  
+  #    |<--------->|<--------->|
+  #
   if d == X:
     c.W[:] = mu[0:-1,:,:] * sx[0:-1,:,:] / dx[0:-1,:,:]
     c.E[:] = mu[1:,  :,:] * sx[1:,  :,:] / dx[1:,  :,:]
@@ -160,6 +195,4 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     
   diag = array([0, +ny*nz, -ny*nz, +nz, -nz, +1, -1])  
 
-  A = spdiags(data, diag, n, n)
-  
-  return A, b  # end of function
+  return spdiags(data, diag, n, n), b  # end of function
