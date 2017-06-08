@@ -35,9 +35,9 @@ def vol_balance(uvwf, dxyz, obst):
   uf, vf, wf = uvwf
 
   # Compute it throughout the domain
-  src = - dif(X, cat(X, (uf.bnd[W].val, uf.val, uf.bnd[E].val)))*dy*dz  \
-        - dif(Y, cat(Y, (vf.bnd[S].val, vf.val, vf.bnd[N].val)))*dx*dz  \
-        - dif(Z, cat(Z, (wf.bnd[B].val, wf.val, wf.bnd[T].val)))*dx*dy   
+  src = - dif_x(cat_x((uf.bnd[W].val, uf.val, uf.bnd[E].val)))*dy*dz  \
+        - dif_y(cat_y((vf.bnd[S].val, vf.val, vf.bnd[N].val)))*dx*dz  \
+        - dif_z(cat_z((wf.bnd[B].val, wf.val, wf.bnd[T].val)))*dx*dy   
   
   # Zero it inside obstacles, if obstacle is sent as parameter
   if obst.any() != 0:
