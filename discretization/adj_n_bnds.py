@@ -5,7 +5,7 @@ Adjust (essentially refresh) boundaries with Neumann type conditions.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all import *
 
 # =============================================================================
@@ -15,10 +15,10 @@ def adj_n_bnds(phi):
   Copies last domain cell values to Neumann boundary condition values.
   
   Args:
-    phi: any unknown created by "scrins.create_unknown"
+    phi: Any unknown created by "pyns.create_unknown".
 
   Returns:
-    none
+    none, but input argument psi is modified.
   """
 
   # These arrays will hold values true (0) in cells with boundary ... 

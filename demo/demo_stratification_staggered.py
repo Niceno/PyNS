@@ -13,7 +13,7 @@ Gravity term is engaged gradually to avoid vortex at the outlet.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all       import *
 from operators.all       import *
 from display.all         import *

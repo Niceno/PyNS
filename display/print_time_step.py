@@ -1,6 +1,17 @@
+"""
+Elegantly prints the current time step on the Python console.
+"""
+
 # =============================================================================
 def print_time_step(ts):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    ts: Time step.
+    
+  Returns:
+    none!
+  """
 
   print('+======================+') 
   print('|                      |')

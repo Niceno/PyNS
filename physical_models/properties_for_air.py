@@ -8,7 +8,7 @@ Properties are take for 60 deg from:
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 

@@ -5,7 +5,7 @@ Spawns a 3D Cartesian grid from three arrays with node coordinates.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
@@ -14,21 +14,21 @@ def cartesian_grid(xn, yn, zn):
 # -----------------------------------------------------------------------------
   """
   Args:
-    xn: one-dimensional array with node coordinates in "x" direction
-    yn: one-dimensional array with node coordinates in "y" direction
-    zn: one-dimensional array with node coordinates in "z" direction
+    xn: One-dimensional array with node coordinates in "x" direction.
+    yn: One-dimensional array with node coordinates in "y" direction.
+    zn: One-dimensional array with node coordinates in "z" direction.
     
   Returns:
-    nx: number of cells (one less than nodes) in "x" direction
-    ny: number of cells (one less than nodes) in "y" direction
-    nz: number of cells (one less than nodes) in "z" direction
-    dx: three-dimensional matrix holding "dx" for all cells.
-    dy: three-dimensional matrix holding "dy" for all cells.
-    dz: three-dimensional matrix holding "dz" for all cells.
-    rc: resolution tuple (nx, ny and nz) for centered variable
-    rx: resolution tuple (nx, ny and nz) for variable staggered in "x"
-    ry: resolution tuple (nx, ny and nz) for variable staggered in "y"
-    rz: resolution tuple (nx, ny and nz) for variable staggered in "z"
+    nx: Number of cells (one less than nodes) in "x" direction.
+    ny: Number of cells (one less than nodes) in "y" direction.
+    nz: Number of cells (one less than nodes) in "z" direction.
+    dx: Three-dimensional matrix holding "dx" for all cells.
+    dy: Three-dimensional matrix holding "dy" for all cells.
+    dz: Three-dimensional matrix holding "dz" for all cells.
+    rc: Resolution tuple (nx, ny and nz) for centered variable.
+    rx: Resolution tuple (nx, ny and nz) for variable staggered in "x".
+    ry: Resolution tuple (nx, ny and nz) for variable staggered in "y".
+    rz: Resolution tuple (nx, ny and nz) for variable staggered in "z".
     
   Note:
     Cell resolutions are for one smaller than node resolutions for each 

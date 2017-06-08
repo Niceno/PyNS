@@ -15,7 +15,7 @@ Gravity term is under-relaxed here, but it works even without it.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all       import *
 from operators.all       import *
 from display.all         import *

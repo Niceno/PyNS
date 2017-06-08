@@ -8,7 +8,7 @@ Note:
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
@@ -21,18 +21,22 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
 # -----------------------------------------------------------------------------
   """
   Args:
-    t:       temperature unknown (from "pyns.create_unknown" function)
+    t:       Temperature unknown (from "pyns.create_unknown" function)
     uvwf:    a tuple with three staggered velocity components (where each 
-             component is created with "scrins.create_unknown" function.
-    rho_cap: three-dimensional matrix holding density times thermal capactity 
+             component is created with "create_unknown" function.
+    rho_cap: Three-dimensional matrix holding density times thermal capactity 
              for all cells.
-    dt:      time step
-    dxyz:    a tuple holding cell dimensions in "x", "y" and "z" directions.
+    dt:      Time step.
+    dxyz:    Tuple holding cell dimensions in "x", "y" and "z" directions.
              Each cell dimension is a three-dimensional matrix.
-    obst:    obstacle
+    obst:    Obstacle, three-dimensional matrix with zeros and ones.  It is
+             zero in fluid, one in solid.
 
   Returns:
     none, but input argument t is modified!      
+    
+  Note:
+    Source (or sink) term is missing.
   """
 
   # Unpack tuple(s)

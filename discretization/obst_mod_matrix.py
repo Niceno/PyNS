@@ -5,7 +5,7 @@ Adjusts the system matrix for obstacles.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all import *
 from operators.all import *
 
@@ -14,13 +14,14 @@ def obst_mod_matrix(phi, c, obst, obc):
 # -----------------------------------------------------------------------------
   """
   Args:
-    phi:  unknown (created with "pyns.create_unknown" function)
-    c:    coefficients in system matrix
-    obst: obstacle
-    obc:  obstacle's boundary condition (NEUMANN or DIRICHLET)
+    phi:  Unknown (created with "pyns.create_unknown" function)
+    c:    Coefficients in system matrix.
+    obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
+          zero in fluid, one in solid.
+    obc:  Obstacle's boundary condition (NEUMANN or DIRICHLET).
     
   Returns:
-    c: modified system matrix.
+    c: Modified system matrix.
     
   Note:
     The format of the system matrix is clear from function: "create_matrix"

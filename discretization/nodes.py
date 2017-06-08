@@ -11,7 +11,7 @@ parameters are sent (starting and ending cell size).
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
@@ -19,25 +19,23 @@ from operators.all      import *
 def nodes(*args):
 # -----------------------------------------------------------------------------
   """
-  Number of input arguments can be three or five, depending if uniform
-  or non-uniform node distribution is desired.  
-
-  Args:
+  Args: Number of input arguments can be three or five, depending if uniform
+        or non-uniform node distribution is desired.  
 
     Three arguments provided (for uniform meshes)      
-      args[0] - starting coordinate
-      args[1] - ending coordinate
-      args[2] - number of cells (number of nodes is greater than one than this)
+      args[0]: Starting coordinate.
+      args[1]: Ending coordinate.
+      args[2]: Number of cells (number of nodes is greater by one than this).
   
     Five arguments provided (for non-uniform meshes)      
-      args[0] - same as above
-      args[1] - same as above
-      args[2] - same as above
-      args[3] - starting cell size
-      args[4] - ending cell size
+      args[0]: Same as above.
+      args[1]: Same as above.
+      args[2]: Same as above.
+      args[3]: Starting cell size.
+      args[4]: Ending cell size.
     
   Returns:
-    An array with node coordinates (size is numbner of cells plus one)
+    An array with node coordinates (size is numbner of cells plus one).
     
   Examples:  
     

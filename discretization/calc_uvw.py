@@ -1,7 +1,11 @@
+"""
+Discretizes and solves momentum equation (all three components).
+"""
+
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
@@ -14,6 +18,26 @@ from discretization.obst_zero_val  import obst_zero_val
 # =============================================================================
 def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    uvw:   Tuple with three velocity components, staggered or collocated. 
+           (Each component is created with "create_unknown" function.)
+    uvwf:  Tuple with three staggered velocity components (where each 
+           component is created with "pyns.create_unknown" function.
+    rho:   Three-dimensional matrix holding density for all cells.
+    mu:    Three-dimensional matrix holding dynamic viscosity.
+    p_tot: Three-dimensional matrix holding total pressure.
+    e_f:   Tuple containing three-dimensional matrices holding external 
+           forces in each direction.
+    dt:    Time step.
+    dxyz:  Tuple holding cell dimensions in "x", "y" and "z" directions.
+           Each cell dimension is a three-dimensional matrix.
+    obst:  Obstacle, three-dimensional matrix with zeros and ones.  It is
+           zero in fluid, one in solid.
+
+  Returns:
+    none, but input argument uvw is modified!      
+  """
 
   # Unpack tuples
   u,   v,   w   = uvw

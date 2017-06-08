@@ -5,7 +5,7 @@ Discretizes and solves equation for pressure (pressure Poisson equaiton).
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
@@ -19,14 +19,15 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
 # -----------------------------------------------------------------------------
   """
   Args:
-    p:    pressure unknown (created with "pyns.create_unknown" function)
-    uvwf: a tuple with three staggered velocity components (where each 
-          component is created with "scrins.create_unknown" function.
-    rho:  three-dimensional matrix holding density for all cells.
-    dt:   time step
-    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
-          Each cell dimension is a three-dimensional array.
-    obst: obstacle
+    p:    Pressure unknown (created with "pyns.create_unknown" function)
+    uvwf: Tuple with three staggered velocity components (where each 
+          component is created with "pyns.create_unknown" function.
+    rho:  Three-dimensional matrix holding density for all cells.
+    dt:   Time step.
+    dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
+          Each cell dimension is a three-dimensional matrix.
+    obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
+          zero in fluid, one in solid.
 
   Returns:
     none, but input argument p is modified!      

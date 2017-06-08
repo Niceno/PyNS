@@ -1,24 +1,50 @@
+"""
+Creates a new unkown.  An unknown has a form of a structure, and holds the 
+values inside the computational domain and on the boundaries.  Value inside
+the domain is stored in a full three-dimensional matrix.  Boundary values are
+also formally stored in three-dimensional matrices, but depending on their 
+position (W, E, S, N, B or T), one dimension is set to one. For boundaries,
+also the type of boundary conditions are specified. 
+
+To access an unknown, say its name is "phi" later in the program, the following
+syntax is used:
+    
+Value inside the domain, at the cell with coordinates (12, 34, 56):
+
+  phi.val[12, 34, 56] = 0.0
+
+Value on the east boundary, at coordinates (34, 56).    
+
+  phi.bnd[E].val[1, 34, 56] = 0.0 
+
+Type of boundary condition at the same boundary cell from above:
+                    
+  phi.bnd[E].typ[1, 34, 56] == NEUMANN    
+"""
+
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
 # =============================================================================
 def create_unknown(name, pos, res, def_bc):
 # -----------------------------------------------------------------------------
-# This function creates a new unkown; helping to shorten the main program.
-# -----------------------------------------------------------------------------
-# Input parameters are:
-#
-# name   - string holding the name of the variable 
-#          it should be used for post-processing
-# pos    - character specifying if the variable is cell centered (C),
-#          staggered in x direction (X) or in y direction (Y)
-# res    - vector specifying resolutions in x and y direction
-# def_bc - integer specifying if the default boundary condition is of 
-#          dirichlet, neumann or outlet type
+  """
+  Args: 
+    name:   String holding the name of the variable.  It is intended to be 
+            used for post-processing.
+    pos:    Integer specifying if the variable is cell centered (value C), 
+            staggered in "x" (value X), "y" (value Y) or in "z" direction (Z).
+    res:    Vector specifying resolutions in "x", "y" and "z" directions.
+    def_bc: Integer specifying if the default boundary condition is of 
+            Dirichlet, Neumann or Outlet type.
+
+   Returns:
+     phi: Formed unknown.  
+   """ 
 # -----------------------------------------------------------------------------
 
   # Fetch resolutions 

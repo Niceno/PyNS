@@ -6,7 +6,7 @@ the convective outflow method.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all import *
 from operators.all import *
 
@@ -15,11 +15,11 @@ def adj_o_bnds(uvw, dxyz, dt):
 # -----------------------------------------------------------------------------
   """
   Args:
-    uvw:  a tuple with three velocity components (where each component is 
-          created with "scrins.create_unknown" function.
-    dxyz: a tuple with cell dimensions in "x", "y" and "z" direction
-          (where each dimension is a three-dimensional array)
-    dt:   time step
+    uvw:  Tuple with three velocity components (where each component is 
+          created with "create_unknown" function.
+    dxyz: Tuple with cell dimensions in "x", "y" and "z" direction
+          (where each dimension is a three-dimensional array).
+    dt:   time step.
 
   Returns:
     none

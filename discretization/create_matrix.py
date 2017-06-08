@@ -6,7 +6,7 @@ staggered variables.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
@@ -17,23 +17,24 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
 # -----------------------------------------------------------------------------
   """
   Args:
-    phi:  unknown (created by "pyns.create_unknown") for which we need the 
+    phi:  Unknown (created by "pyns.create_unknown") for which we need the 
           system matrix.  It is needed for its resolution, essentially.  
-    inn:  three-dimensional matrix holding the innertial term (innertial term
+    inn:  Three-dimensional matrix holding the innertial term (innertial term
           is whatever multiplies the time derivative)
-    mu:   three-dimensional array holding diffusion coefficient. 
-    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
+    mu:   Three-dimensional array holding diffusion coefficient. 
+    dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
           Each cell dimension is a three-dimensional matrix.
-    obst: obstacle
-    obc:  obstacle's boundary condition (NEUMANN or DIRICHLET)
+    obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
+          zero in fluid, one in solid.
+    obc:  Obstacle's boundary condition (NEUMANN or DIRICHLET)
     
   Returns:
-    A: matrix in sparse diagonal format.
-    b: three-dimensional matrix for the right hand side.
+    A: Matrix in sparse diagonal format.
+    b: Three-dimensional matrix for the right hand side vector.
     
   Note:
-    It is a bir of missnomer, it is called "create_matrix", but it also 
-    creates right hand side.
+    It is a bit of missnomer, it is called "create_matrix", but it also 
+    creates right hand side vector.
   """
 
   # Unpack tuples

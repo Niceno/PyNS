@@ -1,12 +1,12 @@
 """
-Computes the volume balance, which is essentially a right hand side in
-the Poisson's equation for pressure.
+Computes volume balance inside the domain, which is, in essence, the right 
+hand side in the pressure-Poisson equation.
 """
 
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
@@ -17,11 +17,12 @@ def vol_balance(uvwf, dxyz, obst):
 # -----------------------------------------------------------------------------
   """
   Args:
-    uvwf: a tuple with three staggered velocity components (where each 
-          component is created with "scrins.create_unknown" function.
-    dxyz: a tuple holding cell dimensions in "x", "y" and "z" directions.
+    uvwf: Tuple with three staggered velocity components (where each 
+          component is created with "create_unknown" function.
+    dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
           Each cell dimension is a three-dimensional array.
-    obst:obstacle      
+    obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
+          zero in fluid, one in solid.
     
   Note:  
     "obst" is an optional parameter.  If it is not sent, the source won't be 

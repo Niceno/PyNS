@@ -1,13 +1,34 @@
+"""
+Computes advection fluxes for a given variable, with various advection schemes.
+
+Following schemes are supported: "upwind", "minmod", "koren" and "superbee"
+"""
+
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all import *
 from operators.all import *
 
 # =============================================================================
 def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    rho:      Three-dimensional matrix holding physical property in advection 
+              term (density or density times capacity ...) for all cells.
+    phi:      Unknown transported by advection (from "pyns.create_unknown").
+    uvwf:     Tuple with three staggered velocity components (where each 
+              component is created with "create_unknown" function.
+    dxyz:     Tuple holding cell dimensions in "x", "y" and "z" directions.
+              Each cell dimension is a three-dimensional matrix.
+    dt:       Time step.
+    lim_name: Limiter name.  Can be: "upwind", "minmod", "koren" and "superbee"
+    
+  Returns:
+    Three-dimensional matrix with advection term.
+  """
 
   res = phi.val.shape
   nx, ny, nz = res

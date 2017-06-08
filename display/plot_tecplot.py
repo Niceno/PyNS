@@ -1,15 +1,28 @@
+"""
+Exports results in Tecplot (TM) ASCII format.
+"""
+
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
 # =============================================================================
 def plot_tecplot(file_name, xyzn, variables):
 # -----------------------------------------------------------------------------
-# Exports results to Tecplot (TM) format.
-# -----------------------------------------------------------------------------
+  """
+  Args:
+    file_name: String containing name of the file to be created.
+    xyzn:      Tuple containing one-dimensional arrays with "x", "y" and "z" 
+               coordinates.
+    variables: Tuple containing unknowns to be exported to Tecplot (TM).  
+               Individual variables can be either collocated or staggered.
+
+  Returns:
+    none!           
+  """
   
   # Unpack tuples
   xn, yn, zn = xyzn    
@@ -25,7 +38,7 @@ def plot_tecplot(file_name, xyzn, variables):
   # Write the file header out
   # --------------------------
   file_id.write("# File header \n")
-  file_id.write("title=\"ScriNS Output\"\n")
+  file_id.write("title=\"PyNS Output\"\n")
   file_id.write("variables=\"x\" \"y\" \"z\" ")
   for v in variables:
     file_id.write("\"%s\" " % v.name)

@@ -1,13 +1,30 @@
+"""
+Function to plot a two-dimensional slice through solution.  It always plots
+velocity fields on top of isolines.
+"""
+
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all      import *
 from operators.all      import *
 
 # =============================================================================
 def plot_isolines(phi, uvw, xyzn, d):
 # -----------------------------------------------------------------------------
+  """
+  Args:
+    phi:  Unknown to be plotted.
+    uvw:  Tuple containing three velocity components.  They can be either 
+          collocated or staggered.
+    xyzn: Tuple containing one-dimensional arrays with "x", "y" and "z" 
+          coordinates.
+    d:    Direction for cutting, can be X, Y or Z.
+      
+  Returns:
+    none!       
+  """
   
   # Unpack tuples
   u,  v,  w  = uvw    

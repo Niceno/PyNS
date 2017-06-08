@@ -1,9 +1,55 @@
-# ScriNS modules
+"""
+Returns runnig difference of the array or matrix sent as parameter.
+
+If array is sent for differencing, only one argument is needed, array itself.
+
+If matrix is sent for differencing, two arguments are needed, matrix itself, 
+and the desired direction for differencing.
+
+It is clear that the returning difference will have one element less in the 
+direction in which it was differenced:
+    
+Example:
+
+  Array sent:    |-------|-------|-------|-------|-------| => six elements
+                 0       1       2       3       4       5
+
+  Returnig array:    o-------o-------o-------o-------o     => five elements
+                     0       1       2       3       4
+     
+  Element 0 in the returning array will be the difference between the values
+  in elements 1 and 0 in the sending array.
+
+Note:
+  Difference is NOT derivative.  Ti find a derivative, you should divide
+  difference with a proper array with distances between elements!
+"""
+
+# PyNS modules
 from constants.all import *
 
 # =============================================================================
 def dif(*args):
 # -----------------------------------------------------------------------------
+  """
+  Args: Number of input arguments can be one or two, depending if one wants to
+        run a difference on array or matrix.
+
+    One argument provided (for arrays)      
+      args[0]: Array for averaging.
+      
+    Two arguments provided (for matrices)      
+      args[0]: Matrix for averaging.
+      args[1]: Direction for averaging (X, Y or Z)
+      
+  Returns:
+    Array or matrix with averaged values.
+    
+  Note:
+    Actually, it would make perfect sense to derive separate functions for
+    averaging in "x", "y" and "z" directions.  Less arguments passing, less
+    arguments parsing, and fewer "if" statements.
+  """
 
   # Only one argument is sent - perform 
   # averaging of one-dimensional array

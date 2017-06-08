@@ -12,7 +12,7 @@ membrane seems to be rather fast too.
 # Standard Python modules
 from standard import *
 
-# ScriNS modules
+# PyNS modules
 from constants.all       import *
 from operators.all       import *
 from display.all         import *

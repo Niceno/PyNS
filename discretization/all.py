@@ -1,3 +1,9 @@
+"""
+This is ruthless violation of Python's ethical code of conduct (best practice).  
+It includes all the functionality defined in the module "discretization".  
+Very bad, but it makes code development faster for non-IT oriendted minds.
+"""
+
 # Discretization
 from discretization.adj_n_bnds      import adj_n_bnds
 from discretization.adj_o_bnds      import adj_o_bnds
