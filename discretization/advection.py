@@ -50,18 +50,18 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   if d == C:  
       
     # Facial values of physical properties including boundary cells
-    rho_x_fac = cat(X, (rho[:1,:,:], avg(X, rho), rho[-1:,:,:]))  # nxp,ny, nz
-    rho_y_fac = cat(Y, (rho[:,:1,:], avg(Y, rho), rho[:,-1:,:]))  # nx, nyp,nz 
-    rho_z_fac = cat(Z, (rho[:,:,:1], avg(Z, rho), rho[:,:,-1:]))  # nx, ny, nzp 
+    rho_x_fac = cat_x((rho[:1,:,:], avg_x(rho), rho[-1:,:,:]))  # nxp,ny, nz
+    rho_y_fac = cat_y((rho[:,:1,:], avg_y(rho), rho[:,-1:,:]))  # nx, nyp,nz 
+    rho_z_fac = cat_z((rho[:,:,:1], avg_z(rho), rho[:,:,-1:]))  # nx, ny, nzp 
 
     # Facial values of areas including boundary cells
-    a_x_fac = cat(X, (sx[:1,:,:], avg(X, sx), sx[-1:,:,:]))
-    a_y_fac = cat(Y, (sy[:,:1,:], avg(Y, sy), sy[:,-1:,:]))
-    a_z_fac = cat(Z, (sz[:,:,:1], avg(Z, sz), sz[:,:,-1:]))
+    a_x_fac = cat_x((sx[:1,:,:], avg_x(sx), sx[-1:,:,:]))
+    a_y_fac = cat_y((sy[:,:1,:], avg_y(sy), sy[:,-1:,:]))
+    a_z_fac = cat_z((sz[:,:,:1], avg_z(sz), sz[:,:,-1:]))
   
-    del_x = avg(X, dx)
-    del_y = avg(Y, dy)
-    del_z = avg(Z, dz)
+    del_x = avg_x(dx)
+    del_y = avg_y(dy)
+    del_z = avg_z(dz)
 
     # Facial values of velocities without boundary values
     u_fac = uf.val  # nxm,ny, nz
@@ -82,39 +82,41 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   if d == X:  
     
     # Facial values of physical properties including boundary cells
-    rho_x_fac = rho                              # nx, ny, nz
-    rho_nod_y = avg(X, avg(Y, rho) )             # nxm,nym,nz
-    rho_y_fac = cat(Y, (rho_nod_y[:, :1, :],     \
-                        rho_nod_y[:,  :, :],     \
-                        rho_nod_y[:,-1:,:]))     # nxm,nyp,nz                      
-    rho_nod_z = avg(X, avg(Z, rho) )             # nxm,ny,nzm
-    rho_z_fac = cat(Z, (rho_nod_z[:,:, :1],      \
-                        rho_nod_z[:,:,  :],      \
-                        rho_nod_z[:,:,-1:]))     # nxm,ny,nzp    
+    rho_x_fac = rho                             # nx, ny, nz
+    rho_nod_y = avg_x(avg_y(rho))               # nxm,nym,nz
+    rho_y_fac = cat_y((rho_nod_y[:, :1,:],      \
+                       rho_nod_y[:,  :,:],      \
+                       rho_nod_y[:,-1:,:]))     # nxm,nyp,nz                      
+    rho_nod_z = avg_x(avg_z(rho))               # nxm,ny,nzm
+    rho_z_fac = cat_z((rho_nod_z[:,:, :1],      \
+                       rho_nod_z[:,:,  :],      \
+                       rho_nod_z[:,:,-1:]))     # nxm,ny,nzp    
 
     # Facial values of areas including boundary cells
     a_x_fac = sx
-    a_y_fac = cat(Y, ( \
-              avg(X,sy[:,:1,:]), avg(X,avg(Y,sy)), avg(X,sy[:,-1:,:])))
-    a_z_fac = cat(Z, ( \
-              avg(X,sz[:,:,:1]), avg(X,avg(Z,sz)), avg(X,sz[:,:,-1:])))
+    a_y_fac = cat_y((avg_x(sy[:,:1,:]),  \
+                     avg_x(avg_y(sy)),   \
+                     avg_x(sy[:,-1:,:])))
+    a_z_fac = cat_z((avg_x(sz[:,:,:1]),  \
+                     avg_x(avg_z(sz)),   \
+                     avg_x(sz[:,:,-1:])))
 
     del_x = dx[1:-1,:,:]
-    del_y = avg(X, avg(Y, dy))
-    del_z = avg(X, avg(Z, dz))
+    del_y = avg_x(avg_y(dy))
+    del_z = avg_x(avg_z(dz))
   
     # Facial values of velocities without boundary values
-    u_fac = avg(X, uf.val)  # nxmm,ny, nz
-    v_fac = avg(X, vf.val)  # nxm, nym,nz
-    w_fac = avg(X, wf.val)  # nxm, ny, nzm
+    u_fac = avg_x(uf.val)  # nxmm,ny, nz
+    v_fac = avg_x(vf.val)  # nxm, nym,nz
+    w_fac = avg_x(wf.val)  # nxm, ny, nzm
 
     # Boundary velocity values
     u_bnd_W = uf.bnd[W].val         
     u_bnd_E = uf.bnd[E].val
-    v_bnd_S = avg(X, vf.bnd[S].val)  
-    v_bnd_N = avg(X, vf.bnd[N].val)
-    w_bnd_B = avg(X, wf.bnd[B].val) 
-    w_bnd_T = avg(X, wf.bnd[T].val)
+    v_bnd_S = avg_x(vf.bnd[S].val)  
+    v_bnd_N = avg_x(vf.bnd[N].val)
+    w_bnd_B = avg_x(wf.bnd[B].val) 
+    w_bnd_T = avg_x(wf.bnd[T].val)
 
   # -----------------------------------------------------------
   # Specific for transported variable staggered in y direction
@@ -122,43 +124,41 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   if d == Y:  
     
     # Facial values of physical properties including boundary cells
-    rho_nod_x = avg(Y, avg(X, rho) )             # nxm,nym,nz
-    rho_x_fac = cat(X, (rho_nod_x[ :1,:,:],      \
-                        rho_nod_x[  :,:,:],      \
-                        rho_nod_x[-1:,:,:]))     # nxp,nym,nz
-    rho_y_fac = rho                              # nx, ny, nz
-    rho_nod_z = avg(Y, avg(Z, rho) )             # nx, nym,nzm
-    rho_z_fac = cat(Z, (rho_nod_z[:,:, :1],      \
-                        rho_nod_z[:,:,  :],      \
-                        rho_nod_z[:,:,-1:]))     # nx, nym,nzp
+    rho_nod_x = avg_y(avg_x(rho) )              # nxm,nym,nz
+    rho_x_fac = cat_x((rho_nod_x[ :1,:,:],      \
+                       rho_nod_x[  :,:,:],      \
+                       rho_nod_x[-1:,:,:]))     # nxp,nym,nz
+    rho_y_fac = rho                             # nx, ny, nz
+    rho_nod_z = avg_y(avg_z(rho) )              # nx, nym,nzm
+    rho_z_fac = cat_z((rho_nod_z[:,:, :1],      \
+                       rho_nod_z[:,:,  :],      \
+                       rho_nod_z[:,:,-1:]))     # nx, nym,nzp
 
     # Facial values of areas including boundary cells
-    a_x_fac = cat(X, (             \
-              avg(Y, sx[:1,:,:]),  \
-              avg(Y, avg(X,sx)),   \
-              avg(Y, sx[-1:,:,:])))
+    a_x_fac = cat_x((avg_y(sx[:1,:,:]),  \
+                     avg_y(avg_x(sx)),   \
+                     avg_y(sx[-1:,:,:])))
     a_y_fac = sy
-    a_z_fac = cat(Z, (             \
-              avg(Y, sz[:,:,:1]),  \
-              avg(Y, avg(Z,sz)),   \
-              avg(Y, sz[:,:,-1:])))
+    a_z_fac = cat_z((avg_y(sz[:,:,:1]),  \
+                     avg_y(avg_z(sz)),   \
+                     avg_y(sz[:,:,-1:])))
 
-    del_x = avg(Y, avg(X, dx))
+    del_x = avg_y(avg_x(dx))
     del_y = dy[:,1:-1,:]
-    del_z = avg(Y, avg(Z, dz))
+    del_z = avg_y(avg_z(dz))
     
     # Facial values of velocities without boundary values
-    u_fac = avg(Y, uf.val)  # nxm,nym, nz
-    v_fac = avg(Y, vf.val)  # nx, nymm,nz
-    w_fac = avg(Y, wf.val)  # nx, nym, nzm
+    u_fac = avg_y(uf.val)  # nxm,nym, nz
+    v_fac = avg_y(vf.val)  # nx, nymm,nz
+    w_fac = avg_y(wf.val)  # nx, nym, nzm
 
     # Facial values of velocities with boundary values
-    u_bnd_W = avg(Y, uf.bnd[W].val)  
-    u_bnd_E = avg(Y, uf.bnd[E].val)
+    u_bnd_W = avg_y(uf.bnd[W].val)  
+    u_bnd_E = avg_y(uf.bnd[E].val)
     v_bnd_S = vf.bnd[S].val          
     v_bnd_N = vf.bnd[N].val
-    w_bnd_B = avg(Y, wf.bnd[B].val)  
-    w_bnd_T = avg(Y, wf.bnd[T].val)
+    w_bnd_B = avg_y(wf.bnd[B].val)  
+    w_bnd_T = avg_y(wf.bnd[T].val)
 
   # -----------------------------------------------------------
   # Specific for transported variable staggered in z direction
@@ -166,41 +166,41 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   if d == Z:
     
     # Facial values of physical properties including boundary cells
-    rho_nod_x = avg(Z, avg(X, rho) )             # nxm,ny, nzm
-    rho_x_fac = cat(X, (rho_nod_x[ :1,:,:],      \
-                        rho_nod_x[  :,:,:],      \
-                        rho_nod_x[-1:,:,:]))     # nxp,ny, nzm
-    rho_nod_y = avg(Z, avg(Y, rho) )             # nx, nym,nzm
-    rho_y_fac = cat(Y, (rho_nod_y[:, :1,:],      \
-                        rho_nod_y[:,  :,:],      \
-                        rho_nod_y[:,-1:,:]))     # nx, nyp,nzm
-    rho_z_fac = rho                              # nx, ny, nz
+    rho_nod_x = avg_z(avg_x(rho) )              # nxm,ny, nzm
+    rho_x_fac = cat_x((rho_nod_x[ :1,:,:],      \
+                       rho_nod_x[  :,:,:],      \
+                       rho_nod_x[-1:,:,:]))     # nxp,ny, nzm
+    rho_nod_y = avg_z(avg_y(rho) )              # nx, nym,nzm
+    rho_y_fac = cat_y((rho_nod_y[:, :1,:],      \
+                       rho_nod_y[:,  :,:],      \
+                       rho_nod_y[:,-1:,:]))     # nx, nyp,nzm
+    rho_z_fac = rho                             # nx, ny, nz
 
     # Facial values of areas including boundary cells
-    a_x_fac = cat(X, (             \
-              avg(Z, sx[:1,:,:]),  \
-              avg(Z, avg(X,sx)),   \
-              avg(Z, sx[-1:,:,:])))
-    a_y_fac = cat(Y, (             \
-              avg(Z, sy[:,:1,:]),  \
-              avg(Z, avg(Y,sy)),   \
-              avg(Z, sy[:,-1:,:])))
+    a_x_fac = cat_x((             \
+              avg_z(sx[:1,:,:]),  \
+              avg_z(avg_x(sx)),   \
+              avg_z(sx[-1:,:,:])))
+    a_y_fac = cat_y((             \
+              avg_z(sy[:,:1,:]),  \
+              avg_z(avg_y(sy)),   \
+              avg_z(sy[:,-1:,:])))
     a_z_fac = sz
 
-    del_x = avg(Z, avg(X,dx))
-    del_y = avg(Z, avg(Y,dy))
+    del_x = avg_z(avg_x(dx))
+    del_y = avg_z(avg_y(dy))
     del_z = dz[:,:,1:-1]
     
     # Facial values of velocities without boundary values
-    u_fac = avg(Z, uf.val)  # nxm,ny,  nzm
-    v_fac = avg(Z, vf.val)  # nx, nym, nzm
-    w_fac = avg(Z, wf.val)  # nx, ny,  nzmm
+    u_fac = avg_z(uf.val)  # nxm,ny,  nzm
+    v_fac = avg_z(vf.val)  # nx, nym, nzm
+    w_fac = avg_z(wf.val)  # nx, ny,  nzmm
 
     # Facial values of velocities with boundary values
-    u_bnd_W = avg(Z, uf.bnd[W].val)  
-    u_bnd_E = avg(Z, uf.bnd[E].val)
-    v_bnd_S = avg(Z, vf.bnd[S].val)  
-    v_bnd_N = avg(Z, vf.bnd[N].val)
+    u_bnd_W = avg_z(uf.bnd[W].val)  
+    u_bnd_E = avg_z(uf.bnd[E].val)
+    v_bnd_S = avg_z(vf.bnd[S].val)  
+    v_bnd_N = avg_z(vf.bnd[N].val)
     w_bnd_B = wf.bnd[B].val          
     w_bnd_T = wf.bnd[T].val
 
@@ -220,20 +220,20 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   # ------------------------------------------------------------
  
   # Compute consecutive differences (and avoid division by zero)
-  d_x = dif(X, phi.val)  # nxm, ny, nz  
+  d_x = dif_x(phi.val)  # nxm, ny, nz  
   d_x[(d_x >  -TINY) & (d_x <=   0.0)] = -TINY 
   d_x[(d_x >=   0.0) & (d_x <  +TINY)] = +TINY 
-  d_x = cat(X, (d_x[:1,:,:], d_x, d_x[-1:,:,:]))  # nxp, ny, nz
+  d_x = cat_x((d_x[:1,:,:], d_x, d_x[-1:,:,:]))  # nxp, ny, nz
     
-  d_y = dif(Y, phi.val)  # nx, nym, nz  
+  d_y = dif_y(phi.val)  # nx, nym, nz  
   d_y[(d_y >  -TINY) & (d_y <=   0.0)] = -TINY 
   d_y[(d_y >=   0.0) & (d_y <  +TINY)] = +TINY 
-  d_y = cat(Y, (d_y[:,:1,:], d_y, d_y[:,-1:,:]))  # nx, nyp, nz
+  d_y = cat_y((d_y[:,:1,:], d_y, d_y[:,-1:,:]))  # nx, nyp, nz
    
-  d_z = dif(Z, phi.val)  # nx, ny, nzm  
+  d_z = dif_z(phi.val)  # nx, ny, nzm  
   d_z[(d_z >  -TINY) & (d_z <=   0.0)] = -TINY 
   d_z[(d_z >=   0.0) & (d_z <  +TINY)] = +TINY 
-  d_z = cat(Z, (d_z[:,:,:1], d_z, d_z[:,:,-1:]))  # nx, ny, nzp
+  d_z = cat_z((d_z[:,:,:1], d_z, d_z[:,:,-1:]))  # nx, ny, nzp
       
   # Ratio of consecutive gradients for positive and negative flow
   r_x_we = d_x[1:-1,:,:] / d_x[0:-2,:,:]  # nxm,ny, nz
@@ -289,15 +289,15 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                       + psi_z[:,:,:] * d_z[:,:,1:nz  ] * flow_tb ) 
 
   # Pad with boundary values
-  flux_fac_lim_x = cat(X, (phi.bnd[W].val * u_bnd_W,      \
-                           flux_fac_lim_x,                \
-                           phi.bnd[E].val * u_bnd_E))
-  flux_fac_lim_y = cat(Y, (phi.bnd[S].val * v_bnd_S,      \
-                           flux_fac_lim_y,                \
-                           phi.bnd[N].val * v_bnd_N))
-  flux_fac_lim_z = cat(Z, (phi.bnd[B].val * w_bnd_B,      \
-                           flux_fac_lim_z,                \
-                           phi.bnd[T].val * w_bnd_T))
+  flux_fac_lim_x = cat_x((phi.bnd[W].val * u_bnd_W,      \
+                          flux_fac_lim_x,                \
+                          phi.bnd[E].val * u_bnd_E))
+  flux_fac_lim_y = cat_y((phi.bnd[S].val * v_bnd_S,      \
+                          flux_fac_lim_y,                \
+                          phi.bnd[N].val * v_bnd_N))
+  flux_fac_lim_z = cat_z((phi.bnd[B].val * w_bnd_B,      \
+                          flux_fac_lim_z,                \
+                          phi.bnd[T].val * w_bnd_T))
                        
   # Multiply with face areas                     
   flux_fac_lim_x = rho_x_fac * flux_fac_lim_x * a_x_fac
@@ -305,8 +305,8 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   flux_fac_lim_z = rho_z_fac * flux_fac_lim_z * a_z_fac
       
   # Sum contributions from all directions up
-  c = dif(X, flux_fac_lim_x) + \
-      dif(Y, flux_fac_lim_y) + \
-      dif(Z, flux_fac_lim_z)
+  c = dif_x(flux_fac_lim_x) + \
+      dif_y(flux_fac_lim_y) + \
+      dif_z(flux_fac_lim_z)
     
   return c  # end of function

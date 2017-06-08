@@ -71,15 +71,15 @@ def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
   i_w = w.old * avg(w.pos, rho) * avg(w.pos, dv) / dt
   
   # Compute staggered pressure gradients
-  p_tot_x = dif(X, p_tot) / avg(X, dx)
-  p_tot_y = dif(Y, p_tot) / avg(Y, dy)
-  p_tot_z = dif(Z, p_tot) / avg(Z, dz)
+  p_tot_x = dif_x(p_tot) / avg_x(dx)
+  p_tot_y = dif_y(p_tot) / avg_y(dy)
+  p_tot_z = dif_z(p_tot) / avg_z(dz)
 
   # Make pressure gradients cell-centered
   if d == C:
-    p_tot_x = avg(X, cat(X, (p_tot_x[:1,:,:], p_tot_x, p_tot_x[-1:,:,:])))
-    p_tot_y = avg(Y, cat(Y, (p_tot_y[:,:1,:], p_tot_y, p_tot_y[:,-1:,:])))
-    p_tot_z = avg(Z, cat(Z, (p_tot_z[:,:,:1], p_tot_z, p_tot_z[:,:,-1:])))
+    p_tot_x = avg_x(cat_x((p_tot_x[:1,:,:], p_tot_x, p_tot_x[-1:,:,:])))
+    p_tot_y = avg_y(cat_y((p_tot_y[:,:1,:], p_tot_y, p_tot_y[:,-1:,:])))
+    p_tot_z = avg_z(cat_z((p_tot_z[:,:,:1], p_tot_z, p_tot_z[:,:,-1:])))
 
   # Total pressure gradients (this works for collocated and staggered)
   p_st_u = p_tot_x * avg(u.pos, dv)
@@ -111,24 +111,24 @@ def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
   # Update face velocities (also substract cell-centered pressure gradients 
   #                         and add staggered pressure gradients)
   if d == C:
-    uf.val[:] = avg(X,u.val + dt /       rho  * (      p_tot_x     ))       \
-                            - dt / avg(X,rho) * (dif(X,p_tot) / avg(X,dx))  
-    vf.val[:] = avg(Y,v.val + dt /       rho  * (      p_tot_y     ))       \
-                            - dt / avg(Y,rho) * (dif(Y,p_tot) / avg(Y,dy))  
-    wf.val[:] = avg(Z,w.val + dt /       rho  * (      p_tot_z     ))       \
-                            - dt / avg(Z,rho) * (dif(Z,p_tot) / avg(Z,dz))  
+    uf.val[:] = avg_x(u.val + dt /       rho  * (      p_tot_x     ))       \
+                            - dt / avg_x(rho) * (dif_x(p_tot) / avg_x(dx))  
+    vf.val[:] = avg_y(v.val + dt /       rho  * (      p_tot_y     ))       \
+                            - dt / avg_y(rho) * (dif_y(p_tot) / avg_y(dy))  
+    wf.val[:] = avg_z(w.val + dt /       rho  * (      p_tot_z     ))       \
+                            - dt / avg_z(rho) * (dif_z(p_tot) / avg_z(dz))  
 
     for j in (W,E):
       uf.bnd[j].val[:] = u.bnd[j].val[:]  
-      vf.bnd[j].val[:] = avg(Y, v.bnd[j].val[:])
-      wf.bnd[j].val[:] = avg(Z, w.bnd[j].val[:])  
+      vf.bnd[j].val[:] = avg_y(v.bnd[j].val[:])
+      wf.bnd[j].val[:] = avg_z(w.bnd[j].val[:])  
     for j in (S,N):
-      uf.bnd[j].val[:] = avg(X, u.bnd[j].val[:])
+      uf.bnd[j].val[:] = avg_x(u.bnd[j].val[:])
       vf.bnd[j].val[:] = v.bnd[j].val[:]
-      wf.bnd[j].val[:] = avg(Z, w.bnd[j].val[:])  
+      wf.bnd[j].val[:] = avg_z(w.bnd[j].val[:])  
     for j in (B,T):  
-      uf.bnd[j].val[:] = avg(X, u.bnd[j].val[:])
-      vf.bnd[j].val[:] = avg(Y, v.bnd[j].val[:])
+      uf.bnd[j].val[:] = avg_x(u.bnd[j].val[:])
+      vf.bnd[j].val[:] = avg_y(v.bnd[j].val[:])
       wf.bnd[j].val[:] = w.bnd[j].val[:]  
 
   else:
