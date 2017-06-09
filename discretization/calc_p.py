@@ -13,6 +13,7 @@ from discretization.adj_n_bnds     import adj_n_bnds
 from discretization.create_matrix  import create_matrix
 from discretization.vol_balance    import vol_balance
 from discretization.obst_zero_val  import obst_zero_val
+from solvers.all                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_p(p, uvwf, rho, dt, dxyz, obst):
@@ -48,10 +49,7 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
   print('Volume imbalance before correction    : %12.5e' % b_p.sum())
 
   # Solve for pressure
-  res = bicgstab( A_p, reshape(b_p, prod(rc)), tol=TOL )
-  p.val[:] = reshape(res[0], rc) 
-    
-  print("res[1] = ", res[1])
+  p.val[:] = bicgstab(A_p, p, b_p, TOL, False) 
     
   # Anchor it to values around zero (the absolute value of pressure
   # correction can get really volatile.  Although it is in prinicple not

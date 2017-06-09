@@ -15,6 +15,7 @@ from operators.all      import *
 from discretization.adj_n_bnds     import adj_n_bnds
 from discretization.advection      import advection
 from discretization.create_matrix  import create_matrix
+from solvers.all                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
@@ -58,8 +59,7 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
   f_t = b_t - c_t + i_t
 
   # Solve for temperature 
-  res0 = bicgstab( A_t, reshape(f_t, prod(rc)), tol=TOL )
-  t.val[:] = reshape(res0[0], rc) 
+  t.val[:] = cgs(A_t, t, f_t, TOL, False)
 
   adj_n_bnds(t)
 

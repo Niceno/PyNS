@@ -14,6 +14,7 @@ from discretization.adj_o_bnds     import adj_o_bnds
 from discretization.advection      import advection
 from discretization.create_matrix  import create_matrix
 from discretization.obst_zero_val  import obst_zero_val
+from solvers.all                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
@@ -98,25 +99,28 @@ def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
     f_w = obst_zero_val(w.pos, f_w, obst)
 
   # Solve for velocities
-  res0 = bicgstab( A_u, reshape(f_u, prod(ru)), tol=TOL )
-  res1 = bicgstab( A_v, reshape(f_v, prod(rv)), tol=TOL )
-  res2 = bicgstab( A_w, reshape(f_w, prod(rw)), tol=TOL )
-  u.val[:] = reshape(res0[0], ru)
-  v.val[:] = reshape(res1[0], rv)
-  w.val[:] = reshape(res2[0], rw)
-
+  u.val[:] = cgs(A_u, u, f_u, TOL, False)
+  v.val[:] = cgs(A_v, v, f_v, TOL, False)
+  w.val[:] = cgs(A_w, w, f_w, TOL, False)
+  
   # Update velocities in boundary cells
   adj_o_bnds((u,v,w), (dx,dy,dz), dt)
 
-  # Update face velocities (also substract cell-centered pressure gradients 
-  #                         and add staggered pressure gradients)
+  # Update face velocities 
+  # (For collocated arrangement also substract cell-centered 
+  # pressure gradients and add staggered pressure gradients)
   if d == C:
-    uf.val[:] = avg_x(u.val + dt /       rho  * (      p_tot_x     ))       \
-                            - dt / avg_x(rho) * (dif_x(p_tot) / avg_x(dx))  
-    vf.val[:] = avg_y(v.val + dt /       rho  * (      p_tot_y     ))       \
-                            - dt / avg_y(rho) * (dif_y(p_tot) / avg_y(dy))  
-    wf.val[:] = avg_z(w.val + dt /       rho  * (      p_tot_z     ))       \
-                            - dt / avg_z(rho) * (dif_z(p_tot) / avg_z(dz))  
+    uf.val[:]  = avg_x(u.val)
+    uf.val[:] += avg_x(dt / rho  * p_tot_x)
+    uf.val[:] -= dt / avg_x(rho) * (dif_x(p_tot) / avg_x(dx))  
+
+    vf.val[:]  = avg_y(v.val)
+    vf.val[:] += avg_y(dt / rho  * p_tot_y)
+    vf.val[:] -= dt / avg_y(rho) * (dif_y(p_tot) / avg_y(dy))  
+
+    wf.val[:]  = avg_z(w.val)       
+    wf.val[:] += avg_z(dt / rho  * p_tot_z)       
+    wf.val[:] -= dt / avg_z(rho) * (dif_z(p_tot) / avg_z(dz))  
 
     for j in (W,E):
       uf.bnd[j].val[:] = u.bnd[j].val[:]  
