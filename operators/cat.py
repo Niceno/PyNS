@@ -9,18 +9,18 @@ from numpy import concatenate
 
 # =============================================================================
 def cat(d, tup):
-  """
-  Args:
-    d:   Direction for catenation (X, Y or Z)
-    tup: Tuple containing whatever has to be sent to NumPy's function.
+    """
+    Args:
+      d:   Direction for catenation (X, Y or Z)
+      tup: Tuple containing whatever has to be sent to NumPy's function.
 
-  Returns:
-    Concatenad arrays.
+    Returns:
+      Concatenad arrays.
 
-  Note:
-    Actually, it would make perfect sense to derive separate functions for
-    catenating in "x", "y" and "z" directions.  Less arguments passing and
-    shorter syntax.
-  """
+    Note:
+      Actually, it would make perfect sense to derive separate functions for
+      catenating in "x", "y" and "z" directions.  Less arguments passing and
+      shorter syntax.
+    """
 
-  return concatenate(tup, d)  # end of function
+    return concatenate(tup, d)  # end of function

@@ -7,7 +7,7 @@ from standard import *
 
 # ScriNS modules
 from scrins.operators.avg import avg
-from scrins.operators.avg_x import avg_x 
+from scrins.operators.avg_x import avg_x
 from scrins.operators.avg_y import avg_y
 from scrins.operators.avg_z import avg_z
 from scrins.operators.cat import cat
@@ -104,11 +104,14 @@ def plot_tecplot(file_name, xyzn, variables):
         if v.pos == C:
             val = v.val
         elif v.pos == X:
-            val = avg_x(cat_x((v.bnd[W].val[:1, :, :], v.val, v.bnd[E].val[:1, :, :])))
+            val = avg_x(
+                cat_x((v.bnd[W].val[:1, :, :], v.val, v.bnd[E].val[:1, :, :])))
         elif v.pos == Y:
-            val = avg_y(cat_y((v.bnd[S].val[:, :1, :], v.val, v.bnd[N].val[:, :1, :])))
+            val = avg_y(
+                cat_y((v.bnd[S].val[:, :1, :], v.val, v.bnd[N].val[:, :1, :])))
         elif v.pos == Z:
-            val = avg_z(cat_z((v.bnd[B].val[:, :, :1], v.val, v.bnd[T].val[:, :, :1])))
+            val = avg_z(
+                cat_z((v.bnd[B].val[:, :, :1], v.val, v.bnd[T].val[:, :, :1])))
 
         file_id.write("\n# %s \n" % v.name)
         c = 0

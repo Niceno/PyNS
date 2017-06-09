@@ -11,7 +11,7 @@ from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.discretization.obst_zero_val import obst_zero_val
 from scrins.operators.avg import avg
-from scrins.operators.avg_x import avg_x 
+from scrins.operators.avg_x import avg_x
 from scrins.operators.avg_y import avg_y
 from scrins.operators.avg_z import avg_z
 from scrins.operators.cat import cat

@@ -6,7 +6,7 @@ Computes maximum Courant-Friedrich-Levy (CFD) number for the given velocity.
 from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.operators.avg import avg
-from scrins.operators.avg_x import avg_x 
+from scrins.operators.avg_x import avg_x
 from scrins.operators.avg_y import avg_y
 from scrins.operators.avg_z import avg_z
 

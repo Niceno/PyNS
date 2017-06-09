@@ -30,5 +30,6 @@ def main():
         print('run time {}: {:7.3f} s'.format(name, duration))
         print('total time: {:7.3f} s'.format(total_time))
 
+
 if __name__ == '__main__':
     main()
