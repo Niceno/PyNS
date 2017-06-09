@@ -1,22 +1,16 @@
 """
 Function to generate a parabolic profile over a set of cell centers,
-useful for specifying parabolic inlet velocity profiles.  
+useful for specifying parabolic inlet velocity profiles.
 
 It expects nodal coordinates as input, but sends values at cell centers back:
 
-Input coordinates at:    |-----|-----|-----|-----|-----|-----|-----|  
+Input coordinates at:    |-----|-----|-----|-----|-----|-----|-----|
 
 Output values at:           o-----o-----o-----o-----o-----o-----o
 """
 
-# Standard Python modules
-from standard import *
-
-# PyNS modules
-from constants.all import *
-from display.all   import *
-
-from operators.all import avg
+from copy import copy
+from scrins.operators.avg import avg
 
 # =============================================================================
 def par(mean_val, x_nodes):
@@ -25,10 +19,10 @@ def par(mean_val, x_nodes):
   Args:
     mean_val: Mean value the parabola will have.
     x_nodes:  Nodal coordinatels.
-    
+
   Returns:
     An array with values of parabolic function.
-    
+
   Note:
     It would really be useful to have a two-dimensional variant of this.
   """
@@ -38,12 +32,12 @@ def par(mean_val, x_nodes):
 
   # Normalized x coordinates (from -1 to +1)
   xn = copy(x_nodes)
-  
-  xn -= xn.min()                  
+
+  xn -= xn.min()
   xn /= (xn.max()-xn.min())
-  xn *= 2                               
-  xn -= 1  
-  
+  xn *= 2
+  xn -= 1
+
   xc = avg(xn)
 
   yc = (1.0-xc*xc) * max_val

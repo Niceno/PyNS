@@ -5,144 +5,158 @@ Discretizes and solves momentum equation (all three components).
 # Standard Python modules
 from standard import *
 
-# PyNS modules
-from constants.all      import *
-from operators.all      import *
-
-from discretization.adj_n_bnds     import adj_n_bnds
-from discretization.adj_o_bnds     import adj_o_bnds
-from discretization.advection      import advection
-from discretization.create_matrix  import create_matrix
-from discretization.obst_zero_val  import obst_zero_val
-
+# ScriNS modules
+from scrins.constants.coordinates import X, Y, Z
+from scrins.constants.compass import W, E, S, N, B, T, C
+from scrins.constants.solver import TOL
+from scrins.discretization.adj_o_bnds import adj_o_bnds
+from scrins.discretization.advection import advection
+from scrins.discretization.create_matrix import create_matrix
+from scrins.discretization.obst_zero_val import obst_zero_val
+from scrins.operators.avg import avg, avg_x, avg_y, avg_z
+#from scrins.operators.avg_x import avg_x
+#from scrins.operators.avg_y import avg_y
+#from scrins.operators.avg_z import avg_z
+from scrins.operators.cat import cat, cat_x, cat_y, cat_z
+#from scrins.operators.cat_x import cat_x
+#from scrins.operators.cat_y import cat_y
+#from scrins.operators.cat_z import cat_z
+from scrins.operators.dif import dif, dif_x, dif_y, dif_z
+#from scrins.operators.dif_x import dif_x
+#from scrins.operators.dif_y import dif_y
+#from scrins.operators.dif_z import dif_z
 # =============================================================================
+
+
 def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
-# -----------------------------------------------------------------------------
-  """
-  Args:
-    uvw:   Tuple with three velocity components, staggered or collocated. 
-           (Each component is created with "create_unknown" function.)
-    uvwf:  Tuple with three staggered velocity components (where each 
-           component is created with "pyns.create_unknown" function.
-    rho:   Three-dimensional matrix holding density for all cells.
-    mu:    Three-dimensional matrix holding dynamic viscosity.
-    p_tot: Three-dimensional matrix holding total pressure.
-    e_f:   Tuple containing three-dimensional matrices holding external 
-           forces in each direction.
-    dt:    Time step.
-    dxyz:  Tuple holding cell dimensions in "x", "y" and "z" directions.
-           Each cell dimension is a three-dimensional matrix.
-    obst:  Obstacle, three-dimensional matrix with zeros and ones.  It is
-           zero in fluid, one in solid.
+    """
+    Args:
+      uvw:   Tuple with three velocity components, staggered or collocated.
+             (Each component is created with "create_unknown" function.)
+      uvwf:  Tuple with three staggered velocity components (where each
+             component is created with "pyns.create_unknown" function.
+      rho:   Three-dimensional matrix holding density for all cells.
+      mu:    Three-dimensional matrix holding dynamic viscosity.
+      p_tot: Three-dimensional matrix holding total pressure.
+      e_f:   Tuple containing three-dimensional matrices holding external
+             forces in each direction.
+      dt:    Time step.
+      dxyz:  Tuple holding cell dimensions in "x", "y" and "z" directions.
+             Each cell dimension is a three-dimensional matrix.
+      obst:  Obstacle, three-dimensional matrix with zeros and ones.  It is
+             zero in fluid, one in solid.
 
-  Returns:
-    none, but input argument uvw is modified!      
-  """
+    Returns:
+      none, but input argument uvw is modified!
+    """
 
-  # Unpack tuples
-  u,   v,   w   = uvw
-  uf,  vf,  wf  = uvwf
-  dx,  dy,  dz  = dxyz
-  e_x, e_y, e_z = e_f
+    # Unpack tuples
+    u, v, w = uvw
+    uf, vf, wf = uvwf
+    dx, dy, dz = dxyz
+    e_x, e_y, e_z = e_f
 
-  # Fetch resolutions
-  ru = u.val.shape
-  rv = v.val.shape
-  rw = w.val.shape
-  
-  # Pre-compute geometrical quantities
-  dv = dx * dy * dz
+    # Fetch resolutions
+    ru = u.val.shape
+    rv = v.val.shape
+    rw = w.val.shape
 
-  d = u.pos
+    # Pre-compute geometrical quantities
+    dv = dx * dy * dz
 
-  # Create linear systems
-  A_u, b_u = create_matrix(u, rho/dt, mu, dxyz, obst, DIRICHLET)
-  A_v, b_v = create_matrix(v, rho/dt, mu, dxyz, obst, DIRICHLET)
-  A_w, b_w = create_matrix(w, rho/dt, mu, dxyz, obst, DIRICHLET)
- 
-  # Advection terms for momentum                            
-  c_u = advection(rho, u, uvwf, dxyz, dt, 'superbee');
-  c_v = advection(rho, v, uvwf, dxyz, dt, 'superbee');
-  c_w = advection(rho, w, uvwf, dxyz, dt, 'superbee');
+    d = u.pos
 
-  # Innertial term for momentum (this works for collocated and staggered)
-  i_u = u.old * avg(u.pos, rho) * avg(u.pos, dv) / dt
-  i_v = v.old * avg(v.pos, rho) * avg(v.pos, dv) / dt
-  i_w = w.old * avg(w.pos, rho) * avg(w.pos, dv) / dt
-  
-  # Compute staggered pressure gradients
-  p_tot_x = dif_x(p_tot) / avg_x(dx)
-  p_tot_y = dif_y(p_tot) / avg_y(dy)
-  p_tot_z = dif_z(p_tot) / avg_z(dz)
+    # Create linear systems
+    A_u, b_u = create_matrix(u, rho / dt, mu, dxyz, obst, 'd')
+    A_v, b_v = create_matrix(v, rho / dt, mu, dxyz, obst, 'd')
+    A_w, b_w = create_matrix(w, rho / dt, mu, dxyz, obst, 'd')
 
-  # Make pressure gradients cell-centered
-  if d == C:
-    p_tot_x = avg_x(cat_x((p_tot_x[:1,:,:], p_tot_x, p_tot_x[-1:,:,:])))
-    p_tot_y = avg_y(cat_y((p_tot_y[:,:1,:], p_tot_y, p_tot_y[:,-1:,:])))
-    p_tot_z = avg_z(cat_z((p_tot_z[:,:,:1], p_tot_z, p_tot_z[:,:,-1:])))
+    # Advection terms for momentum
+    c_u = advection(rho, u, uvwf, dxyz, dt, 'superbee')
+    c_v = advection(rho, v, uvwf, dxyz, dt, 'superbee')
+    c_w = advection(rho, w, uvwf, dxyz, dt, 'superbee')
 
-  # Total pressure gradients (this works for collocated and staggered)
-  p_st_u = p_tot_x * avg(u.pos, dv)
-  p_st_v = p_tot_y * avg(v.pos, dv)
-  p_st_w = p_tot_z * avg(w.pos, dv)
-  
-  # Full force terms for momentum equations (collocated and staggered)
-  f_u = b_u - c_u + i_u - p_st_u + e_x * avg(u.pos, dv)
-  f_v = b_v - c_v + i_v - p_st_v + e_y * avg(v.pos, dv)
-  f_w = b_w - c_w + i_w - p_st_w + e_z * avg(w.pos, dv)
+    # Innertial term for momentum (this works for collocated and staggered)
+    i_u = u.old * avg(u.pos, rho) * avg(u.pos, dv) / dt
+    i_v = v.old * avg(v.pos, rho) * avg(v.pos, dv) / dt
+    i_w = w.old * avg(w.pos, rho) * avg(w.pos, dv) / dt
 
-  # Take care of obsts in the domian
-  if obst.any() != 0:
-    f_u = obst_zero_val(u.pos, f_u, obst)
-    f_v = obst_zero_val(v.pos, f_v, obst)
-    f_w = obst_zero_val(w.pos, f_w, obst)
+    # Compute staggered pressure gradients
+    p_tot_x = dif_x(p_tot) / avg_x(dx)
+    p_tot_y = dif_y(p_tot) / avg_y(dy)
+    p_tot_z = dif_z(p_tot) / avg_z(dz)
 
-  # Solve for velocities
-  res0 = bicgstab( A_u, reshape(f_u, prod(ru)), tol=TOL )
-  res1 = bicgstab( A_v, reshape(f_v, prod(rv)), tol=TOL )
-  res2 = bicgstab( A_w, reshape(f_w, prod(rw)), tol=TOL )
-  u.val[:] = reshape(res0[0], ru)
-  v.val[:] = reshape(res1[0], rv)
-  w.val[:] = reshape(res2[0], rw)
+    # Make pressure gradients cell-centered
+    if d == C:
+        p_tot_x = avg_x(
+            cat_x((p_tot_x[:1, :, :], p_tot_x, p_tot_x[-1:, :, :])))
+        p_tot_y = avg_y(
+            cat_y((p_tot_y[:, :1, :], p_tot_y, p_tot_y[:, -1:, :])))
+        p_tot_z = avg_z(
+            cat_z((p_tot_z[:, :, :1], p_tot_z, p_tot_z[:, :, -1:])))
 
-  # Update velocities in boundary cells
-  adj_o_bnds((u,v,w), (dx,dy,dz), dt)
+    # Total pressure gradients (this works for collocated and staggered)
+    p_st_u = p_tot_x * avg(u.pos, dv)
+    p_st_v = p_tot_y * avg(v.pos, dv)
+    p_st_w = p_tot_z * avg(w.pos, dv)
 
-  # Update face velocities (also substract cell-centered pressure gradients 
-  #                         and add staggered pressure gradients)
-  if d == C:
-    uf.val[:] = avg_x(u.val + dt /       rho  * (      p_tot_x     ))       \
-                            - dt / avg_x(rho) * (dif_x(p_tot) / avg_x(dx))  
-    vf.val[:] = avg_y(v.val + dt /       rho  * (      p_tot_y     ))       \
-                            - dt / avg_y(rho) * (dif_y(p_tot) / avg_y(dy))  
-    wf.val[:] = avg_z(w.val + dt /       rho  * (      p_tot_z     ))       \
-                            - dt / avg_z(rho) * (dif_z(p_tot) / avg_z(dz))  
+    # Full force terms for momentum equations (collocated and staggered)
+    f_u = b_u - c_u + i_u - p_st_u + e_x * avg(u.pos, dv)
+    f_v = b_v - c_v + i_v - p_st_v + e_y * avg(v.pos, dv)
+    f_w = b_w - c_w + i_w - p_st_w + e_z * avg(w.pos, dv)
 
-    for j in (W,E):
-      uf.bnd[j].val[:] = u.bnd[j].val[:]  
-      vf.bnd[j].val[:] = avg_y(v.bnd[j].val[:])
-      wf.bnd[j].val[:] = avg_z(w.bnd[j].val[:])  
-    for j in (S,N):
-      uf.bnd[j].val[:] = avg_x(u.bnd[j].val[:])
-      vf.bnd[j].val[:] = v.bnd[j].val[:]
-      wf.bnd[j].val[:] = avg_z(w.bnd[j].val[:])  
-    for j in (B,T):  
-      uf.bnd[j].val[:] = avg_x(u.bnd[j].val[:])
-      vf.bnd[j].val[:] = avg_y(v.bnd[j].val[:])
-      wf.bnd[j].val[:] = w.bnd[j].val[:]  
+    # Take care of obsts in the domian
+    if obst.any() != 0:
+        f_u = obst_zero_val(u.pos, f_u, obst)
+        f_v = obst_zero_val(v.pos, f_v, obst)
+        f_w = obst_zero_val(w.pos, f_w, obst)
 
-  else:
-    uf.val[:] = u.val[:]
-    vf.val[:] = v.val[:]
-    wf.val[:] = w.val[:]
-    for j in (W,E,S,N,B,T):
-      uf.bnd[j].val[:] = u.bnd[j].val[:]
-      vf.bnd[j].val[:] = v.bnd[j].val[:]
-      wf.bnd[j].val[:] = w.bnd[j].val[:]
+    # Solve for velocities
+    res0 = bicgstab(A_u, reshape(f_u, prod(ru)), tol=TOL)
+    res1 = bicgstab(A_v, reshape(f_v, prod(rv)), tol=TOL)
+    res2 = bicgstab(A_w, reshape(f_w, prod(rw)), tol=TOL)
+    u.val[:] = reshape(res0[0], ru)
+    v.val[:] = reshape(res1[0], rv)
+    w.val[:] = reshape(res2[0], rw)
 
-  if obst.any() != 0:
-    uf.val[:] = obst_zero_val(X, uf.val, obst)
-    vf.val[:] = obst_zero_val(Y, vf.val, obst)
-    wf.val[:] = obst_zero_val(Z, wf.val, obst)
+    # Update velocities in boundary cells
+    adj_o_bnds((u, v, w), (dx, dy, dz), dt)
 
-  return  # end of function
+    # Update face velocities (also substract cell-centered pressure gradients
+    #                         and add staggered pressure gradients)
+    if d == C:
+        uf.val[:] = avg_x(u.val + dt / rho * (p_tot_x))       \
+                  - dt / avg_x(rho) * (dif_x(p_tot) / avg_x(dx))
+        vf.val[:] = avg_y(v.val + dt / rho * (p_tot_y))       \
+                  - dt / avg_y(rho) * (dif_y(p_tot) / avg_y(dy))
+        wf.val[:] = avg_z(w.val + dt / rho * (p_tot_z))       \
+                  - dt / avg_z(rho) * (dif_z(p_tot) / avg_z(dz))
+
+        for j in (W, E):
+            uf.bnd[j].val[:] = u.bnd[j].val[:]
+            vf.bnd[j].val[:] = avg_y(v.bnd[j].val[:])
+            wf.bnd[j].val[:] = avg_z(w.bnd[j].val[:])
+        for j in (S, N):
+            uf.bnd[j].val[:] = avg_x(u.bnd[j].val[:])
+            vf.bnd[j].val[:] = v.bnd[j].val[:]
+            wf.bnd[j].val[:] = avg_z(w.bnd[j].val[:])
+        for j in (B, T):
+            uf.bnd[j].val[:] = avg_x(u.bnd[j].val[:])
+            vf.bnd[j].val[:] = avg_y(v.bnd[j].val[:])
+            wf.bnd[j].val[:] = w.bnd[j].val[:]
+
+    else:
+        uf.val[:] = u.val[:]
+        vf.val[:] = v.val[:]
+        wf.val[:] = w.val[:]
+        for j in (W, E, S, N, B, T):
+            uf.bnd[j].val[:] = u.bnd[j].val[:]
+            vf.bnd[j].val[:] = v.bnd[j].val[:]
+            wf.bnd[j].val[:] = w.bnd[j].val[:]
+
+    if obst.any() != 0:
+        uf.val[:] = obst_zero_val(X, uf.val, obst)
+        vf.val[:] = obst_zero_val(Y, vf.val, obst)
+        wf.val[:] = obst_zero_val(Z, wf.val, obst)
+
+    return  # end of function

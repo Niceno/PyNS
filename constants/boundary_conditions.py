@@ -5,5 +5,5 @@ missing is PERIODIC.
 
 # Boundary conditions
 DIRICHLET = 10
-NEUMANN   = 11
-OUTLET    = 12
+NEUMANN = 11
+OUTLET = 12

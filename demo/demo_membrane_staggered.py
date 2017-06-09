@@ -12,7 +12,7 @@ membrane seems to be rather fast too.
 # Standard Python modules
 from standard import *
 
-# PyNS modules
+# ScriNS modules
 from constants.all       import *
 from operators.all       import *
 from display.all         import *
@@ -33,7 +33,7 @@ xn = (nodes(0, 0.1,  80), nodes(0,    0.1,  80))
 yn = (nodes(0, 0.01, 20), nodes(0.01, 0.03, 30))
 zn = (nodes(0, 0.1,  80), nodes(0,    0.1,  80))
 
-# Cell coordinates 
+# Cell coordinates
 xc = (avg(xn[AIR]), avg(xn[H2O]))
 yc = (avg(yn[AIR]), avg(yn[H2O]))
 zc = (avg(zn[AIR]), avg(zn[H2O]))
@@ -59,7 +59,7 @@ rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0]),  \
                       (prop[AIR][1], prop[H2O][1]),  \
                       (prop[AIR][2], prop[H2O][2]),  \
                       (prop[AIR][3], prop[H2O][3])
-                      
+
 # Time-stepping parameters
 dt  =    0.004  # time step
 ndt = 1000      # number of time steps
@@ -80,33 +80,33 @@ p_tot = [zeros(rc[AIR]), zeros(rc[H2O])]
 # Specify boundary conditions
 for k in range(0,nz[AIR]):
   vf[AIR].bnd[N].val[:,:1,k]=-0.005
-uf[AIR].bnd[E].typ[:1,:,:] = OUTLET 
+uf[AIR].bnd[E].typ[:1,:,:] = OUTLET
 uf[AIR].bnd[E].val[:1,:,:] = 0.1
 
 for k in range(0,nz[H2O]):
   uf[H2O].bnd[W].val[:1,:,k] = par(0.1, yn[H2O])
-uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
+uf[H2O].bnd[E].typ[:1,:,:] = OUTLET
 uf[H2O].bnd[E].val[:1,:,:] = 0.1
 
 for c in range(AIR,H2O):
   for j in (B,T):
-    uf[c].bnd[j].typ[:] = NEUMANN     
-    vf[c].bnd[j].typ[:] = NEUMANN     
-    wf[c].bnd[j].typ[:] = NEUMANN     
-  
-t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
+    uf[c].bnd[j].typ[:] = NEUMANN
+    vf[c].bnd[j].typ[:] = NEUMANN
+    wf[c].bnd[j].typ[:] = NEUMANN
+
+t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET
 t[AIR].bnd[S].val[:,:1,:] = 60
-t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET  
+t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET
 t[AIR].bnd[N].val[:,:1,:] = 70
 
 t[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 t[H2O].bnd[W].val[:1,:,:] = 80
-t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET  
+t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET
 t[H2O].bnd[S].val[:,:1,:] = 70
-  
+
 t[AIR].val[:,:,:] = 50;
 t[H2O].val[:,:,:] = 70;
-  
+
 for c in (AIR,H2O):
   adj_n_bnds(p[c])
   adj_n_bnds(t[c])
@@ -121,13 +121,13 @@ obst = [zeros(rc[AIR]), zeros(rc[H2O])]
 
 # ----------
 #
-# Time loop 
+# Time loop
 #
 # ----------
 for ts in range(1,ndt+1):
 
   print_time_step(ts)
- 
+
   # -----------------
   # Store old values
   # -----------------
@@ -145,29 +145,29 @@ for ts in range(1,ndt+1):
   const = kappa[H2O][:, :1,:] * dy[AIR][:,-1:,:]  \
         / kappa[AIR][:,-1:,:] / dy[H2O][:, :1,:]
   t_mem_old = (const * t[H2O].val[:,:1,:] + t[AIR].val[:,-1:,:])  \
-            / (1+const)     
-  
+            / (1+const)
+
   while True:
     for c in (AIR,H2O):
       calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
              dt, (dx[c],dy[c],dz[c]), obst[c])
-  
+
     # Compute new temperature of the membrane
     const = kappa[H2O][:, :1,:] * dy[AIR][:,-1:,:]  \
           / kappa[AIR][:,-1:,:] / dy[H2O][:, :1,:]
     t_mem = (const * t[H2O].val[:,:1,:] + t[AIR].val[:,-1:,:])  \
-          / (1+const)     
+          / (1+const)
 
     # Update boundary conditions with membrane's temperature
-    t[H2O].bnd[S].val[:,:1,:] = t_mem  
+    t[H2O].bnd[S].val[:,:1,:] = t_mem
     t[AIR].bnd[N].val[:,:1,:] = t_mem
-      
+
     # Check if convergence has been reached
     eps = abs(t_mem-t_mem_old).max()
     print('Maximum temperature error in the membrane = %5.3e' % eps)
     if eps < 0.001:
       break
-      
+
     t_mem_old = t_mem
 
   # ----------------------
@@ -175,35 +175,35 @@ for ts in range(1,ndt+1):
   # ----------------------
   for c in (AIR,H2O):
     g_v = -G * avg(Y, rho[c])
-  
+
     ef = zeros(ru[c]), g_v, zeros(rw[c])
-    
+
     calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
              p_tot[c], ef, dt, (dx[c],dy[c],dz[c]), obst[c])
-  
+
   # ---------
   # Pressure
   # ---------
   for c in (AIR,H2O):
     calc_p(p[c], (uf[c],vf[c],wf[c]), rho[c],  \
            dt, (dx[c],dy[c],dz[c]), obst[c])
-  
+
     p_tot[c] = p_tot[c] + p[c].val
-  
+
   # --------------------
   # Velocity correction
   # --------------------
   for c in (AIR,H2O):
     corr_uvw((uf[c],vf[c],wf[c]), p[c], rho[c],  \
              dt, (dx[c],dy[c],dz[c]), obst[c])
- 
-  # Compute volume balance for checking 
+
+  # Compute volume balance for checking
   for c in (AIR,H2O):
     err = vol_balance((uf[c],vf[c],wf[c]),  \
                       (dx[c],dy[c],dz[c]), obst[c])
     print('Maximum volume error after correction: %12.5e' % abs(err).max())
 
-  # Check the CFL number too 
+  # Check the CFL number too
   for c in (AIR,H2O):
     cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
     print('Maximum CFL number: %12.5e' % cfl)
