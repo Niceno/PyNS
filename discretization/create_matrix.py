@@ -195,4 +195,4 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     
   diag = array([0, +ny*nz, -ny*nz, +nz, -nz, +1, -1])  
 
-  return spdiags(data, diag, n, n), b  # end of function
+  return c, b  # end of function

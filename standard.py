@@ -25,6 +25,7 @@ from scipy               import array,        \
                                 log10,        \
                                 matrix,       \
                                 meshgrid,     \
+                                multiply,     \
                                 ndarray,      \
                                 ones,         \
                                 outer,        \
@@ -35,6 +36,3 @@ from scipy               import array,        \
                                 transpose,    \
                                 zeros
 from scipy.linalg        import solve
-from scipy.sparse        import spdiags
-from scipy.sparse.linalg import bicgstab,     \
-                                spsolve
