@@ -9,10 +9,10 @@ from standard import *
 from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.constants.boundary_conditions import DIRICHLET, NEUMANN, OUTLET
-from scrins.operators.dif import dif
-from scrins.operators.dif_x import dif_x
-from scrins.operators.dif_y import dif_y
-from scrins.operators.dif_z import dif_z
+from scrins.operators.dif import dif, dif_x, dif_y, dif_z
+#from scrins.operators.dif_x import dif_x
+#from scrins.operators.dif_y import dif_y
+#from scrins.operators.dif_z import dif_z
 
 # =============================================================================
 

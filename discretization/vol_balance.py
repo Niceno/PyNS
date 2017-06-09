@@ -10,14 +10,14 @@ from standard import *
 from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import W, E, S, N, B, T, C
 from scrins.discretization.obst_zero_val import obst_zero_val
-from scrins.operators.cat import cat
-from scrins.operators.cat_x import cat_x
-from scrins.operators.cat_y import cat_y
-from scrins.operators.cat_z import cat_z
-from scrins.operators.dif import dif
-from scrins.operators.dif_x import dif_x
-from scrins.operators.dif_y import dif_y
-from scrins.operators.dif_z import dif_z
+from scrins.operators.cat import cat, cat_x, cat_y, cat_z
+#from scrins.operators.cat_x import cat_x
+#from scrins.operators.cat_y import cat_y
+#from scrins.operators.cat_z import cat_z
+from scrins.operators.dif import dif, dif_x, dif_y, dif_z
+#from scrins.operators.dif_x import dif_x
+#from scrins.operators.dif_y import dif_y
+#from scrins.operators.dif_z import dif_z
 
 # =============================================================================
 

@@ -12,8 +12,7 @@ parameters are sent (starting and ending cell size).
 from standard import *
 
 # ScriNS modules
-import scrins.constants
-import scrins.operators
+
 
 # =============================================================================
 

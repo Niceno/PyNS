@@ -13,18 +13,18 @@ from scrins.discretization.adj_o_bnds import adj_o_bnds
 from scrins.discretization.advection import advection
 from scrins.discretization.create_matrix import create_matrix
 from scrins.discretization.obst_zero_val import obst_zero_val
-from scrins.operators.avg import avg
-from scrins.operators.avg_x import avg_x
-from scrins.operators.avg_y import avg_y
-from scrins.operators.avg_z import avg_z
-from scrins.operators.cat import cat
-from scrins.operators.cat_x import cat_x
-from scrins.operators.cat_y import cat_y
-from scrins.operators.cat_z import cat_z
-from scrins.operators.dif import dif
-from scrins.operators.dif_x import dif_x
-from scrins.operators.dif_y import dif_y
-from scrins.operators.dif_z import dif_z
+from scrins.operators.avg import avg, avg_x, avg_y, avg_z
+#from scrins.operators.avg_x import avg_x
+#from scrins.operators.avg_y import avg_y
+#from scrins.operators.avg_z import avg_z
+from scrins.operators.cat import cat, cat_x, cat_y, cat_z
+#from scrins.operators.cat_x import cat_x
+#from scrins.operators.cat_y import cat_y
+#from scrins.operators.cat_z import cat_z
+from scrins.operators.dif import dif, dif_x, dif_y, dif_z
+#from scrins.operators.dif_x import dif_x
+#from scrins.operators.dif_y import dif_y
+#from scrins.operators.dif_z import dif_z
 # =============================================================================
 
 

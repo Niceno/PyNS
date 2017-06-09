@@ -6,14 +6,14 @@ Exports results in Tecplot (TM) ASCII format.
 from standard import *
 
 # ScriNS modules
-from scrins.operators.avg import avg
-from scrins.operators.avg_x import avg_x
-from scrins.operators.avg_y import avg_y
-from scrins.operators.avg_z import avg_z
-from scrins.operators.cat import cat
-from scrins.operators.cat_x import cat_x
-from scrins.operators.cat_y import cat_y
-from scrins.operators.cat_z import cat_z
+from scrins.operators.avg import avg, avg_x, avg_y, avg_z 
+#from scrins.operators.avg_x import avg_x
+#from scrins.operators.avg_y import avg_y
+#from scrins.operators.avg_z import avg_z
+from scrins.operators.cat import cat, cat_x, cat_y, cat_z
+#from scrins.operators.cat_x import cat_x
+#from scrins.operators.cat_y import cat_y
+#from scrins.operators.cat_z import cat_z
 from scrins.constants.coordinates import X, Y, Z
 from scrins.constants.compass import C
 

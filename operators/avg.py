@@ -74,3 +74,41 @@ def avg(*args):
     # arguments is wrong
 
     return a  # end of function
+
+def avg_x(a):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for averaging.
+
+    Returns:
+      Matrix with averaged values.
+    """
+
+    return (a[1:, :, :] + a[:-1, :, :]) * 0.5  # end of function
+
+
+def avg_y(a):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for averaging.
+
+    Returns:
+      Matrix with averaged values.
+    """
+
+    return (a[:, 1:, :] + a[:, :-1, :]) * 0.5  # end of function
+
+def avg_z(a):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for averaging.
+
+    Returns:
+      Matrix with averaged values.
+    """
+
+    return (a[:, :, 1:] + a[:, :, :-1]) * 0.5  # end of function
+

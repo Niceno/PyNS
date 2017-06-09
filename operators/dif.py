@@ -76,3 +76,40 @@ def dif(*args):
     # arguments is wrong
 
     return  # end of function
+
+def dif_x(a):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for differencing.
+
+    Returns:
+      Matrix with differenced values.
+    """
+
+    return (a[1:, :, :] - a[:-1, :, :])  # end of function
+
+def dif_y(a):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for differencing.
+
+    Returns:
+      Matrix with differenced values.
+    """
+
+    return (a[:, 1:, :] - a[:, :-1, :])  # end of function
+
+def dif_z(a):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for differencing.
+
+    Returns:
+      Matrix with differenced values.
+    """
+
+    return (a[:, :, 1:] - a[:, :, :-1])  # end of function
+

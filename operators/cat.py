@@ -6,7 +6,7 @@ memory space.
 
 from numpy import concatenate
 
-
+from scrins.constants.coordinates import X, Y, Z
 # =============================================================================
 def cat(d, tup):
     """
@@ -24,3 +24,41 @@ def cat(d, tup):
     """
 
     return concatenate(tup, d)  # end of function
+
+def cat_x(tup):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      tup: Tuple containing whatever has to be sent to NumPy's function.
+
+    Returns:
+      Concatenad arrays or matrices.
+    """
+
+    return concatenate(tup, X)  # end of function
+
+def cat_y(tup):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      tup: Tuple containing whatever has to be sent to NumPy's function.
+
+    Returns:
+      Concatenad arrays or matrices.
+    """
+
+    return concatenate(tup, Y)  # end of function
+
+
+def cat_z(tup):
+    # -----------------------------------------------------------------------------
+    """
+    Args:
+      tup: Tuple containing whatever has to be sent to NumPy's function.
+
+    Returns:
+      Concatenad arrays or matrices.
+    """
+
+    return concatenate(tup, Z)  # end of function
+
