@@ -5,18 +5,18 @@ Elegantly prints the current time step on the Python console.
 # =============================================================================
 def print_time_step(ts):
 # -----------------------------------------------------------------------------
-  """
-  Args:
-    ts: Time step.
-    
-  Returns:
-    none!
-  """
+    """
+    Args:
+      ts: Time step.
 
-  print('+======================+') 
-  print('|                      |')
-  print('|  Time step = ' +'%6d' %ts + '  |')
-  print('|                      |')
-  print('+======================+')
+    Returns:
+      none!
+    """
 
-  return  # end of function
+    print('+======================+')
+    print('|                      |')
+    print('|  Time step = ' +'%6d' %ts + '  |')
+    print('|                      |')
+    print('+======================+')
+
+    return  # end of function
