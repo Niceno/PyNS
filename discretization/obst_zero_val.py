@@ -12,27 +12,27 @@ from pyns.operators.all import *
 # =============================================================================
 def obst_zero_val(pos, val, obst):
 # -----------------------------------------------------------------------------
-  """
-  Args:
-    pos:  Position of the variable (C, X, Y or Z).
-    val:  Value to be set in the obstacle.
-    obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
-          zero in fluid, one in solid.
-  """
+    """
+    Args:
+      pos:  Position of the variable (C, X, Y or Z).
+      val:  Value to be set in the obstacle.
+      obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
+            zero in fluid, one in solid.
+    """
 
-  if pos == C:  
-    val = val * lnot(obst)
-    
-  elif pos == X:
-    obst_x = mx(obst[:-1,:,:], obst[1:,:,:])
-    val = val * lnot(obst_x)
-    
-  elif pos == Y: 
-    obst_y = mx(obst[:,:-1,:], obst[:,1:,:])
-    val = val * lnot(obst_y)
-    
-  elif pos == Z: 
-    obst_z = mx(obst[:,:,:-1], obst[:,:,1:])
-    val = val * lnot(obst_z)
+    if pos == C:
+        val = val * lnot(obst)
 
-  return val  # end of function
+    elif pos == X:
+        obst_x = mx(obst[:-1,:,:], obst[1:,:,:])
+        val = val * lnot(obst_x)
+
+    elif pos == Y:
+        obst_y = mx(obst[:,:-1,:], obst[:,1:,:])
+        val = val * lnot(obst_y)
+
+    elif pos == Z:
+        obst_z = mx(obst[:,:,:-1], obst[:,:,1:])
+        val = val * lnot(obst_z)
+
+    return val  # end of function
