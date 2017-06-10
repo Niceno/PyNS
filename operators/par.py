@@ -1,10 +1,10 @@
 """
 Function to generate a parabolic profile over a set of cell centers,
-useful for specifying parabolic inlet velocity profiles.  
+useful for specifying parabolic inlet velocity profiles.
 
 It expects nodal coordinates as input, but sends values at cell centers back:
 
-Input coordinates at:    |-----|-----|-----|-----|-----|-----|-----|  
+Input coordinates at:    |-----|-----|-----|-----|-----|-----|-----|
 
 Output values at:           o-----o-----o-----o-----o-----o-----o
 """
@@ -21,31 +21,31 @@ from pyns.operators.all import avg
 # =============================================================================
 def par(mean_val, x_nodes):
 # -----------------------------------------------------------------------------
-  """
-  Args:
-    mean_val: Mean value the parabola will have.
-    x_nodes:  Nodal coordinatels.
-    
-  Returns:
-    An array with values of parabolic function.
-    
-  Note:
-    It would really be useful to have a two-dimensional variant of this.
-  """
+    """
+    Args:
+      mean_val: Mean value the parabola will have.
+      x_nodes:  Nodal coordinatels.
 
-  # It is known that maximum of a parabola is 3/2 of its mean value
-  max_val = mean_val * 3/2
+    Returns:
+      An array with values of parabolic function.
 
-  # Normalized x coordinates (from -1 to +1)
-  xn = copy(x_nodes)
-  
-  xn -= xn.min()                  
-  xn /= (xn.max()-xn.min())
-  xn *= 2                               
-  xn -= 1  
-  
-  xc = avg(xn)
+    Note:
+      It would really be useful to have a two-dimensional variant of this.
+    """
 
-  yc = (1.0-xc*xc) * max_val
+    # It is known that maximum of a parabola is 3/2 of its mean value
+    max_val = mean_val * 3/2
 
-  return yc  # end of function
+    # Normalized x coordinates (from -1 to +1)
+    xn = copy(x_nodes)
+
+    xn -= xn.min()
+    xn /= (xn.max()-xn.min())
+    xn *= 2
+    xn -= 1
+
+    xc = avg(xn)
+
+    yc = (1.0-xc*xc) * max_val
+
+    return yc  # end of function

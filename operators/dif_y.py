@@ -1,7 +1,7 @@
 """
 Returns runnig difference in "y" direction of the matrix sent as parameter.
 
-Returning matrix will have one element less in "y" direction. 
+Returning matrix will have one element less in "y" direction.
 
 Note:
   Difference is NOT derivative.  To find a derivative, you should divide
@@ -11,12 +11,12 @@ Note:
 # =============================================================================
 def dif_y(a):
 # -----------------------------------------------------------------------------
-  """
-  Args: 
-    a: matrix for differencing.
-      
-  Returns:
-    Matrix with differenced values.
-  """
+    """
+    Args:
+      a: matrix for differencing.
 
-  return (a[:,1:,:] - a[:,:-1,:])  # end of function
+    Returns:
+      Matrix with differenced values.
+    """
+
+    return (a[:,1:,:] - a[:,:-1,:])  # end of function

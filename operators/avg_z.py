@@ -1,7 +1,7 @@
 """
 Returns runnig average in "z" direction of the matrix sent as parameter.
 
-Returning matrix will have one element less in "z" direction. 
+Returning matrix will have one element less in "z" direction.
 
 Example:
 
@@ -10,7 +10,7 @@ Example:
 
   Returnig array:    o-------o-------o-------o-------o     => five elements
                      0       1       2       3       4
-                     
+
   Element 0 in the returning array will be the average between the values
   in elements 1 and 0 in the sending array.
 """
@@ -18,12 +18,12 @@ Example:
 # =============================================================================
 def avg_z(a):
 # -----------------------------------------------------------------------------
-  """
-  Args: 
-    a: matrix for averaging.
-      
-  Returns:
-    Matrix with averaged values.
-  """
+    """
+    Args:
+      a: matrix for averaging.
 
-  return (a[:, :, 1:] + a[:,  :,  :-1]) * 0.5  # end of function
+    Returns:
+      Matrix with averaged values.
+    """
+
+    return (a[:, :, 1:] + a[:,  :,  :-1]) * 0.5  # end of function
