@@ -37,7 +37,7 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   uf, vf, wf = uvwf
   dx, dy, dz = dxyz
   
-  d = phi.pos
+  pos = phi.pos
 
   # Pre-compute geometrical quantities
   sx = dy * dz
@@ -47,7 +47,7 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   # ------------------------------------------------
   # Specific for cell-centered transported variable
   # ------------------------------------------------
-  if d == C:  
+  if pos == C:  
       
     # Facial values of physical properties including boundary cells
     rho_x_fac = cat_x((rho[:1,:,:], avg_x(rho), rho[-1:,:,:]))  # nxp,ny, nz
@@ -79,7 +79,7 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   # -----------------------------------------------------------
   # Specific for transported variable staggered in x direction
   # -----------------------------------------------------------
-  if d == X:  
+  if pos == X:  
     
     # Facial values of physical properties including boundary cells
     rho_x_fac = rho                             # nx, ny, nz
@@ -121,7 +121,7 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   # -----------------------------------------------------------
   # Specific for transported variable staggered in y direction
   # -----------------------------------------------------------
-  if d == Y:  
+  if pos == Y:  
     
     # Facial values of physical properties including boundary cells
     rho_nod_x = avg_y(avg_x(rho) )              # nxm,nym,nz
@@ -163,7 +163,7 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   # -----------------------------------------------------------
   # Specific for transported variable staggered in z direction
   # -----------------------------------------------------------
-  if d == Z:
+  if pos == Z:
     
     # Facial values of physical properties including boundary cells
     rho_nod_x = avg_z(avg_x(rho) )              # nxm,ny, nzm

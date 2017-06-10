@@ -10,28 +10,28 @@ from pyns.constants.all import *
 from pyns.operators.all import *
 
 # =============================================================================
-def obst_zero_val(d, val, obst):
+def obst_zero_val(pos, val, obst):
 # -----------------------------------------------------------------------------
   """
   Args:
-    d:    Position of the variable (C, X, Y or Z).
+    pos:  Position of the variable (C, X, Y or Z).
     val:  Value to be set in the obstacle.
     obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
           zero in fluid, one in solid.
   """
 
-  if d == C:  
+  if pos == C:  
     val = val * lnot(obst)
     
-  elif d == X:
+  elif pos == X:
     obst_x = mx(obst[:-1,:,:], obst[1:,:,:])
     val = val * lnot(obst_x)
     
-  elif d == Y: 
+  elif pos == Y: 
     obst_y = mx(obst[:,:-1,:], obst[:,1:,:])
     val = val * lnot(obst_y)
     
-  elif d == Z: 
+  elif pos == Z: 
     obst_z = mx(obst[:,:,:-1], obst[:,:,1:])
     val = val * lnot(obst_z)
 

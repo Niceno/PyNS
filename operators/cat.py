@@ -11,11 +11,11 @@ from pyns.standard import *
 from pyns.constants.all import *
 
 # =============================================================================
-def cat(d, tup):
+def cat(dir, tup):
 # -----------------------------------------------------------------------------
   """
   Args:
-    d:   Direction for catenation (X, Y or Z)
+    dir: Direction for catenation (X, Y or Z)
     tup: Tuple containing whatever has to be sent to NumPy's function.
     
   Returns:
@@ -27,4 +27,4 @@ def cat(d, tup):
     shorter syntax.
   """
   
-  return concatenate(tup, d)  # end of function
+  return concatenate(tup, dir)  # end of function
