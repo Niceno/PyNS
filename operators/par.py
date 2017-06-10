@@ -1,6 +1,6 @@
 """
-Function to generate a parabolic profile over a set of cell centers,
-useful for specifying parabolic inlet velocity profiles.
+Function to generate a parabolic profile over a set of cell centers.
+It is useful for specifying parabolic inlet velocity profiles.
 
 It expects nodal coordinates as input, but sends values at cell centers back:
 

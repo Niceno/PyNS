@@ -28,7 +28,7 @@ from pyns.constants.all import *
 def avg(*args):
 # -----------------------------------------------------------------------------
     """
-    Args: Number of input arguments can be one or two, depending if one wants 
+    Args: Number of input arguments can be one or two, depending if one wants
           to run an average on array or matrix.
 
       One argument provided (for arrays)
@@ -42,9 +42,10 @@ def avg(*args):
       Array or matrix with averaged values.
 
     Note:
-      Actually, it would make perfect sense to derive separate functions for
-      averaging in "x", "y" and "z" directions.  Less arguments passing, less
-      arguments parsing, and fewer "if" statements.
+      Separate functions for averaging in "x", "y" and "z" directions
+      are also defined.  They require fewer arguments being passed and
+      shorter syntax.  This function, however, is still usefull in
+      instances in which the averaging direction is not predefined.
     """
 
     # Only one argument is sent - perform

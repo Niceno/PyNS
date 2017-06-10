@@ -32,8 +32,8 @@ from pyns.constants.all import *
 def dif(*args):
 # -----------------------------------------------------------------------------
     """
-    Args: Number of input arguments can be one or two, depending if one wants 
-          to run a difference on array or matrix.
+    Args: Number of input arguments can be one or two, depending if one
+          wants to run a difference on array or matrix.
 
       One argument provided (for arrays)
         args[0]: Array for differencing.
@@ -46,9 +46,10 @@ def dif(*args):
       Array or matrix with differenced values.
 
     Note:
-      Actually, it would make perfect sense to derive separate functions for
-      differencing in "x", "y" and "z" directions.  Less arguments passing, 
-      less arguments parsing, and fewer "if" statements.
+      Separate functions for differencing in "x", "y" and "z" directions
+      are also defined.  They require fewer arguments being passed and
+      shorter syntax.  This function, however, is still usefull in
+      instances in which the differencing direction is not predefined.
     """
 
     # Only one argument is sent - perform

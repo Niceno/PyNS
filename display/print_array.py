@@ -13,9 +13,9 @@ specified with the function call.
 def print_array(*args):
 # -----------------------------------------------------------------------------
     """
-    Args: Number of input arguments can be one or two, depending if one wants
-          to print the array with entries in default format (one argument),
-          or with specified format (two arguments).
+    Args: Number of input arguments can be one or two, depending if one
+          wants to print the array with entries in default format (one
+          argument), or with specified format (two arguments).
 
       One argument provided (for defualt format)
         args[0]: Array to be printed.

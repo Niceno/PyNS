@@ -21,8 +21,8 @@ def cfl_max(uvw, dt, dxyz):
       cfl: Floating point number holding the maximum value of CFL.
 
     Note:
-      It could be written in a more compact way, without unpacking the tuples,
-      but that would only lead to poorer readability of the code.
+      It could be written in a more compact way, without unpacking the
+      tuples, but that would only lead to poorer readability of the code.
     """
 
     # Unpack received tuples

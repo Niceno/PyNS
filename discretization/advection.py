@@ -17,15 +17,15 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     """
     Args:
       rho:      Three-dimensional matrix holding physical property in advection
-                term (density or density times capacity ...) for all cells.
+                term (density or density times capacity ...) for cells.
       phi:      Unknown transported by advection (from "create_unknown").
       uvwf:     Tuple with three staggered velocity components (where each
                 component is created with "create_unknown" function.
       dxyz:     Tuple holding cell dimensions in "x", "y" and "z" directions.
                 Each cell dimension is a three-dimensional matrix.
       dt:       Time step.
-      lim_name: Limiter name.  Can be: "upwind", "minmod", "koren" and 
-                "superbee"
+      lim_name: Limiter name.
+                Can be: "upwind", "minmod", "koren" and "superbee"
 
     Returns:
       Three-dimensional matrix with advection term.
@@ -51,9 +51,15 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     if pos == C:
 
         # Facial values of physical properties including boundary cells
-        rho_x_fac = cat_x((rho[:1,:,:], avg_x(rho), rho[-1:,:,:]))  # nxp,ny,nz
-        rho_y_fac = cat_y((rho[:,:1,:], avg_y(rho), rho[:,-1:,:]))  # nx,nyp,nz
-        rho_z_fac = cat_z((rho[:,:,:1], avg_z(rho), rho[:,:,-1:]))  # nx,ny,nzp
+        rho_x_fac = cat_x((rho[:1,:,:],  \
+                           avg_x(rho),   \
+                           rho[-1:,:,:]))   # nxp,ny, nz
+        rho_y_fac = cat_y((rho[:,:1,:],  \
+                           avg_y(rho),   \
+                           rho[:,-1:,:]))   # nx, nyp,nz
+        rho_z_fac = cat_z((rho[:,:,:1],  \
+                           avg_z(rho),   \
+                           rho[:,:,-1:]))   # nx, ny, nzp
 
         # Facial values of areas including boundary cells
         a_x_fac = cat_x((sx[:1,:,:], avg_x(sx), sx[-1:,:,:]))

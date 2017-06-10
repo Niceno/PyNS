@@ -33,8 +33,8 @@ def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
       dt:    Time step.
       dxyz:  Tuple holding cell dimensions in "x", "y" and "z" directions.
              Each cell dimension is a three-dimensional matrix.
-      obst:  Obstacle, three-dimensional matrix with zeros and ones.  It is
-             zero in fluid, one in solid.
+      obst:  Obstacle, three-dimensional matrix with zeros and ones.
+             It is zero in fluid, one in solid.
 
     Returns:
       none, but input argument uvw is modified!

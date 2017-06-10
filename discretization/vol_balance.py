@@ -7,8 +7,8 @@ hand side in the pressure-Poisson equation.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all      import *
-from pyns.operators.all      import *
+from pyns.constants.compass import *
+from pyns.operators.all     import *
 
 from pyns.discretization.obst_zero_val  import obst_zero_val
 
@@ -21,13 +21,13 @@ def vol_balance(uvwf, dxyz, obst):
             component is created with "create_unknown" function.
       dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
             Each cell dimension is a three-dimensional array.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
-            zero in fluid, one in solid.
+      obst: Obstacle, three-dimensional matrix with zeros and ones.
+            It is zero in fluid, one in solid.
 
     Note:
-      "obst" is an optional parameter.  If it is not sent, the source won't be
-      set to zero inside the obstacle.  That is important for calculation of
-      pressure, see function "pyns.calc_p" as well.
+      "obst" is an optional parameter.  If it is not sent, the source
+      won't be set to zero inside the obstacle.  That is important for
+      calculation of pressure, see function "calc_p" as well.
     """
 
     # Unpack tuples

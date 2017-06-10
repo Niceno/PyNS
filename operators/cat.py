@@ -22,9 +22,10 @@ def cat(dir, tup):
       Concatenad arrays.
 
     Note:
-      Actually, it would make perfect sense to derive separate functions for
-      catenating in "x", "y" and "z" directions.  Less arguments passing and
-      shorter syntax.
+      Separate functions for catenating in "x", "y" and "z" directions
+      are also defined.  They require fewer arguments being passed and
+      shorter syntax.  This function, however, is still usefull in
+      instances in which the catenating direction is not predefined.
     """
 
     return concatenate(tup, dir)  # end of function

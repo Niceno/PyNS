@@ -1,11 +1,11 @@
 """
 Creates uniform or non-uniform node coordinates in one dimension.
 
-Uniform distribution is obtained if only three parameters are sent (for
-starting and ending coordinate and the number of cells).
+Uniform distribution is obtained if only three parameters are sent
+(for starting and ending coordinate and the number of cells).
 
-Non-uniform distribution is obtained if, in addition to the above, two more
-parameters are sent (starting and ending cell size).
+Non-uniform distribution is obtained if, in addition to the above,
+two more parameters are sent (starting and ending cell size).
 """
 
 # Standard Python modules
@@ -19,13 +19,13 @@ from pyns.operators.all      import *
 def nodes(*args):
 # -----------------------------------------------------------------------------
     """
-    Args: Number of input arguments can be three or five, depending if uniform
-          or non-uniform node distribution is desired.
+    Args: Number of input arguments can be three or five, depending if
+          uniform or non-uniform node distribution is desired.
 
       Three arguments provided (for uniform meshes)
         args[0]: Starting coordinate.
         args[1]: Ending coordinate.
-        args[2]: Number of cells (number of nodes is greater by one than this).
+        args[2]: Number of cells (number of nodes minus one).
 
       Five arguments provided (for non-uniform meshes)
         args[0]: Same as above.
@@ -35,7 +35,7 @@ def nodes(*args):
         args[4]: Ending cell size.
 
     Returns:
-      An array with node coordinates (size is numbner of cells plus one).
+      An array with node coordinates (size is number of cells plus one).
 
     Examples:
 

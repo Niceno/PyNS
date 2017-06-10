@@ -29,10 +29,10 @@ def adj_o_bnds(uvw, dxyz, dt):
     of the computational domain.  Clearly, areas of inlets and outlets is
     computed along the way as well.
 
-    In addition to that, the volume balance must be ensured to make sure that
-    the volume which enters the domain is exactly the same as the volume which
-    leaves it.  Convective outflow doesn't ensure it, so the outflow velocities
-    are scaled to enforce it.
+    In addition to that, the volume balance must be ensured to make sure
+    that the volume which enters the domain is exactly the same as the
+    volume which leaves it.  Convective outflow doesn't ensure it, so the
+    outflow velocities are scaled to enforce it.
     """
 
     # Unpack tuples
@@ -169,29 +169,47 @@ def adj_o_bnds(uvw, dxyz, dt):
     # Correction outflow by applying convective boundary condition
     # -------------------------------------------------------------
     else:
-        du_dx_w = (u.val[ :1,:,:]-u.bnd[W].val[:1,:,:])/dx[ :1,:,:]
-        dv_dx_w = (v.val[ :1,:,:]-v.bnd[W].val[:1,:,:])/avg(v.pos, dx[ :1,:,:])
-        dw_dx_w = (w.val[ :1,:,:]-w.bnd[W].val[:1,:,:])/avg(w.pos, dx[ :1,:,:])
+        du_dx_w = (u.val[ :1,:,:]-u.bnd[W].val[:1,:,:])  \
+                /            dx[ :1,:,:]
+        dv_dx_w = (v.val[ :1,:,:]-v.bnd[W].val[:1,:,:])  \
+                / avg(v.pos, dx[ :1,:,:])
+        dw_dx_w = (w.val[ :1,:,:]-w.bnd[W].val[:1,:,:])  \
+                / avg(w.pos, dx[ :1,:,:])
 
-        du_dx_e = (u.val[-1:,:,:]-u.bnd[E].val[:1,:,:])/dx[-1:,:,:]
-        dv_dx_e = (v.val[-1:,:,:]-v.bnd[E].val[:1,:,:])/avg(v.pos, dx[-1:,:,:])
-        dw_dx_e = (w.val[-1:,:,:]-w.bnd[E].val[:1,:,:])/avg(w.pos, dx[-1:,:,:])
+        du_dx_e = (u.val[-1:,:,:]-u.bnd[E].val[:1,:,:])  \
+                /            dx[-1:,:,:]
+        dv_dx_e = (v.val[-1:,:,:]-v.bnd[E].val[:1,:,:])  \
+                / avg(v.pos, dx[-1:,:,:])
+        dw_dx_e = (w.val[-1:,:,:]-w.bnd[E].val[:1,:,:])  \
+                / avg(w.pos, dx[-1:,:,:])
 
-        du_dy_s = (u.val[:, :1,:]-u.bnd[S].val[:,:1,:])/avg(u.pos, dy[:, :1,:])
-        dv_dy_s = (v.val[:, :1,:]-v.bnd[S].val[:,:1,:])/dy[:, :1,:]
-        dw_dy_s = (w.val[:, :1,:]-w.bnd[S].val[:,:1,:])/avg(w.pos, dy[:, :1,:])
+        du_dy_s = (u.val[:, :1,:]-u.bnd[S].val[:,:1,:])  \
+                / avg(u.pos, dy[:, :1,:])
+        dv_dy_s = (v.val[:, :1,:]-v.bnd[S].val[:,:1,:])  \
+                /            dy[:, :1,:]
+        dw_dy_s = (w.val[:, :1,:]-w.bnd[S].val[:,:1,:])  \
+                / avg(w.pos, dy[:, :1,:])
 
-        du_dy_n = (u.val[:,-1:,:]-u.bnd[N].val[:,:1,:])/avg(u.pos, dy[:,-1:,:])
-        dv_dy_n = (v.val[:,-1:,:]-v.bnd[N].val[:,:1,:])/dy[:,-1:,:]
-        dw_dy_n = (w.val[:,-1:,:]-w.bnd[N].val[:,:1,:])/avg(w.pos, dy[:,-1:,:])
+        du_dy_n = (u.val[:,-1:,:]-u.bnd[N].val[:,:1,:])  \
+                / avg(u.pos, dy[:,-1:,:])
+        dv_dy_n = (v.val[:,-1:,:]-v.bnd[N].val[:,:1,:])  \
+                /            dy[:,-1:,:]
+        dw_dy_n = (w.val[:,-1:,:]-w.bnd[N].val[:,:1,:])  \
+                / avg(w.pos, dy[:,-1:,:])
 
-        du_dz_b = (u.val[:,:, :1]-u.bnd[B].val[:,:,:1])/avg(u.pos, dz[:,:, :1])
-        dv_dz_b = (v.val[:,:, :1]-v.bnd[B].val[:,:,:1])/avg(v.pos, dz[:,:, :1])
-        dw_dz_b = (w.val[:,:, :1]-w.bnd[B].val[:,:,:1])/dz[:,:, :1]
+        du_dz_b = (u.val[:,:, :1]-u.bnd[B].val[:,:,:1])  \
+                / avg(u.pos, dz[:,:, :1])
+        dv_dz_b = (v.val[:,:, :1]-v.bnd[B].val[:,:,:1])  \
+                / avg(v.pos, dz[:,:, :1])
+        dw_dz_b = (w.val[:,:, :1]-w.bnd[B].val[:,:,:1])  \
+                /            dz[:,:, :1]
 
-        du_dz_t = (u.val[:,:,-1:]-u.bnd[T].val[:,:,:1])/avg(u.pos, dz[:,:,-1:])
-        dv_dz_t = (v.val[:,:,-1:]-v.bnd[T].val[:,:,:1])/avg(v.pos, dz[:,:,-1:])
-        dw_dz_t = (w.val[:,:,-1:]-w.bnd[T].val[:,:,:1])/dz[:,:,-1:]
+        du_dz_t = (u.val[:,:,-1:]-u.bnd[T].val[:,:,:1])  \
+                / avg(u.pos, dz[:,:,-1:])
+        dv_dz_t = (v.val[:,:,-1:]-v.bnd[T].val[:,:,:1])  \
+                / avg(v.pos, dz[:,:,-1:])
+        dw_dz_t = (w.val[:,:,-1:]-w.bnd[T].val[:,:,:1])  \
+                /            dz[:,:,-1:]
 
         u_bnd_w_corr = (u.bnd[W].val[:1,:,:] + ub_out * dt * du_dx_w)
         v_bnd_w_corr = (v.bnd[W].val[:1,:,:] + ub_out * dt * dv_dx_w)

@@ -17,8 +17,8 @@ def properties_for_air(rc):
 # -----------------------------------------------------------------------------
     """
     Args:
-      rc: Tuple holding the resolution of the computational domain (number 
-          of cells in "x", "y" and "z" direction.
+      rc: Tuple holding the resolution of the computational domain
+          (number of cells in "x", "y" and "z" direction).
 
     Returns:
       rho:   Three-dimensional matrix holding density for cells.

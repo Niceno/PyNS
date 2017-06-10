@@ -19,13 +19,13 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     Args:
       phi:  Unknown (created by "pyns.create_unknown") for which we need the
             system matrix.  It is needed for its resolution, essentially.
-      inn:  Three-dimensional matrix holding the innertial term (innertial 
+      inn:  Three-dimensional matrix holding the innertial term (innertial
             term is whatever multiplies the time derivative)
       mu:   Three-dimensional array holding diffusion coefficient.
       dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
             Each cell dimension is a three-dimensional matrix.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
-            zero in fluid, one in solid.
+      obst: Obstacle, three-dimensional matrix with zeros and ones.
+            It is zero in fluid, one in solid.
       obc:  Obstacle's boundary condition (NEUMANN or DIRICHLET)
 
     Returns:

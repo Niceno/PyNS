@@ -24,8 +24,8 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst):
       dt:   Time step
       dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
             Each cell dimension is a three-dimensional array.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
-            zero in fluid, one in solid.
+      obst: Obstacle, three-dimensional matrix with zeros and ones.
+            It is zero in fluid, one in solid.
 
     Returns:
       none, but input argument uvw is modified.
