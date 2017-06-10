@@ -6,7 +6,7 @@ Set values of an unknown to zero inside the obstacle.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.coordinates import *
+from pyns.constants.all import *
 from pyns.operators.all import *
 
 # =============================================================================
