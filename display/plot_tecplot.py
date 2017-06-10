@@ -3,11 +3,11 @@ Exports results in Tecplot (TM) ASCII format.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
 # =============================================================================
 def plot_tecplot(file_name, xyzn, variables):

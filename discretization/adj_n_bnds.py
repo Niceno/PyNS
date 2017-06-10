@@ -3,10 +3,10 @@ Adjust (essentially refresh) boundaries with Neumann type conditions.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import *
+from pyns.constants.all import *
 
 # =============================================================================
 def adj_n_bnds(phi):

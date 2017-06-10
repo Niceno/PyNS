@@ -6,23 +6,23 @@ Note:
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
-from discretization.adj_n_bnds     import adj_n_bnds
-from discretization.advection      import advection
-from discretization.create_matrix  import create_matrix
-from solvers.all                   import cg, cgs, bicgstab
+from pyns.discretization.adj_n_bnds     import adj_n_bnds
+from pyns.discretization.advection      import advection
+from pyns.discretization.create_matrix  import create_matrix
+from pyns.solvers.all                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
 # -----------------------------------------------------------------------------
   """
   Args:
-    t:       Temperature unknown (from "pyns.create_unknown" function)
+    t:       Temperature unknown (from "create_unknown" function)
     uvwf:    a tuple with three staggered velocity components (where each 
              component is created with "create_unknown" function.
     rho_cap: Three-dimensional matrix holding density times thermal capactity 

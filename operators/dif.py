@@ -26,7 +26,7 @@ Note:
 """
 
 # PyNS modules
-from constants.all import *
+from pyns.constants.all import *
 
 # =============================================================================
 def dif(*args):

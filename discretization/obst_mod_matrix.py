@@ -3,11 +3,11 @@ Adjusts the system matrix for obstacles.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import *
-from operators.all import *
+from pyns.constants.all import *
+from pyns.operators.all import *
 
 # =============================================================================
 def obst_mod_matrix(phi, c, obst, obc):

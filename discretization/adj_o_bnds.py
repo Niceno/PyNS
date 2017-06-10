@@ -4,11 +4,11 @@ the convective outflow method.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import *
-from operators.all import *
+from pyns.constants.all import *
+from pyns.operators.all import *
 
 # =============================================================================
 def adj_o_bnds(uvw, dxyz, dt):

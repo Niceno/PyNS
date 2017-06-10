@@ -3,18 +3,18 @@ Discretizes and solves momentum equation (all three components).
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
-from discretization.adj_n_bnds     import adj_n_bnds
-from discretization.adj_o_bnds     import adj_o_bnds
-from discretization.advection      import advection
-from discretization.create_matrix  import create_matrix
-from discretization.obst_zero_val  import obst_zero_val
-from solvers.all                   import cg, cgs, bicgstab
+from pyns.discretization.adj_n_bnds     import adj_n_bnds
+from pyns.discretization.adj_o_bnds     import adj_o_bnds
+from pyns.discretization.advection      import advection
+from pyns.discretization.create_matrix  import create_matrix
+from pyns.discretization.obst_zero_val  import obst_zero_val
+from pyns.solvers.all                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):

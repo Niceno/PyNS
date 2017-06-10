@@ -2,7 +2,7 @@
 Vector-vector product for PyNS matrix format
 """
 
-from standard import *
+from pyns.standard import *
 
 # =============================================================================
 def vec_vec(x, y):

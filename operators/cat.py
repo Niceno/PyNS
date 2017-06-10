@@ -5,10 +5,10 @@ memory space.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import *
+from pyns.constants.all import *
 
 # =============================================================================
 def cat(d, tup):

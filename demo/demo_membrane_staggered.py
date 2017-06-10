@@ -10,14 +10,14 @@ membrane seems to be rather fast too.
 #!/usr/bin/python
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all       import *
-from operators.all       import *
-from display.all         import *
-from discretization.all  import *
-from physical_models.all import *
+from pyns.constants.all       import *
+from pyns.operators.all       import *
+from pyns.display.all         import *
+from pyns.discretization.all  import *
+from pyns.physical_models.all import *
 
 # =============================================================================
 #

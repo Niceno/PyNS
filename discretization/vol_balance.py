@@ -4,13 +4,13 @@ hand side in the pressure-Poisson equation.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
-from discretization.obst_zero_val  import obst_zero_val
+from pyns.discretization.obst_zero_val  import obst_zero_val
 
 # =============================================================================
 def vol_balance(uvwf, dxyz, obst):

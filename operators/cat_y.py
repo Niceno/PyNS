@@ -3,10 +3,10 @@ An interface to the standard NumPy's function "concatenate" by second index.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import Y
+from pyns.constants.all import Y
 
 # =============================================================================
 def cat_y(tup):

@@ -6,11 +6,11 @@ Properties are take for 60 deg from:
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
 # =============================================================================
 def properties_for_air(rc):

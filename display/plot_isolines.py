@@ -4,11 +4,11 @@ velocity fields on top of isolines.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
 # =============================================================================
 def plot_isolines(phi, uvw, xyzn, dir):

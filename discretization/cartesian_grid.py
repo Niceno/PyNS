@@ -3,11 +3,11 @@ Spawns a 3D Cartesian grid from three arrays with node coordinates.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
 # =============================================================================
 def cartesian_grid(xn, yn, zn):

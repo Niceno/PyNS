@@ -6,11 +6,11 @@ Source:
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
-from solvers.mat_vec import mat_vec
-from solvers.vec_vec import vec_vec
-from solvers.norm    import norm
+from pyns.solvers.mat_vec import mat_vec
+from pyns.solvers.vec_vec import vec_vec
+from pyns.solvers.norm    import norm
 
 # =============================================================================
 def cg(a, phi, b, tol, ver):

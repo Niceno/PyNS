@@ -5,6 +5,6 @@ code development faster for non-IT oriendted minds.
 """
 
 # Constants
-from solvers.bicgstab import *
-from solvers.cg       import *
-from solvers.cgs      import *
+from pyns.solvers.bicgstab import *
+from pyns.solvers.cg       import *
+from pyns.solvers.cgs      import *

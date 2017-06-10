@@ -5,9 +5,9 @@ code development faster for non-IT oriendted minds.
 """
 
 # Constants
-from constants.boundary_conditions    import *
-from constants.compass                import *
-from constants.coordinates            import *
-from constants.gravitational_constant import *
-from constants.solver                 import *
-from constants.tiny_and_huge          import *
+from pyns.constants.boundary_conditions    import *
+from pyns.constants.compass                import *
+from pyns.constants.coordinates            import *
+from pyns.constants.gravitational_constant import *
+from pyns.constants.solver                 import *
+from pyns.constants.tiny_and_huge          import *

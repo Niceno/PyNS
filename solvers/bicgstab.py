@@ -6,13 +6,13 @@ Source:
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all   import TINY
-from solvers.mat_vec import mat_vec
-from solvers.vec_vec import vec_vec
-from solvers.norm    import norm
+from pyns.constants.all   import TINY
+from pyns.solvers.mat_vec import mat_vec
+from pyns.solvers.vec_vec import vec_vec
+from pyns.solvers.norm    import norm
 
 # =============================================================================
 def bicgstab(a, phi, b, tol, ver):

@@ -3,17 +3,17 @@ Discretizes and solves equation for pressure (pressure Poisson equaiton).
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all      import *
-from operators.all      import *
+from pyns.constants.all      import *
+from pyns.operators.all      import *
 
-from discretization.adj_n_bnds     import adj_n_bnds
-from discretization.create_matrix  import create_matrix
-from discretization.vol_balance    import vol_balance
-from discretization.obst_zero_val  import obst_zero_val
-from solvers.all                   import cg, cgs, bicgstab
+from pyns.discretization.adj_n_bnds     import adj_n_bnds
+from pyns.discretization.create_matrix  import create_matrix
+from pyns.discretization.vol_balance    import vol_balance
+from pyns.discretization.obst_zero_val  import obst_zero_val
+from pyns.solvers.all                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_p(p, uvwf, rho, dt, dxyz, obst):

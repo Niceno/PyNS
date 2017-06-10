@@ -2,9 +2,9 @@
 Compute the norm of a vector.
 """
 
-from standard import *
+from pyns.standard import *
 
-from solvers.vec_vec import vec_vec
+from pyns.solvers.vec_vec import vec_vec
 
 # =============================================================================
 def norm(x):

@@ -10,13 +10,13 @@ Output values at:           o-----o-----o-----o-----o-----o-----o
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import *
-from display.all   import *
+from pyns.constants.all import *
+from pyns.display.all   import *
 
-from operators.all import avg
+from pyns.operators.all import avg
 
 # =============================================================================
 def par(mean_val, x_nodes):

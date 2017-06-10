@@ -3,11 +3,11 @@ Set values of an unknown to zero inside the obstacle.
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import *
-from operators.all import *
+from pyns.constants.all import *
+from pyns.operators.all import *
 
 # =============================================================================
 def obst_zero_val(d, val, obst):

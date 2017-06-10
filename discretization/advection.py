@@ -5,11 +5,11 @@ Following schemes are supported: "upwind", "minmod", "koren" and "superbee"
 """
 
 # Standard Python modules
-from standard import *
+from pyns.standard import *
 
 # PyNS modules
-from constants.all import *
-from operators.all import *
+from pyns.constants.all import *
+from pyns.operators.all import *
 
 # =============================================================================
 def advection(rho, phi, uvwf, dxyz, dt, lim_name):
@@ -18,7 +18,7 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
   Args:
     rho:      Three-dimensional matrix holding physical property in advection 
               term (density or density times capacity ...) for all cells.
-    phi:      Unknown transported by advection (from "pyns.create_unknown").
+    phi:      Unknown transported by advection (from "create_unknown").
     uvwf:     Tuple with three staggered velocity components (where each 
               component is created with "create_unknown" function.
     dxyz:     Tuple holding cell dimensions in "x", "y" and "z" directions.

@@ -22,7 +22,7 @@ Example:
 """
 
 # PyNS modules
-from constants.all import *
+from pyns.constants.all import *
 
 # =============================================================================
 def avg(*args):
