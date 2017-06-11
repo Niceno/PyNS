@@ -32,13 +32,13 @@
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all       import *
-from pyns.operators.all       import *
-from pyns.display.all         import *
-from pyns.discretization.all  import *
-from pyns.physical_models.all import *
+from pyns.constants      import *
+from pyns.operators      import *
+from pyns.discretization import *
+from pyns.display        import plot, write
+from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=1800):
+def main(show_plot=True, time_steps=1800, plot_freq=180):
 
 # =============================================================================
 #
@@ -196,9 +196,9 @@ def main(show_plot=True, time_steps=1800):
 #
 # =============================================================================
         if show_plot:
-            if ts % 20 == 0:
-                plot_isolines(p.val, (uc, vc, wc), (xn, yn, zn), Y)
-                plot_isolines(p.val, (uc, vc, wc), (xn, yn, zn), Z)
+            if ts % plot_freq == 0:
+                plot.isolines(p.val, (uc, vc, wc), (xn, yn, zn), Y)
+                plot.isolines(p.val, (uc, vc, wc), (xn, yn, zn), Z)
 
 if __name__ == '__main__':
     main()

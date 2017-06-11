@@ -32,13 +32,13 @@
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all       import *
-from pyns.operators.all       import *
-from pyns.display.all         import *
-from pyns.discretization.all  import *
-from pyns.physical_models.all import *
+from pyns.constants      import *
+from pyns.operators      import *
+from pyns.discretization import *
+from pyns.display        import plot, write
+from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=4800):
+def main(show_plot=True, time_steps=4800, plot_freq=480):
 
 # =============================================================================
 #
@@ -60,7 +60,7 @@ def main(show_plot=True, time_steps=4800):
     nx,ny,nz, dx,dy,dz, rc,ru,rv,rw = cartesian_grid(xn,yn,zn)
 
     # Set physical properties
-    rho, mu, cap, kappa = properties_for_air(rc)
+    rho, mu, cap, kappa = properties.air(rc)
 
     # Time-stepping parameters
     dt  = 0.002      # time step
@@ -84,8 +84,6 @@ def main(show_plot=True, time_steps=4800):
         vf.bnd[j].typ[:] = NEUMANN
         wf.bnd[j].typ[:] = NEUMANN
 
-    adj_n_bnds(p)
-
     obst = zeros(rc)
     for j in range(0, 24):
         for i in range(64+j, 64+24):
@@ -105,7 +103,7 @@ def main(show_plot=True, time_steps=4800):
     # ----------
     for ts in range(1,ndt+1):
 
-        print_time_step(ts)
+        write.time_step(ts)
 
         # -----------------
         # Store old values
@@ -146,8 +144,8 @@ def main(show_plot=True, time_steps=4800):
 #
 # =============================================================================
         if show_plot:
-            if ts % 20 == 0:
-                plot_isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
+            if ts % plot_freq == 0:
+                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
 
 if __name__ == '__main__':
     main()

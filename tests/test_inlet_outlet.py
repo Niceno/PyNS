@@ -14,13 +14,13 @@
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all       import *
-from pyns.operators.all       import *
-from pyns.display.all         import *
-from pyns.discretization.all  import *
-from pyns.physical_models.all import properties_for_air
+from pyns.constants      import *
+from pyns.operators      import *
+from pyns.discretization import *
+from pyns.display        import plot, write
+from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=600):
+def main(show_plot=True, time_steps=600, plot_freq=60):
 
 # =============================================================================
 #
@@ -49,7 +49,7 @@ def main(show_plot=True, time_steps=600):
     nx,ny,nz, dx,dy,dz, rc,ru,rv,rw = cartesian_grid(xn,yn,zn)
 
     # Set physical properties
-    rho, mu, cap, kappa = properties_for_air(rc)
+    rho, mu, cap, kappa = properties.air(rc)
 
     # Time-stepping parameters
     dt  = 0.15        # time step
@@ -179,7 +179,7 @@ def main(show_plot=True, time_steps=600):
     # ----------
     for ts in range(1,ndt+1):
 
-        print_time_step(ts)
+        write.time_step(ts)
 
         # -----------------
         # Store old values
@@ -220,8 +220,8 @@ def main(show_plot=True, time_steps=600):
 #
 # =============================================================================
         if show_plot:
-            if ts % 10 == 0:
-                plot_isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
+            if ts % plot_freq == 0:
+                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
 
 if __name__ == '__main__':
     main()

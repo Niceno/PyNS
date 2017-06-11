@@ -15,13 +15,13 @@ staggered and collocated arrangements always possible.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all       import *
-from pyns.operators.all       import *
-from pyns.display.all         import *
-from pyns.discretization.all  import *
-from pyns.physical_models.all import *
+from pyns.constants      import *
+from pyns.operators      import *
+from pyns.discretization import *
+from pyns.display        import plot, write
+from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=1800):
+def main(show_plot=True, time_steps=1800, plot_freq=180):
 
 # =============================================================================
 #
@@ -88,9 +88,6 @@ def main(show_plot=True, time_steps=1800):
     t.bnd[N].typ[:,:1,:] = DIRICHLET
     t.bnd[N].val[:,:1,:] =  0.0
 
-    adj_n_bnds(t)
-    adj_n_bnds(p)
-
     # Specify initial conditions
     uc.val[:,:,:] = 1.0
     t.val[:,:,:] = 0
@@ -127,7 +124,7 @@ def main(show_plot=True, time_steps=1800):
     # ----------
     for ts in range(1,ndt+1):
 
-        print_time_step(ts)
+        write.time_step(ts)
 
         # -----------------
         # Store old values
@@ -175,9 +172,9 @@ def main(show_plot=True, time_steps=1800):
 #
 # =============================================================================
         if show_plot:
-            if ts % 150 == 0:
-                plot_isolines(t.val, (uc,vc,wc), (xn,yn,zn), Z)
-                plot_isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
+            if ts % plot_freq == 0:
+                plot.isolines(t.val, (uc,vc,wc), (xn,yn,zn), Z)
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
 
 if __name__ == '__main__':
     main()
