@@ -6,8 +6,8 @@ Set values of an unknown to zero inside the obstacle.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all import *
-from pyns.operators.all import *
+from pyns.constants import *
+from pyns.operators import *
 
 # =============================================================================
 def obst_zero_val(pos, val, obst):

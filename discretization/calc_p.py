@@ -6,8 +6,8 @@ Discretizes and solves equation for pressure (pressure Poisson equaiton).
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all      import *
-from pyns.operators.all      import *
+from pyns.constants import *
+from pyns.operators import *
 
 from pyns.discretization.adj_n_bnds     import adj_n_bnds
 from pyns.discretization.create_matrix  import create_matrix

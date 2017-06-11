@@ -6,7 +6,7 @@ An interface to the standard NumPy's function "concatenate" by second index.
 from pyns.standard import concatenate
 
 # PyNS modules
-from pyns.constants.all import Y
+from pyns.constants import Y
 
 # =============================================================================
 def cat_y(tup):

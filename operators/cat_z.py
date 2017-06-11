@@ -6,7 +6,7 @@ An interface to the standard NumPy's function "concatenate" by third index.
 from pyns.standard import concatenate
 
 # PyNS modules
-from pyns.constants.all import Z
+from pyns.constants import Z
 
 # =============================================================================
 def cat_z(tup):

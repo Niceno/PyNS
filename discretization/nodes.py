@@ -12,8 +12,8 @@ two more parameters are sent (starting and ending cell size).
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all      import *
-from pyns.operators.all      import *
+from pyns.constants import *
+from pyns.operators import *
 
 # =============================================================================
 def nodes(*args):

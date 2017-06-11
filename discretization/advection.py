@@ -8,8 +8,8 @@ Following schemes are supported: "upwind", "minmod", "koren" and "superbee"
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all import *
-from pyns.operators.all import *
+from pyns.constants import *
+from pyns.operators import *
 
 # =============================================================================
 def advection(rho, phi, uvwf, dxyz, dt, lim_name):

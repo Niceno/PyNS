@@ -6,7 +6,7 @@ Adjust (essentially refresh) boundaries with Neumann type conditions.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all import *
+from pyns.constants import *
 
 # =============================================================================
 def adj_n_bnds(phi):

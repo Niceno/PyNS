@@ -7,8 +7,8 @@ staggered variables.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all      import *
-from pyns.operators.all      import *
+from pyns.constants import *
+from pyns.operators import *
 
 from pyns.discretization.obst_mod_matrix import obst_mod_matrix
 

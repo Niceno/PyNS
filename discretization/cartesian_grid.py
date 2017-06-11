@@ -6,8 +6,8 @@ Spawns a 3D Cartesian grid from three arrays with node coordinates.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all      import *
-from pyns.operators.all      import *
+from pyns.constants import *
+from pyns.operators import *
 
 # =============================================================================
 def cartesian_grid(xn, yn, zn):

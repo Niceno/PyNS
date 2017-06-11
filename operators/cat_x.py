@@ -6,7 +6,7 @@ An interface to the standard NumPy's function "concatenate" by first index.
 from pyns.standard import concatenate
 
 # PyNS modules
-from pyns.constants.all import X
+from pyns.constants import X
 
 # =============================================================================
 def cat_x(tup):

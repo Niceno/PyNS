@@ -8,7 +8,7 @@ Source:
 # Standard Python modules
 from pyns.standard import *
 
-from pyns.constants.all   import TINY
+from pyns.constants       import TINY
 from pyns.solvers.mat_vec import mat_vec
 from pyns.solvers.vec_vec import vec_vec
 from pyns.solvers.norm    import norm

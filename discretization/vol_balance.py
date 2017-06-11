@@ -8,7 +8,7 @@ from pyns.standard import *
 
 # PyNS modules
 from pyns.constants.compass import *
-from pyns.operators.all     import *
+from pyns.operators         import *
 
 from pyns.discretization.obst_zero_val  import obst_zero_val
 

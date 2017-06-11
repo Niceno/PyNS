@@ -13,10 +13,9 @@ Output values at:           o-----o-----o-----o-----o-----o-----o
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all import *
-from pyns.display.all   import *
-
-from pyns.operators.all import avg
+from pyns.constants import *
+from pyns.operators import avg
+from pyns.display   import *
 
 # =============================================================================
 def par(mean_val, x_nodes):
