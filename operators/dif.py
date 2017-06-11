@@ -26,7 +26,7 @@ Note:
 """
 
 # PyNS modules
-from pyns.constants.all import *
+from pyns.constants.coordinates import X, Y, Z
 
 # =============================================================================
 def dif(*args):

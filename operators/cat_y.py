@@ -3,7 +3,7 @@ An interface to the standard NumPy's function "concatenate" by second index.
 """
 
 # Standard Python modules
-from pyns.standard import *
+from pyns.standard import concatenate
 
 # PyNS modules
 from pyns.constants.all import Y

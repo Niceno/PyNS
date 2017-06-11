@@ -5,10 +5,7 @@ memory space.
 """
 
 # Standard Python modules
-from pyns.standard import *
-
-# PyNS modules
-from pyns.constants.all import *
+from pyns.standard import concatenate
 
 # =============================================================================
 def cat(dir, tup):
