@@ -2,6 +2,7 @@
 Matrix-vector product for PyNS matrix format.
 """
 
+# Standard Python modules
 from pyns.standard import *
 
 # =============================================================================

@@ -2,6 +2,7 @@
 Compute the norm of a vector.
 """
 
+# Standard Python modules
 from pyns.standard import *
 
 from pyns.solvers.vec_vec import vec_vec
