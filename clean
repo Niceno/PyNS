@@ -1,2 +1,3 @@
 rm -fR __pycache__
 rm -fR */__pycache__
+rm -fR */*/__pycache__
