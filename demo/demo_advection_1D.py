@@ -16,10 +16,11 @@ for positive, and 'n' for negative sense.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all      import *
-from pyns.operators.all      import *
-from pyns.display.all        import *
-from pyns.discretization.all import *
+from pyns.constants      import *
+from pyns.operators      import *
+from pyns.discretization import *
+from pyns.display        import plot, write
+from pyns.physical       import properties
 
 # =============================================================================
 #
@@ -109,7 +110,7 @@ obst = zeros(rc)
 # ----------
 for ts in range(1,40):
 
-  print_time_step(ts)
+  write.time_step(ts)
   
   # -----------------
   # Store old values

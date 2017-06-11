@@ -5,6 +5,7 @@ Very bad, but it makes code development faster for non-IT oriendted minds.
 """
 
 # Discretization
+from .adj_n_bnds      import adj_n_bnds
 from .calc_p          import calc_p
 from .calc_t          import calc_t
 from .calc_uvw        import calc_uvw

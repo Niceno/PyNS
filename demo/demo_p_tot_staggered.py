@@ -16,11 +16,12 @@ Gravity term is under-relaxed here, but it works even without it.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all       import *
-from pyns.operators.all       import *
-from pyns.display.all         import *
-from pyns.discretization.all  import *
-from pyns.physical_models.all import *
+from pyns.constants          import *
+from pyns.operators          import *
+from pyns.discretization     import *
+from pyns.display            import plot, write
+from pyns.physical           import properties
+from pyns.physical.constants import G 
 
 # =============================================================================
 #
@@ -89,7 +90,7 @@ obst = zeros(rc)
 # ----------
 for ts in range(1,ndt+1):
 
-  print_time_step(ts)
+  write.time_step(ts)
   
   # -----------------
   # Store old values
@@ -135,5 +136,5 @@ for ts in range(1,ndt+1):
 # =============================================================================
 
   if ts % 20 == 0:
-    plot_isolines(p_tot, (uf,vf,wf), (xn,yn,zn), Z)
-    plot_isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)    
+    plot.isolines(p_tot, (uf,vf,wf), (xn,yn,zn), Z)
+    plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)    

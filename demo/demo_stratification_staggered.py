@@ -14,11 +14,12 @@ Gravity term is engaged gradually to avoid vortex at the outlet.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all       import *
-from pyns.operators.all       import *
-from pyns.display.all         import *
-from pyns.discretization.all  import *
-from pyns.physical_models.all import *
+from pyns.constants          import *
+from pyns.operators          import *
+from pyns.discretization     import *
+from pyns.display            import plot, write
+from pyns.physical           import properties
+from pyns.physical.constants import G 
 
 # =============================================================================
 #
@@ -114,7 +115,7 @@ obst = zeros(rc)
 # ----------
 for ts in range(1,ndt+1):
 
-  print_time_step(ts)
+  write.time_step(ts)
   
   # -----------------
   # Store old values
@@ -171,6 +172,6 @@ for ts in range(1,ndt+1):
 # =============================================================================
 
   if ts % 50 == 0:
-    plot_isolines(p_tot, (uf,vf,wf), (xn,yn,zn), Z)
-    plot_isolines(t.val, (uf,vf,wf), (xn,yn,zn), Z)
-    plot_isolines(rho,   (uf,vf,wf), (xn,yn,zn), Z)    
+    plot.isolines(p_tot, (uf,vf,wf), (xn,yn,zn), Z)
+    plot.isolines(t.val, (uf,vf,wf), (xn,yn,zn), Z)
+    plot.isolines(rho,   (uf,vf,wf), (xn,yn,zn), Z)    

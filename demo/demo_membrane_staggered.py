@@ -13,11 +13,12 @@ membrane seems to be rather fast too.
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants.all       import *
-from pyns.operators.all       import *
-from pyns.display.all         import *
-from pyns.discretization.all  import *
-from pyns.physical_models.all import *
+from pyns.constants          import *
+from pyns.operators          import *
+from pyns.discretization     import *
+from pyns.display            import plot, write
+from pyns.physical           import properties
+from pyns.physical.constants import G 
 
 # =============================================================================
 #
@@ -54,7 +55,7 @@ rc,ru,rv,rw =        (cell[AIR][6], cell[H2O][6]),  \
                      (cell[AIR][9], cell[H2O][9])
 
 # Set physical properties
-prop = [properties_for_air(rc[AIR]), properties_for_water(rc[H2O])]
+prop = [properties.air(rc[AIR]), properties.water(rc[H2O])]
 rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0]),  \
                       (prop[AIR][1], prop[H2O][1]),  \
                       (prop[AIR][2], prop[H2O][2]),  \
@@ -126,7 +127,7 @@ obst = [zeros(rc[AIR]), zeros(rc[H2O])]
 # ----------
 for ts in range(1,ndt+1):
 
-  print_time_step(ts)
+  write.time_step(ts)
  
   # -----------------
   # Store old values
@@ -216,5 +217,5 @@ for ts in range(1,ndt+1):
 
   if ts % 100 == 0:
     for c in (AIR,H2O):
-      plot_isolines(t[c].val, (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
-      plot_isolines(p_tot[c], (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
+      plot.isolines(t[c].val, (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
+      plot.isolines(p_tot[c], (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
