@@ -13,7 +13,7 @@ from pyns.discretization.adj_n_bnds     import adj_n_bnds
 from pyns.discretization.create_matrix  import create_matrix
 from pyns.discretization.vol_balance    import vol_balance
 from pyns.discretization.obst_zero_val  import obst_zero_val
-from pyns.solvers.all                   import cg, cgs, bicgstab
+from pyns.solvers                       import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_p(p, uvwf, rho, dt, dxyz, obst):
