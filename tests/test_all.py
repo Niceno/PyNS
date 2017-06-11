@@ -20,8 +20,12 @@ def main():
         print('#' * 40)
         print(name)
         print('#' * 40)
+        
         start = timeit.default_timer()
-        test.main(show_plot=False, time_steps=120)
+        test.main(show_plot  = True, 
+                  time_steps = 20, 
+                  plot_freq  = 10)
+        
         duration = timeit.default_timer() - start
         total_time += duration
         print('run time {}: {:7.3f} s'.format(name, duration))
