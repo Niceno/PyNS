@@ -31,7 +31,7 @@
 # Standard Python modules
 from pyns.standard import *
 
-# ScriNS modules
+# PyNS modules
 from pyns.constants.all       import *
 from pyns.operators.all       import *
 from pyns.display.all         import *

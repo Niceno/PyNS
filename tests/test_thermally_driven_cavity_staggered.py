@@ -30,7 +30,7 @@ Ra = 1.0000E+06
 # Standard Python modules
 from pyns.standard import *
 
-# ScriNS modules
+# PyNS modules
 from pyns.constants.all       import *
 from pyns.operators.all       import *
 from pyns.display.all         import *
