@@ -17,12 +17,14 @@ def main():
     total_time = 0
     for name, test in test_mods:
 
-        print('#' * 40)
-        print(name)
-        print('#' * 40)
+        print('##########' * 8)
+        print('#')
+        print('# ', name)
+        print('#')
+        print('##########' * 8)
         
         start = timeit.default_timer()
-        test.main(show_plot  = True, 
+        test.main(show_plot  = False, 
                   time_steps = 20, 
                   plot_freq  = 10)
         
