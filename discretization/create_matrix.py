@@ -65,10 +65,18 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     sy = dx * dz
     sz = dx * dy
 
+    # Allocate memory for specification of boundary conditions
+    nx, ny, nz = res
+    c_bc_x = zeros(( 1, ny, nz))
+    c_bc_y = zeros((nx,  1, nz))
+    c_bc_z = zeros((nx, ny,  1))
+
     # In the following lines, coefficients are computed simply by multiplying
     # diffusivity (mu) with cell-face areas (sx, sy and sz) and dividing by
     # distance between cells (dx, dy and dz).  Near the boundaries, only
     # half-distance between cells is taken into account.
+    #
+    #    DIRICHLET:
     #
     #    +-----------+-----------+//
     #    |           |           |//
@@ -80,46 +88,45 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     #          |<--------->|<--->|
     #
     if d != X:
-        c.W[:] = cat_x((                                   \
-         avg(d,mu[ :1,:,:]) * avg(d, sx[ :1,:,:])          \
-                            / avg(d,(dx[ :1,:,:])/2.0),    \
-         avg(d,avg_x(mu))   * avg(d,avg_x(sx))             \
-                            / avg(d,avg_x(dx)) ) )
-
-        c.E[:] = cat_x((                                   \
-         avg(d,avg_x(mu))   * avg(d,avg_x(sx))             \
-                            / avg(d,avg_x(dx)),            \
-         avg(d,mu[-1:,:,:]) * avg(d, sx[-1:,:,:])          \
-                            / avg(d,(dx[-1:,:,:])/2.0) ) )
+        # west
+        c_bc_x[:] = avg(d, mu[ :1,:,:]) * avg(d,  sx[ :1,:,:])         \
+                                        / avg(d, (dx[ :1,:,:]) / 2.0)      
+        c.W[:] = cat_x((c_bc_x, avg(d, avg_x(mu)) * avg(d, avg_x(sx))
+                                                  / avg(d, avg_x(dx))))
+        # east
+        c_bc_x[:] = avg(d, mu[-1:,:,:]) * avg(d,  sx[-1:,:,:])         \
+                                        / avg(d, (dx[-1:,:,:]) / 2.0)      
+        c.E[:] = cat_x((avg(d, avg_x(mu)) * avg(d, avg_x(sx))
+                                          / avg(d, avg_x(dx)), c_bc_x))
 
     if d != Y:
-        c.S[:] = cat_y((                                   \
-         avg(d,mu[:, :1,:]) * avg(d, sy[:, :1,:])          \
-                            / avg(d,(dy[:, :1,:])/2.0),    \
-         avg(d,avg_y(mu))   * avg(d,avg_y(sy))             \
-                            / avg(d,avg_y(dy)) ) )
-
-        c.N[:] = cat_y((                                   \
-         avg(d,avg_y(mu))   * avg(d,avg_y(sy))             \
-                            / avg(d,avg_y(dy)),            \
-         avg(d,mu[:,-1:,:]) * avg(d,sy[:,-1:,:])           \
-                            / avg(d,(dy[:,-1:,:])/2.0) ) )
+        # south
+        c_bc_y[:] = avg(d, mu[:, :1,:]) * avg(d,  sy[:, :1,:])         \
+                                        / avg(d, (dy[:, :1,:]) / 2.0)            
+        c.S[:] = cat_y((c_bc_y, avg(d, avg_y(mu)) * avg(d, avg_y(sy))
+                                                  / avg(d, avg_y(dy))))
+        # north
+        c_bc_y[:] = avg(d, mu[:,-1:,:]) * avg(d,  sy[:,-1:,:])         \
+                                        / avg(d, (dy[:,-1:,:]) / 2.0)      
+        c.N[:] = cat_y((avg(d, avg_y(mu)) * avg(d, avg_y(sy))
+                                          / avg(d, avg_y(dy)), c_bc_y))
 
     if d != Z:
-        c.B[:] = cat_z((                                   \
-         avg(d,mu[:,:, :1]) * avg(d, sz[:,:, :1])          \
-                            / avg(d,(dz[:,:, :1])/2.0),    \
-         avg(d,avg_z(mu))   * avg(d,avg_z(sz))             \
-                            / avg(d,avg_z(dz)) ) )
-
-        c.T[:] = cat_z((                                   \
-         avg(d,avg_z(mu))   * avg(d,avg_z(sz))             \
-                            / avg(d,avg_z(dz)),            \
-         avg(d,mu[:,:,-1:]) * avg(d, sz[:,:,-1:])          \
-                            / avg(d,(dz[:,:,-1:])/2.0) ) )
+        # bottom
+        c_bc_z[:] = avg(d, mu[:,:, :1]) * avg(d,  sz[:,:, :1])         \
+                                        / avg(d, (dz[:,:, :1]) / 2.0)            
+        c.B[:] = cat_z((c_bc_z, avg(d, avg_z(mu)) * avg(d, avg_z(sz))
+                                                  / avg(d, avg_z(dz))))
+        # top
+        c_bc_z[:] = avg(d, mu[:,:,-1:]) * avg(d,  sz[:,:,-1:])         \
+                                        / avg(d, (dz[:,:,-1:]) / 2.0)            
+        c.T[:] = cat_z((avg(d, avg_z(mu)) * avg(d, avg_z(sz))
+                                          / avg(d, avg_z(dz)), c_bc_z))
 
     # Correct for staggered variables.  For staggered variables, near wall
     # cells are not at a half-distance from the wall, but at full distance.
+    #
+    #    DIRICHLET:
     #
     #    +-----------+-----------+//
     #    |           |           |//
