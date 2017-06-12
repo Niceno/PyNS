@@ -66,91 +66,91 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
     # Specify boundary conditions
     if TEST == 11:
         for k in range(0,nz):
-            uf.bnd[W].val[0,ny/4:3*ny/4,k] = +par(0.01, yn[ny/4:3*ny/4+1])
-            uf.bnd[E].typ[0,ny/4:3*ny/4,k] =  OUTLET
+            uf.bnd[W].val[0,ny//4:3*ny//4,k] = +par(0.01, yn[ny//4:3*ny//4+1])
+            uf.bnd[E].typ[0,ny//4:3*ny//4,k] =  OUTLET
 
     elif TEST == 12:  # vertical mirror from 11
         for k in range(0,nz):
-            uf.bnd[E].val[0,ny/4:3*ny/4,k] = -par(0.01, yn[ny/4:3*ny/4+1])
-            uf.bnd[W].typ[0,ny/4:3*ny/4,k] =  OUTLET
+            uf.bnd[E].val[0,ny//4:3*ny//4,k] = -par(0.01, yn[ny//4:3*ny//4+1])
+            uf.bnd[W].typ[0,ny//4:3*ny//4,k] =  OUTLET
 
     elif TEST == 13:  # rotate 11
         for k in range(0,nz):
-            vf.bnd[S].val[nx/4:3*nx/4,0,k] = +par(0.01, xn[nx/4:3*nx/4+1])
-            vf.bnd[N].typ[nx/4:3*nx/4,0,k] = OUTLET
+            vf.bnd[S].val[nx//4:3*nx//4,0,k] = +par(0.01, xn[nx//4:3*nx//4+1])
+            vf.bnd[N].typ[nx//4:3*nx//4,0,k] = OUTLET
 
     elif TEST == 14:  # horizontal mirror 13
         for k in range(0,nz):
-            vf.bnd[N].val[nx/4:3*nx/4,0,k] = -par(0.01, xn[nx/4:3*nx/4+1])
-            vf.bnd[S].typ[nx/4:3*nx/4,0,k] =  OUTLET
+            vf.bnd[N].val[nx//4:3*nx//4,0,k] = -par(0.01, xn[nx//4:3*nx//4+1])
+            vf.bnd[S].typ[nx//4:3*nx//4,0,k] =  OUTLET
 
     elif TEST == 21:  # 2 exits
         for k in range(0,nz):
-            uf.bnd[W].val[0,  ny/4:3*ny/4,k] = +par(0.01, yn[ny/4:3*ny/4+1])
-            uf.bnd[E].typ[0,       0:ny/4,k] = OUTLET
-            uf.bnd[E].typ[0,3*ny/4:ny,    k] = OUTLET
+            uf.bnd[W].val[0,  ny//4:3*ny//4,k] = +par(0.01, yn[ny//4:3*ny//4+1])
+            uf.bnd[E].typ[0,       0:ny//4,k] = OUTLET
+            uf.bnd[E].typ[0,3*ny//4:ny,    k] = OUTLET
 
     elif TEST == 22:  # vertical mirror 21
         for k in range(0,nz):
-            uf.bnd[E].val[0,  ny/4:3*ny/4,k] = -par(0.01, yn[ny/4:3*ny/4+1])
-            uf.bnd[W].typ[0,       0:ny/4,k] = OUTLET
-            uf.bnd[W].typ[0,3*ny/4:ny,    k] = OUTLET
+            uf.bnd[E].val[0,  ny//4:3*ny//4,k] = -par(0.01, yn[ny//4:3*ny//4+1])
+            uf.bnd[W].typ[0,       0:ny//4,k] = OUTLET
+            uf.bnd[W].typ[0,3*ny//4:ny,    k] = OUTLET
 
     elif TEST == 23:  # rotated 21
         for k in range(0,nz):
-            vf.bnd[S].val[  nx/4:3*nx/4,0,k] = +par(0.01, xn[nx/4:3*nx/4+1])
-            vf.bnd[N].typ[        :nx/4,0,k] = OUTLET
-            vf.bnd[N].typ[3*nx/4:nx,    0,k] = OUTLET
+            vf.bnd[S].val[  nx//4:3*nx//4,0,k] = +par(0.01, xn[nx//4:3*nx//4+1])
+            vf.bnd[N].typ[        :nx//4,0,k] = OUTLET
+            vf.bnd[N].typ[3*nx//4:nx,    0,k] = OUTLET
 
     elif TEST == 24:  # horizontal mirror of 23
         for k in range(0,nz):
-            vf.bnd[N].val[  nx/4:3*nx/4,0,k] = -par(0.01, xn[nx/4:3*nx/4+1])
-            vf.bnd[S].typ[        :nx/4,0,k] =  OUTLET
-            vf.bnd[S].typ[3*nx/4:nx,    0,k] =  OUTLET
+            vf.bnd[N].val[  nx//4:3*nx//4,0,k] = -par(0.01, xn[nx//4:3*nx//4+1])
+            vf.bnd[S].typ[        :nx//4,0,k] =  OUTLET
+            vf.bnd[S].typ[3*nx//4:nx,    0,k] =  OUTLET
 
     elif TEST == 31:  # inlet and outlet at the same face
         for k in range(0,nz):
-            uf.bnd[W].val[0,3*ny/4:ny,  k] = +par(0.01, yn[3*ny/4:ny+1])
-            uf.bnd[W].typ[0,      :ny/4,k] =  OUTLET
+            uf.bnd[W].val[0,3*ny//4:ny,  k] = +par(0.01, yn[3*ny//4:ny+1])
+            uf.bnd[W].typ[0,      :ny//4,k] =  OUTLET
 
     elif TEST == 32:  # vertical mirror of 31
         for k in range(0,nz):
-            uf.bnd[E].val[0,3*ny/4:ny,  k] = -par(0.01, yn[3*ny/4:ny+1])
-            uf.bnd[E].typ[0,     0:ny/4,k] =  OUTLET
+            uf.bnd[E].val[0,3*ny//4:ny,  k] = -par(0.01, yn[3*ny//4:ny+1])
+            uf.bnd[E].typ[0,     0:ny//4,k] =  OUTLET
 
     elif TEST == 33:  # rotated 31
         for k in range(0,nz):
-            vf.bnd[S].val[3*nx/4:nx,  0,k] = +par(0.01, xn[3*nx/4:nx+1])
-            vf.bnd[S].typ[      :nx/4,0,k] =  OUTLET
+            vf.bnd[S].val[3*nx//4:nx,  0,k] = +par(0.01, xn[3*nx//4:nx+1])
+            vf.bnd[S].typ[      :nx//4,0,k] =  OUTLET
 
     elif TEST == 34:  # horizontal mirror of 33
         for k in range(0,nz):
-            vf.bnd[N].val[3*nx/4:nx,  0,k] = -par(0.01, xn[3*nx/4:nx+1])
-            vf.bnd[N].typ[      :nx/4,0,k] =  OUTLET
+            vf.bnd[N].val[3*nx//4:nx,  0,k] = -par(0.01, xn[3*nx//4:nx+1])
+            vf.bnd[N].typ[      :nx//4,0,k] =  OUTLET
 
     elif TEST == 41:  # inlet and outlet at the same face, one more outlet
         for k in range(0,nz):
-            uf.bnd[W].val[0,3*ny/4:ny,  k] = +par(0.01, yn[3*ny/4:ny+1])
-            uf.bnd[W].typ[0,      :ny/8,k] = OUTLET
-            uf.bnd[E].typ[0,      :ny/8,k] = OUTLET
+            uf.bnd[W].val[0,3*ny//4:ny,  k] = +par(0.01, yn[3*ny//4:ny+1])
+            uf.bnd[W].typ[0,      :ny//8,k] = OUTLET
+            uf.bnd[E].typ[0,      :ny//8,k] = OUTLET
 
     elif TEST == 42:  # vertical mirror of 41
         for k in range(0,nz):
-            uf.bnd[E].val[0,3*ny/4:ny,  k] = -par(0.01, yn[3*ny/4:ny+1])
-            uf.bnd[E].typ[0,      :ny/8,k] = OUTLET
-            uf.bnd[W].typ[0,      :ny/8,k] = OUTLET
+            uf.bnd[E].val[0,3*ny//4:ny,  k] = -par(0.01, yn[3*ny//4:ny+1])
+            uf.bnd[E].typ[0,      :ny//8,k] = OUTLET
+            uf.bnd[W].typ[0,      :ny//8,k] = OUTLET
 
     elif TEST == 43:  # rotated 41
         for k in range(0,nz):
-            vf.bnd[S].val[3*nx/4:nx,  0,k] = +par(0.01, xn[3*nx/4:nx+1])
-            vf.bnd[S].typ[     0:nx/8,0,k] =  OUTLET
-            vf.bnd[N].typ[     0:nx/8,0,k] =  OUTLET
+            vf.bnd[S].val[3*nx//4:nx,  0,k] = +par(0.01, xn[3*nx//4:nx+1])
+            vf.bnd[S].typ[     0:nx//8,0,k] =  OUTLET
+            vf.bnd[N].typ[     0:nx//8,0,k] =  OUTLET
 
     elif TEST == 44:  # horizontal mirror of 43
         for k in range(0,nz):
-            vf.bnd[N].val[3*ny/4:nx,  0,k] = -par(0.01, xn[3*nx/4:nx+1])
-            vf.bnd[N].typ[      :nx/8,0,k] =  OUTLET
-            vf.bnd[S].typ[      :nx/8,0,k] =  OUTLET
+            vf.bnd[N].val[3*ny//4:nx,  0,k] = -par(0.01, xn[3*nx//4:nx+1])
+            vf.bnd[N].typ[      :nx//8,0,k] =  OUTLET
+            vf.bnd[S].typ[      :nx//8,0,k] =  OUTLET
 
     for j in (B,T):
         uf.bnd[j].typ[:] = NEUMANN
@@ -162,7 +162,7 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
     for k in range(0,nz):
         for j in range(0,ny):
             for i in range(0,nx):
-                dist = sqrt( (j-ny/2+1)**2 + (i-nx/2+1)**2 )
+                dist = sqrt( (j-ny//2+1)**2 + (i-nx//2+1)**2 )
                 if dist < ny/4:
                     obst[i,j,k] = 1
 
