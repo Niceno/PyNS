@@ -47,7 +47,8 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
     rc = t.val.shape
 
     # Discretize the diffusive part
-    A_t, b_t = create_matrix(t, rho_cap/dt, kappa, dxyz, obst, NEUMANN)
+    A_t = create_matrix(t, rho_cap/dt, kappa, dxyz, obst, NEUMANN)
+    b_t = zeros(rc)
 
     # The advective fluxes
     c_t = advection(rho_cap, t, uvwf, dxyz, dt, 'minmod')

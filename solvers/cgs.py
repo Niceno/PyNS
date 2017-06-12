@@ -8,10 +8,13 @@ Source:
 # Standard Python modules
 from pyns.standard import *
 
-from pyns.constants       import TINY
-from pyns.solvers.mat_vec import mat_vec
-from pyns.solvers.vec_vec import vec_vec
-from pyns.solvers.norm    import norm
+# PyNS modules
+from pyns.constants           import TINY
+
+from pyns.solvers.mat_vec     import mat_vec
+from pyns.solvers.mat_vec_bnd import mat_vec_bnd
+from pyns.solvers.vec_vec     import vec_vec
+from pyns.solvers.norm        import norm
 
 # =============================================================================
 def cgs(a, phi, b, tol, ver):
@@ -52,7 +55,7 @@ def cgs(a, phi, b, tol, ver):
     v_hat   = zeros(x.shape)
 
     # r = b - A * x
-    r[:,:,:] = b[:,:,:] - mat_vec(a, x)
+    r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi)
 
     # Chose r~
     r_tilda[:,:,:] = r[:,:,:]

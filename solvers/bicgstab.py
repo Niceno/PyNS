@@ -9,10 +9,12 @@ Source:
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants       import TINY
-from pyns.solvers.mat_vec import mat_vec
-from pyns.solvers.vec_vec import vec_vec
-from pyns.solvers.norm    import norm
+from pyns.constants           import TINY
+
+from pyns.solvers.mat_vec     import mat_vec
+from pyns.solvers.mat_vec_bnd import mat_vec_bnd
+from pyns.solvers.vec_vec     import vec_vec
+from pyns.solvers.norm        import norm
 
 # =============================================================================
 def bicgstab(a, phi, b, tol, ver):
@@ -52,7 +54,7 @@ def bicgstab(a, phi, b, tol, ver):
     v       = zeros(x.shape)
 
     # r = b - A * x
-    r[:,:,:] = b[:,:,:] - mat_vec(a, x)
+    r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi)
 
     # Chose r~
     r_tilda[:,:,:] = r[:,:,:]

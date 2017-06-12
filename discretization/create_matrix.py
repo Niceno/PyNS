@@ -42,11 +42,6 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
 
     res = phi.val.shape
 
-    # ------------------------------
-    # Create right hand side vector
-    # ------------------------------
-    b = zeros(res)
-
     # -----------------------------------
     # Create default matrix coefficients
     # -----------------------------------
@@ -160,16 +155,6 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     c.B[  :,  :, :1] *= ( phi.bnd[B].typ[:] != NEUMANN )
     c.T[  :,  :,-1:] *= ( phi.bnd[T].typ[:] != NEUMANN )
 
-    # -------------------------------------------
-    # Fill the source terms with boundary values
-    # -------------------------------------------
-    b[ :1,  :,  :] += c.W[ :1,  :,  :] * phi.bnd[W].val[:1,:,:]
-    b[-1:,  :,  :] += c.E[-1:,  :,  :] * phi.bnd[E].val[:1,:,:]
-    b[  :, :1,  :] += c.S[  :, :1,  :] * phi.bnd[S].val[:,:1,:]
-    b[  :,-1:,  :] += c.N[  :,-1:,  :] * phi.bnd[N].val[:,:1,:]
-    b[  :,  :, :1] += c.B[  :,  :, :1] * phi.bnd[B].val[:,:,:1]
-    b[  :,  :,-1:] += c.T[  :,  :,-1:] * phi.bnd[T].val[:,:,:1]
-
     # --------------------------------------
     # Correct system matrices for obstacles
     # --------------------------------------
@@ -182,11 +167,4 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     # ----------------------------------------------
     c.P[:] += c.W[:] + c.E[:] + c.S[:] + c.N[:] + c.B[:] + c.T[:]
 
-    c.W[ :1,  :,  :] = 0.0
-    c.E[-1:,  :,  :] = 0.0
-    c.S[  :, :1,  :] = 0.0
-    c.N[  :,-1:,  :] = 0.0
-    c.B[  :,  :, :1] = 0.0
-    c.T[  :,  :,-1:] = 0.0
-
-    return c, b  # end of function
+    return c  # end of function

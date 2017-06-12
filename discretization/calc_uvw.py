@@ -56,10 +56,13 @@ def calc_uvw(uvw, uvwf, rho, mu, p_tot, e_f, dt, dxyz, obst):
 
     d = u.pos
 
-    # Create linear systems
-    A_u, b_u = create_matrix(u, rho/dt, mu, dxyz, obst, DIRICHLET)
-    A_v, b_v = create_matrix(v, rho/dt, mu, dxyz, obst, DIRICHLET)
-    A_w, b_w = create_matrix(w, rho/dt, mu, dxyz, obst, DIRICHLET)
+    # Create system matrices and right hand sides
+    A_u = create_matrix(u, rho/dt, mu, dxyz, obst, DIRICHLET)
+    A_v = create_matrix(v, rho/dt, mu, dxyz, obst, DIRICHLET)
+    A_w = create_matrix(w, rho/dt, mu, dxyz, obst, DIRICHLET)
+    b_u = zeros(ru)
+    b_v = zeros(rv)
+    b_w = zeros(rw)
 
     # Advection terms for momentum
     c_u = advection(rho, u, uvwf, dxyz, dt, 'superbee');

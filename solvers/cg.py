@@ -8,9 +8,10 @@ Source:
 # Standard Python modules
 from pyns.standard import *
 
-from pyns.solvers.mat_vec import mat_vec
-from pyns.solvers.vec_vec import vec_vec
-from pyns.solvers.norm    import norm
+from pyns.solvers.mat_vec     import mat_vec
+from pyns.solvers.mat_vec_bnd import mat_vec_bnd
+from pyns.solvers.vec_vec     import vec_vec
+from pyns.solvers.norm        import norm
 
 # =============================================================================
 def cg(a, phi, b, tol, ver):
@@ -47,7 +48,7 @@ def cg(a, phi, b, tol, ver):
     z = zeros(x.shape)
 
     # r = b - A * x
-    r[:,:,:] = b[:,:,:] - mat_vec(a, x)
+    r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi)
 
     # ---------------
     # Iteration loop

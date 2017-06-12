@@ -37,8 +37,9 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
     # Fetch the resolution
     rc = p.val.shape
 
-    # Create linear system
-    A_p, b_p = create_matrix(p, zeros(rc), dt/rho, dxyz, obst, NEUMANN)
+    # Create system matrix and right hand side
+    A_p = create_matrix(p, zeros(rc), dt/rho, dxyz, obst, NEUMANN)
+    b_p = zeros(rc)
 
     # Compute the source for the pressure.  Important: don't send "obst"
     # as a parameter here, because you don't want to take it into
