@@ -6,4 +6,5 @@ Very bad, but it makes code development faster for non-IT oriendted minds.
 
 # Plotting functions
 from .isolines import isolines
+from .gmv      import gmv
 from .tecplot  import tecplot
