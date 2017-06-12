@@ -88,36 +88,36 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     #          |<--------->|<--->|
     #
     if d != X:
-        # west
+        # West
         c_bc_x[:] = avg(d, mu[ :1,:,:]) * avg(d,  sx[ :1,:,:])         \
-                                        / avg(d, (dx[ :1,:,:]) / 2.0)      
+                                        / avg(d, (dx[ :1,:,:]) / 2.0)
         c.W[:] = cat_x((c_bc_x, avg(d, avg_x(mu)) * avg(d, avg_x(sx))
                                                   / avg(d, avg_x(dx))))
-        # east
+        # East
         c_bc_x[:] = avg(d, mu[-1:,:,:]) * avg(d,  sx[-1:,:,:])         \
                                         / avg(d, (dx[-1:,:,:]) / 2.0)      
         c.E[:] = cat_x((avg(d, avg_x(mu)) * avg(d, avg_x(sx))
                                           / avg(d, avg_x(dx)), c_bc_x))
 
     if d != Y:
-        # south
+        # South
         c_bc_y[:] = avg(d, mu[:, :1,:]) * avg(d,  sy[:, :1,:])         \
-                                        / avg(d, (dy[:, :1,:]) / 2.0)            
+                                        / avg(d, (dy[:, :1,:]) / 2.0)
         c.S[:] = cat_y((c_bc_y, avg(d, avg_y(mu)) * avg(d, avg_y(sy))
                                                   / avg(d, avg_y(dy))))
-        # north
+        # North
         c_bc_y[:] = avg(d, mu[:,-1:,:]) * avg(d,  sy[:,-1:,:])         \
                                         / avg(d, (dy[:,-1:,:]) / 2.0)      
         c.N[:] = cat_y((avg(d, avg_y(mu)) * avg(d, avg_y(sy))
                                           / avg(d, avg_y(dy)), c_bc_y))
 
     if d != Z:
-        # bottom
+        # Bottom
         c_bc_z[:] = avg(d, mu[:,:, :1]) * avg(d,  sz[:,:, :1])         \
                                         / avg(d, (dz[:,:, :1]) / 2.0)            
         c.B[:] = cat_z((c_bc_z, avg(d, avg_z(mu)) * avg(d, avg_z(sz))
                                                   / avg(d, avg_z(dz))))
-        # top
+        # Top
         c_bc_z[:] = avg(d, mu[:,:,-1:]) * avg(d,  sz[:,:,-1:])         \
                                         / avg(d, (dz[:,:,-1:]) / 2.0)            
         c.T[:] = cat_z((avg(d, avg_z(mu)) * avg(d, avg_z(sz))
@@ -153,12 +153,12 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
 
     # The values defined here will be false (numerical value 0)
     # wherever there is or Neumann boundary condition.
-    c.W[ :1,  :,  :] *= ( phi.bnd[W].typ[:] == DIRICHLET )
-    c.E[-1:,  :,  :] *= ( phi.bnd[E].typ[:] == DIRICHLET )
-    c.S[  :, :1,  :] *= ( phi.bnd[S].typ[:] == DIRICHLET )
-    c.N[  :,-1:,  :] *= ( phi.bnd[N].typ[:] == DIRICHLET )
-    c.B[  :,  :, :1] *= ( phi.bnd[B].typ[:] == DIRICHLET )
-    c.T[  :,  :,-1:] *= ( phi.bnd[T].typ[:] == DIRICHLET )
+    c.W[ :1,  :,  :] *= ( phi.bnd[W].typ[:] != NEUMANN )
+    c.E[-1:,  :,  :] *= ( phi.bnd[E].typ[:] != NEUMANN )
+    c.S[  :, :1,  :] *= ( phi.bnd[S].typ[:] != NEUMANN )
+    c.N[  :,-1:,  :] *= ( phi.bnd[N].typ[:] != NEUMANN )
+    c.B[  :,  :, :1] *= ( phi.bnd[B].typ[:] != NEUMANN )
+    c.T[  :,  :,-1:] *= ( phi.bnd[T].typ[:] != NEUMANN )
 
     # -------------------------------------------
     # Fill the source terms with boundary values
