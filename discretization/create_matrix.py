@@ -189,17 +189,4 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     c.B[  :,  :, :1] = 0.0
     c.T[  :,  :,-1:] = 0.0
 
-    # ---------------------
-    # Create sparse matrix
-    # ---------------------
-    nx, ny, nz = res
-    n = nx * ny * nz
-
-    data = array([reshape( c.P, n),                     \
-                  reshape(-c.W, n), reshape(-c.E, n),   \
-                  reshape(-c.S, n), reshape(-c.N, n),   \
-                  reshape(-c.B, n), reshape(-c.T, n)])
-
-    diag = array([0, +ny*nz, -ny*nz, +nz, -nz, +1, -1])
-
     return c, b  # end of function
