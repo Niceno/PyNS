@@ -69,14 +69,14 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uc = create_unknown('cell-u-vel',  C, rc, DIRICHLET)
-    vc = create_unknown('cell-v-vel',  C, rc, DIRICHLET)
-    wc = create_unknown('cell-w-vel',  C, rc, DIRICHLET)
-    uf = create_unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = create_unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = create_unknown('face-w-vel',  Z, rw, DIRICHLET)
-    t  = create_unknown('temperature', C, rc, NEUMANN)
-    p  = create_unknown('pressure',    C, rc, NEUMANN)
+    uc = Unknown('cell-u-vel',  C, rc, DIRICHLET)
+    vc = Unknown('cell-v-vel',  C, rc, DIRICHLET)
+    wc = Unknown('cell-w-vel',  C, rc, DIRICHLET)
+    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
+    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
+    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
+    t  = Unknown('temperature', C, rc, NEUMANN)
+    p  = Unknown('pressure',    C, rc, NEUMANN)
     p_tot = zeros(rc)
 
     # This is a new test
@@ -157,8 +157,9 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-                plot.isolines(t.val, (uc,vc,wc), (xn,yn,zn), Z)
-                plot.tecplot("results.dat", (xn,yn,zn), (uc,vc,wc,t))
+                plot.isolines(t.val, (uc, vc, wc), (xn, yn, zn), Z)
+                plot.gmv("results-%6.6d.gmv" % ts, 
+                         (xn, yn, zn), (uc, vc, wc, t))
 
 if __name__ == '__main__':
     main()
