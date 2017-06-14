@@ -20,6 +20,10 @@ Value on the east boundary, at coordinates (34, 56).
 Type of boundary condition at the same boundary cell from above:
 
   phi.bnd[E].typ[1, 34, 56] == NEUMANN
+  
+Note: 
+  This function has been superseeded by the class "Unknown", and its use 
+  is therefore discouraged.
 """
 
 # Standard Python modules
