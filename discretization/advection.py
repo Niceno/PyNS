@@ -282,18 +282,18 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     flux_fac_lim_x =   phi.val[0:-1,:,:] * u_fac * flow_we               \
                    +   phi.val[1:,  :,:] * u_fac * flow_ew               \
                    +   0.5 * abs(u_fac) * (1 - abs(u_fac) * dt / del_x)  \
-                   *  (   psi_x[:,:,:] * d_x[0:nx-1,:,:] * flow_we       \
-                        + psi_x[:,:,:] * d_x[1:nx,  :,:] * flow_ew )
+                   *  (   psi_x[:,:,:] * d_x[0:-2,:,:] * flow_we         \
+                        + psi_x[:,:,:] * d_x[1:-1,:,:] * flow_ew )
     flux_fac_lim_y =   phi.val[:,0:-1,:] * v_fac * flow_sn               \
                    +   phi.val[:,1:  ,:] * v_fac * flow_ns               \
                    +   0.5 * abs(v_fac) * (1 - abs(v_fac) * dt / del_y)  \
-                   *  (   psi_y[:,:,:] * d_y[:,0:ny-1,:] * flow_sn       \
-                        + psi_y[:,:,:] * d_y[:,1:ny,  :] * flow_ns )
+                   *  (   psi_y[:,:,:] * d_y[:,0:-2,:] * flow_sn         \
+                        + psi_y[:,:,:] * d_y[:,1:-1,:] * flow_ns )
     flux_fac_lim_z =   phi.val[:,:,0:-1] * w_fac * flow_bt               \
                    +   phi.val[:,:,1:  ] * w_fac * flow_tb               \
                    +   0.5 * abs(w_fac) * (1 - abs(w_fac) * dt / del_z)  \
-                   *  (   psi_z[:,:,:] * d_z[:,:,0:nz-1] * flow_bt       \
-                        + psi_z[:,:,:] * d_z[:,:,1:nz  ] * flow_tb )
+                   *  (   psi_z[:,:,:] * d_z[:,:,0:-2] * flow_bt         \
+                        + psi_z[:,:,:] * d_z[:,:,1:-1] * flow_tb )
 
     # Pad with boundary values
     flux_fac_lim_x = cat_x((phi.bnd[W].val * u_bnd_W,
