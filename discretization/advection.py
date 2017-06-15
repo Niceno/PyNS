@@ -51,15 +51,15 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     if pos == C:
 
         # Facial values of physical properties including boundary cells
-        rho_x_fac = cat_x((rho[:1,:,:],  \
-                           avg_x(rho),   \
-                           rho[-1:,:,:]))   # nxp,ny, nz
-        rho_y_fac = cat_y((rho[:,:1,:],  \
-                           avg_y(rho),   \
-                           rho[:,-1:,:]))   # nx, nyp,nz
-        rho_z_fac = cat_z((rho[:,:,:1],  \
-                           avg_z(rho),   \
-                           rho[:,:,-1:]))   # nx, ny, nzp
+        rho_x_fac = cat_x((rho[:1,:,:],
+                           avg_x(rho),
+                           rho[-1:,:,:]))  # nxp,ny, nz
+        rho_y_fac = cat_y((rho[:,:1,:],
+                           avg_y(rho),
+                           rho[:,-1:,:]))  # nx, nyp,nz
+        rho_z_fac = cat_z((rho[:,:,:1],
+                           avg_z(rho),
+                           rho[:,:,-1:]))  # nx, ny, nzp
 
         # Facial values of areas including boundary cells
         a_x_fac = cat_x((sx[:1,:,:], avg_x(sx), sx[-1:,:,:]))
@@ -91,21 +91,21 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
         # Facial values of physical properties including boundary cells
         rho_x_fac = rho                             # nx, ny, nz
         rho_nod_y = avg_x(avg_y(rho))               # nxm,nym,nz
-        rho_y_fac = cat_y((rho_nod_y[:, :1,:],      \
-                           rho_nod_y[:,  :,:],      \
+        rho_y_fac = cat_y((rho_nod_y[:, :1,:],
+                           rho_nod_y[:,  :,:],
                            rho_nod_y[:,-1:,:]))     # nxm,nyp,nz
         rho_nod_z = avg_x(avg_z(rho))               # nxm,ny,nzm
-        rho_z_fac = cat_z((rho_nod_z[:,:, :1],      \
-                           rho_nod_z[:,:,  :],      \
+        rho_z_fac = cat_z((rho_nod_z[:,:, :1],
+                           rho_nod_z[:,:,  :],
                            rho_nod_z[:,:,-1:]))     # nxm,ny,nzp
 
         # Facial values of areas including boundary cells
         a_x_fac = sx
-        a_y_fac = cat_y((avg_x(sy[:,:1,:]),  \
-                         avg_x(avg_y(sy)),   \
+        a_y_fac = cat_y((avg_x(sy[:,:1,:]),
+                         avg_x(avg_y(sy)),
                          avg_x(sy[:,-1:,:])))
-        a_z_fac = cat_z((avg_x(sz[:,:,:1]),  \
-                         avg_x(avg_z(sz)),   \
+        a_z_fac = cat_z((avg_x(sz[:,:,:1]),
+                         avg_x(avg_z(sz)),
                          avg_x(sz[:,:,-1:])))
 
         del_x = dx[1:-1,:,:]
@@ -132,22 +132,22 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 
         # Facial values of physical properties including boundary cells
         rho_nod_x = avg_y(avg_x(rho) )              # nxm,nym,nz
-        rho_x_fac = cat_x((rho_nod_x[ :1,:,:],      \
-                           rho_nod_x[  :,:,:],      \
+        rho_x_fac = cat_x((rho_nod_x[ :1,:,:],
+                           rho_nod_x[  :,:,:],
                            rho_nod_x[-1:,:,:]))     # nxp,nym,nz
         rho_y_fac = rho                             # nx, ny, nz
         rho_nod_z = avg_y(avg_z(rho) )              # nx, nym,nzm
-        rho_z_fac = cat_z((rho_nod_z[:,:, :1],      \
-                           rho_nod_z[:,:,  :],      \
+        rho_z_fac = cat_z((rho_nod_z[:,:, :1],
+                           rho_nod_z[:,:,  :],
                            rho_nod_z[:,:,-1:]))     # nx, nym,nzp
 
         # Facial values of areas including boundary cells
-        a_x_fac = cat_x((avg_y(sx[:1,:,:]),  \
-                         avg_y(avg_x(sx)),   \
+        a_x_fac = cat_x((avg_y(sx[:1,:,:]),
+                         avg_y(avg_x(sx)),
                          avg_y(sx[-1:,:,:])))
         a_y_fac = sy
-        a_z_fac = cat_z((avg_y(sz[:,:,:1]),  \
-                         avg_y(avg_z(sz)),   \
+        a_z_fac = cat_z((avg_y(sz[:,:,:1]),
+                         avg_y(avg_z(sz)),
                          avg_y(sz[:,:,-1:])))
 
         del_x = avg_y(avg_x(dx))
@@ -174,23 +174,23 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 
         # Facial values of physical properties including boundary cells
         rho_nod_x = avg_z(avg_x(rho) )              # nxm,ny, nzm
-        rho_x_fac = cat_x((rho_nod_x[ :1,:,:],      \
-                           rho_nod_x[  :,:,:],      \
+        rho_x_fac = cat_x((rho_nod_x[ :1,:,:],
+                           rho_nod_x[  :,:,:],
                            rho_nod_x[-1:,:,:]))     # nxp,ny, nzm
         rho_nod_y = avg_z(avg_y(rho) )              # nx, nym,nzm
-        rho_y_fac = cat_y((rho_nod_y[:, :1,:],      \
-                           rho_nod_y[:,  :,:],      \
+        rho_y_fac = cat_y((rho_nod_y[:, :1,:],
+                           rho_nod_y[:,  :,:],
                            rho_nod_y[:,-1:,:]))     # nx, nyp,nzm
         rho_z_fac = rho                             # nx, ny, nz
 
         # Facial values of areas including boundary cells
-        a_x_fac = cat_x((             \
-                  avg_z(sx[:1,:,:]),  \
-                  avg_z(avg_x(sx)),   \
+        a_x_fac = cat_x((
+                  avg_z(sx[:1,:,:]),
+                  avg_z(avg_x(sx)),
                   avg_z(sx[-1:,:,:])))
-        a_y_fac = cat_y((             \
-                  avg_z(sy[:,:1,:]),  \
-                  avg_z(avg_y(sy)),   \
+        a_y_fac = cat_y((
+                  avg_z(sy[:,:1,:]),
+                  avg_z(avg_y(sy)),
                   avg_z(sy[:,-1:,:])))
         a_z_fac = sz
 
@@ -296,14 +296,14 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                         + psi_z[:,:,:] * d_z[:,:,1:nz  ] * flow_tb )
 
     # Pad with boundary values
-    flux_fac_lim_x = cat_x((phi.bnd[W].val * u_bnd_W,      \
-                            flux_fac_lim_x,                \
+    flux_fac_lim_x = cat_x((phi.bnd[W].val * u_bnd_W,
+                            flux_fac_lim_x,
                             phi.bnd[E].val * u_bnd_E))
-    flux_fac_lim_y = cat_y((phi.bnd[S].val * v_bnd_S,      \
-                            flux_fac_lim_y,                \
+    flux_fac_lim_y = cat_y((phi.bnd[S].val * v_bnd_S,
+                            flux_fac_lim_y,
                             phi.bnd[N].val * v_bnd_N))
-    flux_fac_lim_z = cat_z((phi.bnd[B].val * w_bnd_B,      \
-                            flux_fac_lim_z,                \
+    flux_fac_lim_z = cat_z((phi.bnd[B].val * w_bnd_B,
+                            flux_fac_lim_z,
                             phi.bnd[T].val * w_bnd_T))
 
     # Multiply with face areas
