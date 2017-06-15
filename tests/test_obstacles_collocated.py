@@ -4,9 +4,9 @@
 #                                                       | ... v velocities
 #       +-------+-------+-------+-------+-------+
 #       |       |       |       |       |       |
-#       |   o   -   o   -   o   -   o   -   o   | j=ny-2
+#       |   o   -   o   -   o   -   o   -   o   | j=ny-1
 #       |       |       |       |       |       |
-#       +---|---+---|---+---|---+---|---+---|---+     j=ny-1
+#       +---|---+---|---+---|---+---|---+---|---+     j=ny-2
 #       |       |       |       |       |       |
 #       |   o   -   o   -   o   -   o   -   o   | ...
 #       |       |       |       |       |       |
@@ -67,13 +67,13 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
     ndt = time_steps # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uc = create_unknown('cell-u-vel',  C, rc, DIRICHLET)
-    vc = create_unknown('cell-v-vel',  C, rc, DIRICHLET)
-    wc = create_unknown('cell-w-vel',  C, rc, DIRICHLET)
-    uf = create_unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = create_unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = create_unknown('face-w-vel',  Z, rw, DIRICHLET)
-    p  = create_unknown('pressure',    C, rc, NEUMANN)
+    uc = Unknown('cell-u-vel',  C, rc, DIRICHLET)
+    vc = Unknown('cell-v-vel',  C, rc, DIRICHLET)
+    wc = Unknown('cell-w-vel',  C, rc, DIRICHLET)
+    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
+    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
+    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
+    p  = Unknown('pressure',    C, rc, NEUMANN)
 
     # Specify boundary conditions
     uc.bnd[W].typ[:1,:,:] = DIRICHLET
@@ -150,6 +150,8 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
         if show_plot:
             if ts % plot_freq == 0:
                 plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
+                plot.tecplot("obst-staggered-%6.6d.plt" % ts, 
+                             (xn, yn, zn), (uf, vf, wf, p))
 
 if __name__ == '__main__':
     main()
