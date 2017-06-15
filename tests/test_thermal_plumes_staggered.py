@@ -154,7 +154,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
             if ts % plot_freq == 0:
                 plot.isolines(t.val, (uf,vf,wf), (xn,yn,zn), Z)
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
-                plot.tecplot("results-%6.6d.dat" % ts, 
+                plot.tecplot("tp-staggered-%6.6d.plt" % ts, 
                              (xn, yn, zn), (uf, vf, wf, t, p))
 
 if __name__ == '__main__':

@@ -154,7 +154,7 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         if show_plot:
             if ts % plot_freq == 0:
                 plot.isolines(t.val, (uf, vf, wf), (xn, yn, zn), Z)
-                plot.gmv("results-%6.6d.gmv" % ts, 
+                plot.gmv("tdc-staggered-%6.6d.gmv" % ts, 
                          (xn, yn, zn), (uf, vf, wf, t))
 
 if __name__ == '__main__':
