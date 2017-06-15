@@ -36,19 +36,19 @@ def cartesian_grid(xn, yn, zn):
     """
 
     # Compute cell resolutions
-    nx = len(xn)-1
-    ny = len(yn)-1
-    nz = len(zn)-1
+    nx = len(xn) - 1
+    ny = len(yn) - 1
+    nz = len(zn) - 1
 
     # Create matrices for cell dimensions ...
-    dx = empty((nx,ny,nz))
-    dy = empty((nx,ny,nz))
-    dz = empty((nx,ny,nz))
+    dx = empty((nx, ny, nz))
+    dy = empty((nx, ny, nz))
+    dz = empty((nx, ny, nz))
 
     # ... and fill them up!
-    dx[:] = dif(xn).reshape(nx,1,1)
-    dy[:] = dif(yn).reshape(1,ny,1)
-    dz[:] = dif(zn).reshape(1,1,nz)
+    dx[:] = dif(xn).reshape(nx,  1,  1)
+    dy[:] = dif(yn).reshape( 1, ny,  1)
+    dz[:] = dif(zn).reshape( 1,  1, nz)
 
     # Compute resolutions for cell-centered and all collocated variables
     rc = nx,   ny,   nz
