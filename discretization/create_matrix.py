@@ -150,8 +150,8 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     #        -->       -->       -->         -->       -->       -->       -->   
     #         |nx-1     |0        |1          |         |nx-2     |nx-1      0
     #         +---------+---------+-- -   - --+---------+---------+-- -   
-    #         :         :         :           :         :         :
-    #         |   dx    |   dx    |           |   dx    |   dx    |   dx 
+    #         :         :         :           :         :         :         :
+    #         |   dx    |   dx    |           |   dx    |   dx    |   dx    |
     #         |<------->|<------->|           |<------->|<------->|<------->|
     #
     if d == X:
@@ -169,7 +169,7 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     # ----------------------------------------------------------------------
 
     # The values defined here will be false (numerical value 0)
-    # wherever there is or Neumann boundary condition.
+    # wherever there is Neumann boundary condition.
     c.W[ :1,  :,  :] *= ( phi.bnd[W].typ[:] != NEUMANN )
     c.E[-1:,  :,  :] *= ( phi.bnd[E].typ[:] != NEUMANN )
     c.S[  :, :1,  :] *= ( phi.bnd[S].typ[:] != NEUMANN )
