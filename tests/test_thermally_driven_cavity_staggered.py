@@ -36,7 +36,7 @@ from pyns.operators      import *
 from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
-
+        
 def main(show_plot=True, time_steps=1200, plot_freq=120):
 
 #==============================================================================
@@ -69,11 +69,11 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = create_unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = create_unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = create_unknown('face-w-vel',  Z, rw, DIRICHLET)
-    t  = create_unknown('temperature', C, rc, NEUMANN)
-    p  = create_unknown('pressure',    C, rc, NEUMANN)
+    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
+    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
+    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
+    t  = Unknown('temperature', C, rc, NEUMANN)
+    p  = Unknown('pressure',    C, rc, NEUMANN)
     p_tot = zeros(rc)
 
     # This is a new test
@@ -153,8 +153,9 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-                plot.isolines(t.val, (uf,vf,wf), (xn,yn,zn), Z)
-                plot.tecplot("results.dat", (xn,yn,zn), (uf,vf,wf,t))
+                plot.isolines(t.val, (uf, vf, wf), (xn, yn, zn), Z)
+                plot.gmv("results-%6.6d.gmv" % ts, 
+                         (xn, yn, zn), (uf, vf, wf, t))
 
 if __name__ == '__main__':
     main()

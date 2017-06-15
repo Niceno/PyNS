@@ -4,7 +4,10 @@ It includes all the functionality defined in the module "discretization".
 Very bad, but it makes code development faster for non-IT oriendted minds.
 """
 
-# Discretization
+# Classes in "discretization":
+from .Unknown import Unknown
+  
+# Functions in "discretization":
 from .adj_n_bnds      import adj_n_bnds
 from .calc_p          import calc_p
 from .calc_t          import calc_t
