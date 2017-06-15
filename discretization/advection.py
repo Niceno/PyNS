@@ -51,53 +51,38 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     if pos == C:
 
         # Facial values of physical properties including boundary cells
-        rho_x_fac = cat_x((rho[:1,:,:],
-                           avg_x(rho),
-                           rho[-1:,:,:]))  # nxp,ny, nz
-        rho_y_fac = cat_y((rho[:,:1,:],
-                           avg_y(rho),
-                           rho[:,-1:,:]))  # nx, nyp,nz
-        rho_z_fac = cat_z((rho[:,:,:1],
-                           avg_z(rho),
-                           rho[:,:,-1:]))  # nx, ny, nzp
+        rho_x_fac = cat_x((rho[:1,:,:], avg_x(rho), rho[-1:,:,:]))  
+        rho_y_fac = cat_y((rho[:,:1,:], avg_y(rho), rho[:,-1:,:]))  
+        rho_z_fac = cat_z((rho[:,:,:1], avg_z(rho), rho[:,:,-1:]))  
 
         # Facial values of areas including boundary cells
         a_x_fac = cat_x((sx[:1,:,:], avg_x(sx), sx[-1:,:,:]))
         a_y_fac = cat_y((sy[:,:1,:], avg_y(sy), sy[:,-1:,:]))
         a_z_fac = cat_z((sz[:,:,:1], avg_z(sz), sz[:,:,-1:]))
 
-        del_x = avg_x(dx)
-        del_y = avg_y(dy)
-        del_z = avg_z(dz)
+        # Distance between cell centers, defined at faces including boundaries
+        # MODIFY FOR PERIODIC!!!
+        del_x = cat_x((dx[:1,:,:]*0.5, avg_x(dx), dx[-1:,:,:]*0.5))
+        del_y = cat_y((dy[:,:1,:]*0.5, avg_y(dy), dy[:,-1:,:]*0.5))
+        del_z = cat_z((dz[:,:,:1]*0.5, avg_z(dz), dz[:,:,-1:]*0.5))
 
-        # Facial values of velocities without boundary values
-        u_fac = uf.val  # nxm,ny, nz
-        v_fac = vf.val  # nx, nym,nz
-        w_fac = wf.val  # nx, ny, nzm
-
-        # Boundary velocity values
-        u_bnd_W = uf.bnd[W].val
-        u_bnd_E = uf.bnd[E].val
-        v_bnd_S = vf.bnd[S].val
-        v_bnd_N = vf.bnd[N].val
-        w_bnd_B = wf.bnd[B].val
-        w_bnd_T = wf.bnd[T].val
-
+        # Velocities defined at faces including boundaries
+        # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
+        u_fac = cat_x((uf.bnd[W].val, uf.val, uf.bnd[E].val))
+        v_fac = cat_y((vf.bnd[S].val, vf.val, vf.bnd[N].val))
+        w_fac = cat_z((wf.bnd[B].val, wf.val, wf.bnd[T].val))
+        
     # -----------------------------------------------------------
     # Specific for transported variable staggered in x direction
     # -----------------------------------------------------------
     if pos == X:
 
         # Facial values of physical properties including boundary cells
-        rho_x_fac = rho                             # nx, ny, nz
-        rho_nod_y = avg_x(avg_y(rho))               # nxm,nym,nz
-        rho_y_fac = cat_y((rho_nod_y[:, :1,:],
-                           rho_nod_y[:,  :,:],
-                           rho_nod_y[:,-1:,:]))     # nxm,nyp,nz
-        rho_nod_z = avg_x(avg_z(rho))               # nxm,ny,nzm
-        rho_z_fac = cat_z((rho_nod_z[:,:, :1],
-                           rho_nod_z[:,:,  :],
-                           rho_nod_z[:,:,-1:]))     # nxm,ny,nzp
+        rho_x_fac = rho                             
+        rho_nod_y = avg_x(avg_y(rho))               
+        rho_y_fac = cat_y((rho_nod_y[:, :1,:], rho_nod_y, rho_nod_y[:,-1:,:]))     
+        rho_nod_z = avg_x(avg_z(rho))               
+        rho_z_fac = cat_z((rho_nod_z[:,:, :1], rho_nod_z, rho_nod_z[:,:,-1:]))     
 
         # Facial values of areas including boundary cells
         a_x_fac = sx
@@ -108,22 +93,17 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                          avg_x(avg_z(sz)),
                          avg_x(sz[:,:,-1:])))
 
-        del_x = dx[1:-1,:,:]
-        del_y = avg_x(avg_y(dy))
-        del_z = avg_x(avg_z(dz))
+        # Distance between cell centers, defined at faces including boundaries
+        # MODIFY FOR PERIODIC
+        del_x = dx[:,:,:]
+        del_y = avg_x(cat_y((dy[:,:1,:]*0.5, avg_y(dy), dy[:,-1:,:]*0.5)))
+        del_z = avg_x(cat_z((dz[:,:,:1]*0.5, avg_z(dz), dz[:,:,-1:]*0.5)))
 
-        # Facial values of velocities without boundary values
-        u_fac = avg_x(uf.val)  # nxmm,ny, nz
-        v_fac = avg_x(vf.val)  # nxm, nym,nz
-        w_fac = avg_x(wf.val)  # nxm, ny, nzm
-
-        # Boundary velocity values
-        u_bnd_W = uf.bnd[W].val
-        u_bnd_E = uf.bnd[E].val
-        v_bnd_S = avg_x(vf.bnd[S].val)
-        v_bnd_N = avg_x(vf.bnd[N].val)
-        w_bnd_B = avg_x(wf.bnd[B].val)
-        w_bnd_T = avg_x(wf.bnd[T].val)
+        # Velocities defined at faces including boundaries
+        # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
+        u_fac = cat_x((uf.bnd[W].val, avg_x(uf.val), uf.bnd[E].val))  
+        v_fac = avg_x(cat_y((vf.bnd[S].val, vf.val, vf.bnd[N].val)))
+        w_fac = avg_x(cat_z((wf.bnd[B].val, wf.val, wf.bnd[T].val)))  
 
     # -----------------------------------------------------------
     # Specific for transported variable staggered in y direction
@@ -131,15 +111,11 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     if pos == Y:
 
         # Facial values of physical properties including boundary cells
-        rho_nod_x = avg_y(avg_x(rho) )              # nxm,nym,nz
-        rho_x_fac = cat_x((rho_nod_x[ :1,:,:],
-                           rho_nod_x[  :,:,:],
-                           rho_nod_x[-1:,:,:]))     # nxp,nym,nz
-        rho_y_fac = rho                             # nx, ny, nz
-        rho_nod_z = avg_y(avg_z(rho) )              # nx, nym,nzm
-        rho_z_fac = cat_z((rho_nod_z[:,:, :1],
-                           rho_nod_z[:,:,  :],
-                           rho_nod_z[:,:,-1:]))     # nx, nym,nzp
+        rho_nod_x = avg_y(avg_x(rho) )
+        rho_x_fac = cat_x((rho_nod_x[ :1,:,:], rho_nod_x, rho_nod_x[-1:,:,:]))
+        rho_y_fac = rho
+        rho_nod_z = avg_y(avg_z(rho) )
+        rho_z_fac = cat_z((rho_nod_z[:,:, :1], rho_nod_z, rho_nod_z[:,:,-1:]))
 
         # Facial values of areas including boundary cells
         a_x_fac = cat_x((avg_y(sx[:1,:,:]),
@@ -150,105 +126,102 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                          avg_y(avg_z(sz)),
                          avg_y(sz[:,:,-1:])))
 
-        del_x = avg_y(avg_x(dx))
-        del_y = dy[:,1:-1,:]
-        del_z = avg_y(avg_z(dz))
+        # Distance between cell centers, defined at faces including boundaries
+        # MODIFY FOR PERIODIC
+        del_x = avg_y(cat_x((dx[:1,:,:]*0.5, avg_x(dx), dx[-1:,:,:]*0.5)))
+        del_y = dy[:,:,:]
+        del_z = avg_y(cat_z((dz[:,:,:1]*0.5, avg_z(dz), dz[:,:,-1:]*0.5)))
 
-        # Facial values of velocities without boundary values
-        u_fac = avg_y(uf.val)  # nxm,nym, nz
-        v_fac = avg_y(vf.val)  # nx, nymm,nz
-        w_fac = avg_y(wf.val)  # nx, nym, nzm
-
-        # Facial values of velocities with boundary values
-        u_bnd_W = avg_y(uf.bnd[W].val)
-        u_bnd_E = avg_y(uf.bnd[E].val)
-        v_bnd_S = vf.bnd[S].val
-        v_bnd_N = vf.bnd[N].val
-        w_bnd_B = avg_y(wf.bnd[B].val)
-        w_bnd_T = avg_y(wf.bnd[T].val)
-
+        # Velocities defined at faces including boundaries
+        # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
+        u_fac = avg_y(cat_x((uf.bnd[W].val, uf.val, uf.bnd[E].val)))
+        v_fac = cat_y((vf.bnd[S].val, avg_y(vf.val), vf.bnd[N].val)) 
+        w_fac = avg_y(cat_z((wf.bnd[B].val, wf.val, wf.bnd[T].val)))
+        
     # -----------------------------------------------------------
     # Specific for transported variable staggered in z direction
     # -----------------------------------------------------------
     if pos == Z:
 
         # Facial values of physical properties including boundary cells
-        rho_nod_x = avg_z(avg_x(rho) )              # nxm,ny, nzm
-        rho_x_fac = cat_x((rho_nod_x[ :1,:,:],
-                           rho_nod_x[  :,:,:],
-                           rho_nod_x[-1:,:,:]))     # nxp,ny, nzm
-        rho_nod_y = avg_z(avg_y(rho) )              # nx, nym,nzm
-        rho_y_fac = cat_y((rho_nod_y[:, :1,:],
-                           rho_nod_y[:,  :,:],
-                           rho_nod_y[:,-1:,:]))     # nx, nyp,nzm
+        rho_nod_x = avg_z(avg_x(rho) )
+        rho_x_fac = cat_x((rho_nod_x[ :1,:,:], rho_nod_x, rho_nod_x[-1:,:,:]))
+        rho_nod_y = avg_z(avg_y(rho) )
+        rho_y_fac = cat_y((rho_nod_y[:, :1,:], rho_nod_y, rho_nod_y[:,-1:,:]))
         rho_z_fac = rho                             # nx, ny, nz
 
         # Facial values of areas including boundary cells
-        a_x_fac = cat_x((
-                  avg_z(sx[:1,:,:]),
-                  avg_z(avg_x(sx)),
-                  avg_z(sx[-1:,:,:])))
-        a_y_fac = cat_y((
-                  avg_z(sy[:,:1,:]),
-                  avg_z(avg_y(sy)),
-                  avg_z(sy[:,-1:,:])))
+        a_x_fac = cat_x((avg_z(sx[:1,:,:]),
+                         avg_z(avg_x(sx)),
+                         avg_z(sx[-1:,:,:])))
+        a_y_fac = cat_y((avg_z(sy[:,:1,:]),
+                         avg_z(avg_y(sy)),
+                         avg_z(sy[:,-1:,:])))
         a_z_fac = sz
 
-        del_x = avg_z(avg_x(dx))
-        del_y = avg_z(avg_y(dy))
-        del_z = dz[:,:,1:-1]
+        # Facial values of distance between cell centers
+        # MODIFY FOR PERIODIC
+        del_x = avg_z(cat_x((dx[:1,:,:]*0.5, avg_x(dx), dx[-1:,:,:]*0.5)))
+        del_y = avg_z(cat_y((dy[:,:1,:]*0.5, avg_y(dy), dy[:,-1:,:]*0.5)))
+        del_z = dz[:,:,:]
 
         # Facial values of velocities without boundary values
-        u_fac = avg_z(uf.val)  # nxm,ny,  nzm
-        v_fac = avg_z(vf.val)  # nx, nym, nzm
-        w_fac = avg_z(wf.val)  # nx, ny,  nzmm
-
-        # Facial values of velocities with boundary values
-        u_bnd_W = avg_z(uf.bnd[W].val)
-        u_bnd_E = avg_z(uf.bnd[E].val)
-        v_bnd_S = avg_z(vf.bnd[S].val)
-        v_bnd_N = avg_z(vf.bnd[N].val)
-        w_bnd_B = wf.bnd[B].val
-        w_bnd_T = wf.bnd[T].val
+        # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
+        u_fac = avg_z(cat_x((uf.bnd[W].val, uf.val, uf.bnd[E].val)))  
+        v_fac = avg_z(cat_y((vf.bnd[S].val, vf.val, vf.bnd[N].val)))
+        w_fac = cat_z((wf.bnd[B].val, avg_z(wf.val), wf.bnd[T].val))  
 
     # -----------------------------
     # Common part of the algorithm
     # -----------------------------
 
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------------
     #
-    #    |-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|
-    #      0   1   2   3   4   5   6   7   8   9      phi
-    #        x---x---x---x---x---x---x---x---x
-    #        0   1   2   3   4   5   6   7   8        d_x initial
-    #    x---x---x---x---x---x---x---x---x---x---x
-    #    0   1   2   3   4   5   6   7   8   9  10    d_x padded
+    #    |-W-|-W-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-E-|-E-|
+    #      0   1   2   3   4   5   6   7   8   9  10  11  12  13    phi
+    #        x---x---x---x---x---x---x---x---x---x---x---x---x
+    #        0   1   2   3   4   5   6   7   8   9  10  11  12      d_x
     #
-    # ------------------------------------------------------------
+    #            x---x---x---x---x---x---x---x---x---x---x
+    #            0   1   2   3   4   5   6   7   8   9  10          r_x
+    #
+    # ------------------------------------------------------------------
 
     # Compute consecutive differences (and avoid division by zero)
-    d_x = dif_x(phi.val)  # nxm, ny, nz
+    # FILL THE BUFFERS PROPERLY FOR PERIODIC
+    d_x = dif_x(cat_x((phi.bnd[W].val, 
+                       phi.bnd[W].val, 
+                       phi.val, 
+                       phi.bnd[E].val,
+                       phi.bnd[E].val)))  
     d_x[(d_x >  -TINY) & (d_x <=   0.0)] = -TINY
     d_x[(d_x >=   0.0) & (d_x <  +TINY)] = +TINY
-    d_x = cat_x((d_x[:1,:,:], d_x, d_x[-1:,:,:]))  # nxp, ny, nz
 
-    d_y = dif_y(phi.val)  # nx, nym, nz
+    d_y = dif_y(phi.val)  
+    d_y = dif_y(cat_y((phi.bnd[S].val, 
+                       phi.bnd[S].val, 
+                       phi.val, 
+                       phi.bnd[N].val,
+                       phi.bnd[N].val)))  
     d_y[(d_y >  -TINY) & (d_y <=   0.0)] = -TINY
     d_y[(d_y >=   0.0) & (d_y <  +TINY)] = +TINY
-    d_y = cat_y((d_y[:,:1,:], d_y, d_y[:,-1:,:]))  # nx, nyp, nz
 
-    d_z = dif_z(phi.val)  # nx, ny, nzm
+    d_z = dif_z(phi.val)  
+    d_z = dif_z(cat_z((phi.bnd[B].val, 
+                       phi.bnd[B].val, 
+                       phi.val, 
+                       phi.bnd[T].val,
+                       phi.bnd[T].val)))  
     d_z[(d_z >  -TINY) & (d_z <=   0.0)] = -TINY
     d_z[(d_z >=   0.0) & (d_z <  +TINY)] = +TINY
-    d_z = cat_z((d_z[:,:,:1], d_z, d_z[:,:,-1:]))  # nx, ny, nzp
 
     # Ratio of consecutive gradients for positive and negative flow
-    r_x_we = d_x[1:-1,:,:] / d_x[0:-2,:,:]  # nxm,ny, nz
-    r_x_ew = d_x[2:,  :,:] / d_x[1:-1,:,:]  # nxm,ny, nz
-    r_y_sn = d_y[:,1:-1,:] / d_y[:,0:-2,:]  # nx, nym,nz
-    r_y_ns = d_y[:,2:,  :] / d_y[:,1:-1,:]  # nx, nym,nz
-    r_z_bt = d_z[:,:,1:-1] / d_z[:,:,0:-2]  # nx, ny, nzm
-    r_z_tb = d_z[:,:,2:  ] / d_z[:,:,1:-1]  # nx, ny, nzm
+    r_x_we = d_x[1:-1,:,:] / d_x[0:-2,:,:]  
+    r_x_ew = d_x[2:,  :,:] / d_x[1:-1,:,:]  
+    r_y_sn = d_y[:,1:-1,:] / d_y[:,0:-2,:]  
+    r_y_ns = d_y[:,2:,  :] / d_y[:,1:-1,:]  
+    r_z_bt = d_z[:,:,1:-1] / d_z[:,:,0:-2]  
+    r_z_tb = d_z[:,:,2:  ] / d_z[:,:,1:-1] 
 
     flow_we = u_fac >= 0
     flow_ew = lnot(flow_we)
@@ -279,32 +252,21 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
         psi_y = mx(zeros(r_y.shape),mn(2.*r_y,(2.+r_y)/3.,2.*ones(r_y.shape)))
         psi_z = mx(zeros(r_z.shape),mn(2.*r_z,(2.+r_z)/3.,2.*ones(r_z.shape)))
 
-    flux_fac_lim_x =   phi.val[0:-1,:,:] * u_fac * flow_we               \
-                   +   phi.val[1:,  :,:] * u_fac * flow_ew               \
-                   +   0.5 * abs(u_fac) * (1 - abs(u_fac) * dt / del_x)  \
-                   *  (   psi_x[:,:,:] * d_x[0:-2,:,:] * flow_we         \
+    flux_fac_lim_x =   cat_x((phi.bnd[W].val, phi.val)) * u_fac * flow_we  \
+                   +   cat_x((phi.val, phi.bnd[E].val)) * u_fac * flow_ew  \
+                   +   0.5 * abs(u_fac) * (1 - abs(u_fac) * dt / del_x)    \
+                   *  (   psi_x[:,:,:] * d_x[0:-2,:,:] * flow_we           \
                         + psi_x[:,:,:] * d_x[1:-1,:,:] * flow_ew )
-    flux_fac_lim_y =   phi.val[:,0:-1,:] * v_fac * flow_sn               \
-                   +   phi.val[:,1:  ,:] * v_fac * flow_ns               \
-                   +   0.5 * abs(v_fac) * (1 - abs(v_fac) * dt / del_y)  \
-                   *  (   psi_y[:,:,:] * d_y[:,0:-2,:] * flow_sn         \
+    flux_fac_lim_y =   cat_y((phi.bnd[S].val, phi.val)) * v_fac * flow_sn  \
+                   +   cat_y((phi.val, phi.bnd[N].val)) * v_fac * flow_ns  \
+                   +   0.5 * abs(v_fac) * (1 - abs(v_fac) * dt / del_y)    \
+                   *  (   psi_y[:,:,:] * d_y[:,0:-2,:] * flow_sn           \
                         + psi_y[:,:,:] * d_y[:,1:-1,:] * flow_ns )
-    flux_fac_lim_z =   phi.val[:,:,0:-1] * w_fac * flow_bt               \
-                   +   phi.val[:,:,1:  ] * w_fac * flow_tb               \
-                   +   0.5 * abs(w_fac) * (1 - abs(w_fac) * dt / del_z)  \
-                   *  (   psi_z[:,:,:] * d_z[:,:,0:-2] * flow_bt         \
+    flux_fac_lim_z =   cat_z((phi.bnd[B].val, phi.val)) * w_fac * flow_bt  \
+                   +   cat_z((phi.val, phi.bnd[T].val)) * w_fac * flow_tb  \
+                   +   0.5 * abs(w_fac) * (1 - abs(w_fac) * dt / del_z)    \
+                   *  (   psi_z[:,:,:] * d_z[:,:,0:-2] * flow_bt           \
                         + psi_z[:,:,:] * d_z[:,:,1:-1] * flow_tb )
-
-    # Pad with boundary values
-    flux_fac_lim_x = cat_x((phi.bnd[W].val * u_bnd_W,
-                            flux_fac_lim_x,
-                            phi.bnd[E].val * u_bnd_E))
-    flux_fac_lim_y = cat_y((phi.bnd[S].val * v_bnd_S,
-                            flux_fac_lim_y,
-                            phi.bnd[N].val * v_bnd_N))
-    flux_fac_lim_z = cat_z((phi.bnd[B].val * w_bnd_B,
-                            flux_fac_lim_z,
-                            phi.bnd[T].val * w_bnd_T))
 
     # Multiply with face areas
     flux_fac_lim_x = rho_x_fac * flux_fac_lim_x * a_x_fac
