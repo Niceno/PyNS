@@ -61,14 +61,53 @@ def avg(*args):
         a   = args[1]  # array
 
         if dir == X:
-            return (a[1:,:, : ] + a[:-1,:,  :  ]) * 0.5
+            return (a[1:,:,:] + a[:-1,:,:]) * 0.5
         elif dir == Y:
-            return (a[:, 1:,: ] + a[:,  :-1,:  ]) * 0.5
+            return (a[:,1:,:] + a[:,:-1,:]) * 0.5
         elif dir == Z:
-            return (a[:, :, 1:] + a[:,  :,  :-1]) * 0.5
+            return (a[:,:,1:] + a[:,:,:-1]) * 0.5
 
     # Some error message might
     # be printed if number of
     # arguments is wrong
 
     return a  # end of function
+    
+# =============================================================================
+def avg_x(a):
+# -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for averaging.
+
+    Returns:
+      Matrix with averaged values.
+    """
+
+    return (a[1:,:,:] + a[:-1,:,:]) * 0.5  # end of function
+
+# =============================================================================
+def avg_y(a):
+# -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for averaging.
+
+    Returns:
+      Matrix with averaged values.
+    """
+
+    return (a[:,1:,:] + a[:,:-1,:]) * 0.5  # end of function
+  
+# =============================================================================
+def avg_z(a):
+# -----------------------------------------------------------------------------
+    """
+    Args:
+      a: matrix for averaging.
+
+    Returns:
+      Matrix with averaged values.
+    """
+
+    return (a[:,:,1:] + a[:,:,:-1]) * 0.5  # end of function
