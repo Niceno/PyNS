@@ -54,6 +54,7 @@ class Unknown:
         # Store name, position and resolution
         self.name = name
         self.pos  = pos
+        self.per  = per
         self.nx, self.ny, self.nz = res
 
         # Allocate memory space for new and old values
@@ -86,3 +87,25 @@ class Unknown:
         self.bnd[T].val[:,:,0] = 0
 
         print("Created unknown ", self.name)
+
+    # =========================================================================
+    def exchange(self):
+    # -------------------------------------------------------------------------  
+        """
+        Function to refresh buffers.  For the time being it only takes 
+        care of periodic boundary conditions, but in the future it may 
+        also refresh buffers used in parallel execution.
+        """
+        
+        if self.pos == C:
+            if self.per[X] == True:
+                self.bnd[W].val[:] = self.val[-1:,:,:]
+                self.bnd[E].val[:] = self.val[ :1,:,:]
+            if self.per[Y] == True:
+                self.bnd[S].val[:] = self.val[:,-1:,:]
+                self.bnd[N].val[:] = self.val[:, :1,:]
+            if self.per[Z] == True:
+                self.bnd[B].val[:] = self.val[:,:,-1:]
+                self.bnd[T].val[:] = self.val[:,:, :1]
+
+        
