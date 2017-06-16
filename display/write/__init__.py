@@ -6,5 +6,6 @@ Very bad, but it makes code development faster for non-IT oriendted minds.
 
 # Printing functions
 from .array     import array
+from .at        import at
 from .matrix    import matrix
 from .time_step import time_step
