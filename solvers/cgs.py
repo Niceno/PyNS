@@ -9,7 +9,9 @@ Source:
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants           import TINY
+from pyns.constants import *
+from pyns.operators import *
+from pyns.display   import write
 
 from pyns.solvers.mat_vec     import mat_vec
 from pyns.solvers.mat_vec_bnd import mat_vec_bnd
@@ -73,7 +75,8 @@ def cgs(a, phi, b, tol, ver):
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
-            print("cgs fails becuase rho = %12.5e" % rho)
+            write.at(__name__)
+            print("  Fails becuase rho = %12.5e" % rho)
             return x
 
         if i == 1:
