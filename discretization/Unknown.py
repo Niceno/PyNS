@@ -97,15 +97,14 @@ class Unknown:
         also refresh buffers used in parallel execution.
         """
         
-        if self.pos == C:
-            if self.per[X] == True:
-                self.bnd[W].val[:] = self.val[-1:,:,:]
-                self.bnd[E].val[:] = self.val[ :1,:,:]
-            if self.per[Y] == True:
-                self.bnd[S].val[:] = self.val[:,-1:,:]
-                self.bnd[N].val[:] = self.val[:, :1,:]
-            if self.per[Z] == True:
-                self.bnd[B].val[:] = self.val[:,:,-1:]
-                self.bnd[T].val[:] = self.val[:,:, :1]
+        if self.per[X] == True:
+            self.bnd[W].val[:] = self.val[-1:,:,:]
+            self.bnd[E].val[:] = self.val[ :1,:,:]
+        if self.per[Y] == True:
+            self.bnd[S].val[:] = self.val[:,-1:,:]
+            self.bnd[N].val[:] = self.val[:, :1,:]
+        if self.per[Z] == True:
+            self.bnd[B].val[:] = self.val[:,:,-1:]
+            self.bnd[T].val[:] = self.val[:,:, :1]
 
         
