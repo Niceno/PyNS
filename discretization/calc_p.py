@@ -8,6 +8,7 @@ from pyns.standard import *
 # PyNS modules
 from pyns.constants import *
 from pyns.operators import *
+from pyns.display   import write
 
 from pyns.discretization.adj_n_bnds     import adj_n_bnds
 from pyns.discretization.create_matrix  import create_matrix
@@ -46,8 +47,9 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
     # account at this stage.  After velocity corrections, you should.
     b_p = vol_balance(uvwf, dxyz, zeros(rc))
 
-    print('Maximum volume error before correction: %12.5e' % abs(b_p).max())
-    print('Volume imbalance before correction    : %12.5e' % b_p.sum())
+    write.at(__name__)
+    print("  Maximum volume error before correction: %12.5e" % abs(b_p).max())
+    print("  Volume imbalance before correction    : %12.5e" % b_p.sum())
 
     # Solve for pressure
     p.val[:] = bicgstab(A_p, p, b_p, TOL, False)
