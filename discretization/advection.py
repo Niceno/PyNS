@@ -31,19 +31,22 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
       Three-dimensional matrix with advection term.
     """
 
-    res = phi.val.shape
-    nx, ny, nz = res
-
     # Unpack tuples
     uf, vf, wf = uvwf
     dx, dy, dz = dxyz
 
     pos = phi.pos
-
+    per = phi.per
+    
     # Pre-compute geometrical quantities
     sx = dy * dz
     sy = dx * dz
     sz = dx * dy
+
+    # ----------------
+    # Refresh buffers
+    # ----------------
+    phi.exchange()
 
     # ------------------------------------------------
     # Specific for cell-centered transported variable
@@ -61,17 +64,30 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
         a_z_fac = cat_z((sz[:,:,:1], avg_z(sz), sz[:,:,-1:]))
 
         # Distance between cell centers, defined at faces including boundaries
-        # MODIFY FOR PERIODIC!!!
         del_x = cat_x((dx[:1,:,:]*0.5, avg_x(dx), dx[-1:,:,:]*0.5))
         del_y = cat_y((dy[:,:1,:]*0.5, avg_y(dy), dy[:,-1:,:]*0.5))
         del_z = cat_z((dz[:,:,:1]*0.5, avg_z(dz), dz[:,:,-1:]*0.5))
 
+        # Modify all of the above values for periodic boundaries
+        if per[X] == True:
+            link_avg_x(rho_x_fac)  
+            link_avg_x(a_x_fac)
+            link_add_x(del_x)
+        if per[Y] == True:
+            link_avg_y(rho_y_fac)
+            link_avg_y(a_y_fac)
+            link_add_y(del_y)
+        if per[Z] == True:
+            link_avg_z(rho_z_fac)
+            link_avg_z(a_z_fac)
+            link_add_z(del_z)
+          
         # Velocities defined at faces including boundaries
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
         u_fac = cat_x((uf.bnd[W].val, uf.val, uf.bnd[E].val))
         v_fac = cat_y((vf.bnd[S].val, vf.val, vf.bnd[N].val))
         w_fac = cat_z((wf.bnd[B].val, wf.val, wf.bnd[T].val))
-        
+       
     # -----------------------------------------------------------
     # Specific for transported variable staggered in x direction
     # -----------------------------------------------------------
@@ -94,10 +110,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                          avg_x(sz[:,:,-1:])))
 
         # Distance between cell centers, defined at faces including boundaries
-        # MODIFY FOR PERIODIC
         del_x = dx[:,:,:]
         del_y = avg_x(cat_y((dy[:,:1,:]*0.5, avg_y(dy), dy[:,-1:,:]*0.5)))
         del_z = avg_x(cat_z((dz[:,:,:1]*0.5, avg_z(dz), dz[:,:,-1:]*0.5)))
+
+        # Modify all of the above values for periodic boundaries
+        if per[Y] == True:
+            link_avg_y(rho_y_fac)
+            link_avg_y(a_y_fac)
+            link_add_y(del_y)
+        if per[Z] == True:
+            link_avg_z(rho_z_fac)
+            link_avg_z(a_z_fac)
+            link_add_z(del_z)
 
         # Velocities defined at faces including boundaries
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
@@ -127,10 +152,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                          avg_y(sz[:,:,-1:])))
 
         # Distance between cell centers, defined at faces including boundaries
-        # MODIFY FOR PERIODIC
         del_x = avg_y(cat_x((dx[:1,:,:]*0.5, avg_x(dx), dx[-1:,:,:]*0.5)))
         del_y = dy[:,:,:]
         del_z = avg_y(cat_z((dz[:,:,:1]*0.5, avg_z(dz), dz[:,:,-1:]*0.5)))
+
+        # Modify all of the above values for periodic boundaries
+        if per[X] == True:
+            link_avg_x(rho_x_fac)  
+            link_avg_x(a_x_fac)
+            link_add_x(del_x)
+        if per[Z] == True:
+            link_avg_z(rho_z_fac)
+            link_avg_z(a_z_fac)
+            link_add_z(del_z)
 
         # Velocities defined at faces including boundaries
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
@@ -148,7 +182,7 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
         rho_x_fac = cat_x((rho_nod_x[ :1,:,:], rho_nod_x, rho_nod_x[-1:,:,:]))
         rho_nod_y = avg_z(avg_y(rho) )
         rho_y_fac = cat_y((rho_nod_y[:, :1,:], rho_nod_y, rho_nod_y[:,-1:,:]))
-        rho_z_fac = rho                             # nx, ny, nz
+        rho_z_fac = rho
 
         # Facial values of areas including boundary cells
         a_x_fac = cat_x((avg_z(sx[:1,:,:]),
@@ -160,10 +194,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
         a_z_fac = sz
 
         # Facial values of distance between cell centers
-        # MODIFY FOR PERIODIC
         del_x = avg_z(cat_x((dx[:1,:,:]*0.5, avg_x(dx), dx[-1:,:,:]*0.5)))
         del_y = avg_z(cat_y((dy[:,:1,:]*0.5, avg_y(dy), dy[:,-1:,:]*0.5)))
         del_z = dz[:,:,:]
+
+        # Modify all of the above values for periodic boundaries
+        if per[X] == True:
+            link_avg_x(rho_x_fac)  
+            link_avg_x(a_x_fac)
+            link_add_x(del_x)
+        if per[Y] == True:
+            link_avg_y(rho_y_fac)
+            link_avg_y(a_y_fac)
+            link_add_y(del_y)
 
         # Facial values of velocities without boundary values
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
@@ -177,8 +220,17 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 
     # ------------------------------------------------------------------
     #
+    #    Non-periodic:
+    #
     #    |-W-|-W-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-E-|-E-|
     #      0   1   2   3   4   5   6   7   8   9  10  11  12  13    phi
+    #
+    #    Periodic:
+    #
+    #    |-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|-o-|
+    #      0   1   2   3   4   5   6   7   8   9  10  11  12  13    phi
+    #     =10 =11                                         =2  =3
+    #
     #        x---x---x---x---x---x---x---x---x---x---x---x---x
     #        0   1   2   3   4   5   6   7   8   9  10  11  12      d_x
     #
@@ -188,30 +240,36 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     # ------------------------------------------------------------------
 
     # Compute consecutive differences (and avoid division by zero)
-    # FILL THE BUFFERS PROPERLY FOR PERIODIC
-    d_x = dif_x(cat_x((phi.bnd[W].val, 
-                       phi.bnd[W].val, 
-                       phi.val, 
-                       phi.bnd[E].val,
-                       phi.bnd[E].val)))  
+    if per[X] == False:
+        d_x = dif_x(cat_x((phi.bnd[W].val, 
+                           phi.bnd[W].val, 
+                           phi.val, 
+                           phi.bnd[E].val,
+                           phi.bnd[E].val)))  
+    else:
+        d_x = dif_x(cat_x((phi.val[-2:,:,:], phi.val, phi.val[:2,:,:])))  
     d_x[(d_x >  -TINY) & (d_x <=   0.0)] = -TINY
     d_x[(d_x >=   0.0) & (d_x <  +TINY)] = +TINY
 
-    d_y = dif_y(phi.val)  
-    d_y = dif_y(cat_y((phi.bnd[S].val, 
-                       phi.bnd[S].val, 
-                       phi.val, 
-                       phi.bnd[N].val,
-                       phi.bnd[N].val)))  
+    if per[Y] == False:
+        d_y = dif_y(cat_y((phi.bnd[S].val, 
+                           phi.bnd[S].val, 
+                           phi.val, 
+                           phi.bnd[N].val,
+                           phi.bnd[N].val)))
+    else:
+        d_y = dif_y(cat_y((phi.val[:,-2:,:], phi.val, phi.val[:,:2,:])))  
     d_y[(d_y >  -TINY) & (d_y <=   0.0)] = -TINY
     d_y[(d_y >=   0.0) & (d_y <  +TINY)] = +TINY
 
-    d_z = dif_z(phi.val)  
-    d_z = dif_z(cat_z((phi.bnd[B].val, 
-                       phi.bnd[B].val, 
-                       phi.val, 
-                       phi.bnd[T].val,
-                       phi.bnd[T].val)))  
+    if per[Z] == False:
+        d_z = dif_z(cat_z((phi.bnd[B].val, 
+                           phi.bnd[B].val, 
+                           phi.val, 
+                           phi.bnd[T].val,
+                           phi.bnd[T].val)))
+    else:    
+        d_z = dif_z(cat_z((phi.val[:,:,-2:], phi.val, phi.val[:,:,:2])))  
     d_z[(d_z >  -TINY) & (d_z <=   0.0)] = -TINY
     d_z[(d_z >=   0.0) & (d_z <  +TINY)] = +TINY
 
