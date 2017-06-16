@@ -54,7 +54,7 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
     c_t = advection(rho_cap, t, uvwf, dxyz, dt, 'minmod')
 
     # Innertial term for enthalpy
-    i_t = t.old * rho_cap * dx*dy*dz / dt
+    i_t = t.old * avg(t.pos, rho_cap) * avg(t.pos, dx*dy*dz) / dt
 
     # The entire source term
     f_t = b_t - c_t + i_t
