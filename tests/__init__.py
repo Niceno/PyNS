@@ -1,4 +1,5 @@
 from . import (test_inlet_outlet,
+               test_little_cube,
                test_obstacles_collocated,
                test_obstacles_staggered,
                test_obstacles_thinner_staggered,

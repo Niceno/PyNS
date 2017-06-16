@@ -146,7 +146,7 @@ def main(show_plot=True, time_steps=1000, plot_freq=10):
         if show_plot:
             if ts % plot_freq == 0:
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
-                plot.tecplot("cube-periodicity-%6.6d.plt" % ts, 
+                plot.tecplot("little-cube-%6.6d.plt" % ts, 
                              (xn, yn, zn), (uf, vf, wf, p))
 
 if __name__ == '__main__':
