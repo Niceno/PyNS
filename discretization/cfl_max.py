@@ -5,6 +5,7 @@ Computes maximum Courant-Friedrich-Levy (CFD) number for the given velocity.
 # PyNS modules
 from pyns.constants import *
 from pyns.operators import *
+from pyns.display   import write
 
 # =============================================================================
 def cfl_max(uvw, dt, dxyz):
@@ -43,5 +44,8 @@ def cfl_max(uvw, dt, dxyz):
         cfl = dt * max( abs(u.val/avg_x(dx)).max(),   \
                         abs(v.val/avg_y(dy)).max(),   \
                         abs(w.val/avg_z(dz)).max() )
+
+    write.at(__name__)
+    print("  Maximum CFL number: %12.5e" % cfl)
 
     return cfl
