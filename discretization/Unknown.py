@@ -72,12 +72,15 @@ class Unknown:
                     key(ndarray(shape=(nx,ny,1), dtype=int), zeros((nx,ny,1))))
         
         # Prescribe default boundary conditions
-        self.bnd[W].typ[0,:,:] = def_bc
-        self.bnd[E].typ[0,:,:] = def_bc
-        self.bnd[S].typ[:,0,:] = def_bc
-        self.bnd[N].typ[:,0,:] = def_bc
-        self.bnd[B].typ[:,:,0] = def_bc
-        self.bnd[T].typ[:,:,0] = def_bc
+        if self.per[X] == False:
+            self.bnd[W].typ[0,:,:] = def_bc
+            self.bnd[E].typ[0,:,:] = def_bc
+        if self.per[Y] == False:
+            self.bnd[S].typ[:,0,:] = def_bc
+            self.bnd[N].typ[:,0,:] = def_bc
+        if self.per[Z] == False:
+            self.bnd[B].typ[:,:,0] = def_bc
+            self.bnd[T].typ[:,:,0] = def_bc
 
         self.bnd[W].val[0,:,:] = 0
         self.bnd[E].val[0,:,:] = 0
