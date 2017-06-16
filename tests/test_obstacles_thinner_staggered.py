@@ -67,10 +67,10 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     ndt = time_steps # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = create_unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = create_unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = create_unknown('face-w-vel',  Z, rw, DIRICHLET)
-    p  = create_unknown('pressure',    C, rc, NEUMANN)
+    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
+    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
+    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
+    p  = Unknown('pressure',    C, rc, NEUMANN)
 
     # Specify boundary conditions
     uf.bnd[W].typ[:1,:,:] = DIRICHLET
