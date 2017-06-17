@@ -11,7 +11,8 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def isolines(phi, uvw, xyzn, dir):
+def isolines(phi, uvw, xyzn, dir, 
+             levels = 11):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -60,7 +61,7 @@ def isolines(phi, uvw, xyzn, dir):
         vp = transpose(vc [:,:,kp], (1,0))
 
     # Set levels and normalize the colors
-    levels = linspace( zp.min(), zp.max(), 11)
+    levels = linspace( zp.min(), zp.max(), levels)
     norm   = cm.colors.Normalize( vmax=zp.max(), vmin=zp.min() )
 
     plt.figure()
