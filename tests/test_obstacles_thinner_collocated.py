@@ -194,6 +194,8 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
             if ts % plot_freq == 0:
                 plot.isolines(p.val, (uc, vc, wc), (xn, yn, zn), Y)
                 plot.isolines(p.val, (uc, vc, wc), (xn, yn, zn), Z)
+                plot.gmv("obst-thinner-collocated-%6.6d" % ts, 
+                         (xn, yn, zn), (uc, vc, wc, p))
 
 if __name__ == '__main__':
     main()

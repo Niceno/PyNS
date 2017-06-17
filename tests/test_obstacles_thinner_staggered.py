@@ -179,10 +179,12 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
 # Visualisation
 #
 # =============================================================================
-    if show_plot:
-        if ts % plot_freq == 0:
-            plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Y)
-            plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
+        if show_plot:
+            if ts % plot_freq == 0:
+                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Y)
+                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
+                plot.gmv("obst-thinner-staggered-%6.6d" % ts, 
+                         (xn, yn, zn), (uf, vf, wf, p))
 
 if __name__ == '__main__':
     main()
