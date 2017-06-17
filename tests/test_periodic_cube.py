@@ -14,7 +14,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=1, plot_freq=50):
+def main(show_plot=True, time_steps=6000, plot_freq=20):
 
 # =============================================================================
 #
@@ -39,26 +39,14 @@ def main(show_plot=True, time_steps=1, plot_freq=50):
     rho, mu, cap, kappa = properties.air(rc)
 
     # Time-stepping parameters
-    dt  = 0.01        # time step
+    dt  = 0.005       # time step
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET, per=(True, False, False))
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET, per=(True, False, False))
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET, per=(True, False, False))
-    p  = Unknown('pressure',    C, rc, NEUMANN,   per=(True, False, False))
-
-#    # Specify boundary conditions
-#    uf.bnd[W].typ[:1,:,:] = DIRICHLET
-#    for j in range(0, ny):
-#        uf.bnd[W].val[:1,j,:]  = par(0.1, zn)
-#
-#    uf.bnd[E].typ[:1,:,:] = OUTLET
-#
-#    for j in (S, N):
-#        uf.bnd[j].typ[:] = NEUMANN
-#        vf.bnd[j].typ[:] = NEUMANN
-#        wf.bnd[j].typ[:] = NEUMANN
+    uf = Unknown('face-u-vel',  X, ru, DIRICHLET, per=(True, True, False))
+    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET, per=(True, True, False))
+    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET, per=(True, True, False))
+    p  = Unknown('pressure',    C, rc, NEUMANN,   per=(True, True, False))
 
     obst = zeros(rc)
     for j in range(22, 38):
@@ -91,7 +79,7 @@ def main(show_plot=True, time_steps=1, plot_freq=50):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        ef = ones(ru)*0.1, zeros(rv), zeros(rw)
+        ef = ones(ru)*0.05, zeros(rv), zeros(rw)
 
         calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
                  zeros(rc), ef, dt, (dx,dy,dz), obst)
@@ -116,8 +104,8 @@ def main(show_plot=True, time_steps=1, plot_freq=50):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Y)
-                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
+                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Y, levels=41)
+                plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z, levels=41)
                 plot.tecplot("little-cube-%6.6d" % ts, 
                              (xn, yn, zn), (uf, vf, wf, p))
 

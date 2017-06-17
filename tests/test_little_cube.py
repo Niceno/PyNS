@@ -1,29 +1,5 @@
 """
-#                                                       o ... scalars
-#                          (n)                          - ... u velocities
-#                                                       | ... v velocities
-#       +-------+-------+-------+-------+-------+
-#       |       |       |       |       |       |
-#       |   o   -   o   -   o   -   o   -   o   | j=ny-1
-#       |       |       |       |       |       |
-#       +---|---+---|---+---|---+---|---+---|---+     j=ny-2
-#       |       |       |       |       |       |
-#       |   o   -   o   -   o   -   o   -   o   | ...
-#       |       |       |       |       |       |
-#  (w)  +---|---+---|---+---|---+---|---+---|---+    j=1        (e)
-#       |       |       |       |       |       |
-#       |   o   -   o   -   o   -   o   -   o   | j=1
-#       |       |       |       |       |       |
-#       +---|---+---|---+---|---+---|---+---|---+    j=0 (v-velocity)
-#       |       |       |       |       |       |
-#       |   o   -   o   -   o   -   o   -   o   | j=0   (scalar cell)
-#       |       |       |       |       |       |
-#       +-------+-------+-------+-------+-------+
-#  y       i=0     i=1     ...     ...    i=nx-1      (scalar cells)
-# ^            i=0      i=1    ...    i=nx-2      (u-velocity cells)
-# |
-# +---> x                  (s)
-#
+Single cube placed in a square channel.
 """
 
 #!/usr/bin/python
@@ -38,7 +14,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=1000, plot_freq=10):
+def main(show_plot=True, time_steps=2000, plot_freq=200):
 
 # =============================================================================
 #
@@ -63,7 +39,7 @@ def main(show_plot=True, time_steps=1000, plot_freq=10):
     rho, mu, cap, kappa = properties.air(rc)
 
     # Time-stepping parameters
-    dt  = 0.02        # time step
+    dt  = 0.005       # time step
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
@@ -75,7 +51,7 @@ def main(show_plot=True, time_steps=1000, plot_freq=10):
     # Specify boundary conditions
     uf.bnd[W].typ[:1,:,:] = DIRICHLET
     for j in range(0, ny):
-        uf.bnd[W].val[:1,j,:]  = par(0.1, zn)
+        uf.bnd[W].val[:1,j,:]  = par(0.4, zn)
 
     uf.bnd[E].typ[:1,:,:] = OUTLET
 
