@@ -153,7 +153,7 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         if show_plot:
             if ts % plot_freq == 0:
                 plot.isolines(t.val, (uc, vc, wc), (xn, yn, zn), Z)
-                plot.gmv("tdc-collocated-%6.6d.gmv" % ts, 
+                plot.gmv("tdc-collocated-%6.6d" % ts, 
                          (xn, yn, zn), (uc, vc, wc, t))
 
 if __name__ == '__main__':

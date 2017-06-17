@@ -118,7 +118,7 @@ def main(show_plot=True, time_steps=1, plot_freq=50):
             if ts % plot_freq == 0:
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Y)
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
-                plot.tecplot("little-cube-%6.6d.plt" % ts, 
+                plot.tecplot("little-cube-%6.6d" % ts, 
                              (xn, yn, zn), (uf, vf, wf, p))
 
 if __name__ == '__main__':

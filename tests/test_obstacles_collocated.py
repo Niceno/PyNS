@@ -145,7 +145,7 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
         if show_plot:
             if ts % plot_freq == 0:
                 plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
-                plot.tecplot("obst-staggered-%6.6d.plt" % ts, 
+                plot.tecplot("obst-staggered-%6.6d" % ts, 
                              (xn, yn, zn), (uf, vf, wf, p))
 
 if __name__ == '__main__':
