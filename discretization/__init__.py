@@ -10,6 +10,7 @@ from .Unknown import Unknown
 # Functions in "discretization":
 from .adj_n_bnds      import adj_n_bnds
 from .calc_p          import calc_p
+from .calc_phi        import calc_phi
 from .calc_t          import calc_t
 from .calc_uvw        import calc_uvw
 from .cartesian_grid  import cartesian_grid
