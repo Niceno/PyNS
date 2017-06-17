@@ -84,14 +84,19 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     #
     #    PERIODIC:
     #
-    #     - --+---------+---------+-- -   - --+---------+---------+-- -
-    #         |         |         |           |         |         |   
+    #    - First cell (0) is the same as last cell (nx-1)
+    #    - Thaty makes domain a bit shorter
+    #
+    #         +---------+---------+-- -   - --+---------+---------+
+    #   [W]   |         |         |           |         |         |   [E]
     #    o    |    o    |    o    |           |    o    |    o    |    o
-    #  nx-1   |    0    |    1    |           |  nx-2   |  nx-1   |    0
-    #     - --+---------+---------+-- -   - --+---------+---------+-- -
-    #    :         :         :                     :         :         :
+    #  nx-2   |    0    |    1    |           |  nx-2   |  nx-1   |    1
+    #         +---------+---------+-- -   - --+---------+---------+
+    #    :   __    :   __    :                     :   __    :   __    :
     #    |   dx    |   dx    |                     |   dx    |   dx    |
     #    |<------->|<------->|                     |<------->|<------->|
+    #       (nx-2)     (0)                           (nx-2)      (0) 
+    #
     #
     if d != X:
         # West
@@ -104,6 +109,10 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
                                         / avg(d, (dx[-1:,:,:]) / 2.0)      
         c.E[:] = cat_x((avg(d, avg_x(mu)) * avg(d, avg_x(sx))
                                           / avg(d, avg_x(dx)), c_bc_x))
+        # Correct for periodicity
+        if phi.per[X] == True:
+            c.W[ :1,:,:] = c.W[-1:,:,:]
+            c.E[-1:,:,:] = c.E[ :1,:,:]
 
     if d != Y:
         # South
@@ -116,6 +125,10 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
                                         / avg(d, (dy[:,-1:,:]) / 2.0)      
         c.N[:] = cat_y((avg(d, avg_y(mu)) * avg(d, avg_y(sy))
                                           / avg(d, avg_y(dy)), c_bc_y))
+        # Correct for periodicity
+        if phi.per[Y] == True:
+            c.S[:, :1,:] = c.S[:,-1:,:]
+            c.N[:,-1:,:] = c.N[:, :1,:]
 
     if d != Z:
         # Bottom
@@ -128,6 +141,10 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
                                         / avg(d, (dz[:,:,-1:]) / 2.0)            
         c.T[:] = cat_z((avg(d, avg_z(mu)) * avg(d, avg_z(sz))
                                           / avg(d, avg_z(dz)), c_bc_z))
+        # Correct for periodicity
+        if phi.per[Z] == True:
+            c.B[:,:, :1] = c.B[:,:,-1:]
+            c.T[:,:,-1:] = c.T[:,:, :1]
 
     # Correct for staggered variables.  For staggered variables, near wall
     # cells are not at a half-distance from the wall, but at full distance.
@@ -136,7 +153,7 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     #
     #      ///+---------+---------+-- -   - --+---------+---------+///
     #      ///|         |         |           |         |         |///
-    #      ///|        -->       -->         -->       -->        |/// 
+    #  [W] ///|        -->       -->         -->       -->        |/// [E]
     #      ///|         |0        |1          |nx-2     |nx-1     |///
     #      ///+---------+---------+-- -   - --+---------+---------+///
     #         :         :         :           :         :         :
@@ -145,14 +162,14 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     #
     #    PERIODIC:
     #
-    #         +---------+---------+-- -   - --+---------+---------+-- -   
-    #         |         |         |           |         |         |  
-    #        -->       -->       -->         -->       -->       -->       -->   
-    #         |nx-1     |0        |1          |         |nx-2     |nx-1      0
-    #         +---------+---------+-- -   - --+---------+---------+-- -   
-    #         :         :         :           :         :         :         :
-    #         |   dx    |   dx    |           |   dx    |   dx    |   dx    |
-    #         |<------->|<------->|           |<------->|<------->|<------->|
+    #         +---------+---------+-- -   - --+---------+---------+
+    #         |         |         |           |         |         |
+    #  [W]   -->       -->       -->         -->       -->       -->   [E]
+    #         |nx-2     |0        |1          |         |nx-2     |0
+    #         +---------+---------+-- -   - --+---------+---------+   
+    #         :         :         :           :         :         :
+    #         |   dx    |   dx    |           |   dx    |   dx    |
+    #         |<------->|<------->|           |<------->|<------->|
     #
     if d == X:
         c.W[:] = mu[0:-1,:,:] * sx[0:-1,:,:] / dx[0:-1,:,:]

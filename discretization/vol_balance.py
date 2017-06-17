@@ -33,6 +33,11 @@ def vol_balance(uvwf, dxyz, obst):
     # Unpack tuples
     dx, dy, dz = dxyz
     uf, vf, wf = uvwf
+    
+    # Refresh buffers here
+    uf.exchange()
+    vf.exchange()
+    wf.exchange()
 
     # Compute it throughout the domain
     src = - dif_x(cat_x((uf.bnd[W].val, uf.val, uf.bnd[E].val)))*dy*dz  \

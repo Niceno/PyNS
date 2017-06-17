@@ -47,6 +47,9 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
     # Refresh buffers
     # ----------------
     phi.exchange()
+    uf.exchange()
+    vf.exchange()
+    wf.exchange()
 
     # ------------------------------------------------
     # Specific for cell-centered transported variable
@@ -70,17 +73,26 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 
         # Modify all of the above values for periodic boundaries
         if per[X] == True:
-            link_avg_x(rho_x_fac)  
-            link_avg_x(a_x_fac)
-            link_add_x(del_x)
+            rho_x_fac[ :1,:,:] = rho_x_fac[-2:-1,:,:]
+            rho_x_fac[-1:,:,:] = rho_x_fac[ 1: 2,:,:]
+            a_x_fac  [ :1,:,:] = a_x_fac  [-2:-1,:,:]
+            a_x_fac  [-1:,:,:] = a_x_fac  [ 1: 2,:,:]
+            del_x    [ :1,:,:] = del_x    [-2:-1,:,:]
+            del_x    [-1:,:,:] = del_x    [ 1: 2,:,:]
         if per[Y] == True:
-            link_avg_y(rho_y_fac)
-            link_avg_y(a_y_fac)
-            link_add_y(del_y)
+            rho_y_fac[:, :1,:] = rho_y_fac[:,-2:-1,:]
+            rho_y_fac[:,-1:,:] = rho_y_fac[:, 1: 2,:]
+            a_y_fac  [:, :1,:] = a_y_fac  [:,-2:-1,:]
+            a_y_fac  [:,-1:,:] = a_y_fac  [:, 1: 2,:]
+            del_y    [:, :1,:] = del_y    [:,-2:-1,:]
+            del_y    [:,-1:,:] = del_y    [:, 1: 2,:]
         if per[Z] == True:
-            link_avg_z(rho_z_fac)
-            link_avg_z(a_z_fac)
-            link_add_z(del_z)
+            rho_z_fac[:,:, :1] = rho_z_fac[:,:,-2:-1]
+            rho_z_fac[:,:,-1:] = rho_z_fac[:,:, 1: 2]
+            a_z_fac  [:,:, :1] = a_z_fac  [:,:,-2:-1]
+            a_z_fac  [:,:,-1:] = a_z_fac  [:,:, 1: 2]
+            del_z    [:,:, :1] = del_z    [:,:,-2:-1]
+            del_z    [:,:,-1:] = del_z    [:,:, 1: 2]
           
         # Velocities defined at faces including boundaries
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
@@ -116,13 +128,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 
         # Modify all of the above values for periodic boundaries
         if per[Y] == True:
-            link_avg_y(rho_y_fac)
-            link_avg_y(a_y_fac)
-            link_add_y(del_y)
+            rho_y_fac[:, :1,:] = rho_y_fac[:,-2:-1,:]
+            rho_y_fac[:,-1:,:] = rho_y_fac[:, 1: 2,:]
+            a_y_fac  [:, :1,:] = a_y_fac  [:,-2:-1,:]
+            a_y_fac  [:,-1:,:] = a_y_fac  [:, 1: 2,:]
+            del_y    [:, :1,:] = del_y    [:,-2:-1,:]
+            del_y    [:,-1:,:] = del_y    [:, 1: 2,:]
         if per[Z] == True:
-            link_avg_z(rho_z_fac)
-            link_avg_z(a_z_fac)
-            link_add_z(del_z)
+            rho_z_fac[:,:, :1] = rho_z_fac[:,:,-2:-1]
+            rho_z_fac[:,:,-1:] = rho_z_fac[:,:, 1: 2]
+            a_z_fac  [:,:, :1] = a_z_fac  [:,:,-2:-1]
+            a_z_fac  [:,:,-1:] = a_z_fac  [:,:, 1: 2]
+            del_z    [:,:, :1] = del_z    [:,:,-2:-1]
+            del_z    [:,:,-1:] = del_z    [:,:, 1: 2]
 
         # Velocities defined at faces including boundaries
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
@@ -158,13 +176,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 
         # Modify all of the above values for periodic boundaries
         if per[X] == True:
-            link_avg_x(rho_x_fac)  
-            link_avg_x(a_x_fac)
-            link_add_x(del_x)
+            rho_x_fac[ :1,:,:] = rho_x_fac[-2:-1,:,:]
+            rho_x_fac[-1:,:,:] = rho_x_fac[ 1: 2,:,:]
+            a_x_fac  [ :1,:,:] = a_x_fac  [-2:-1,:,:]
+            a_x_fac  [-1:,:,:] = a_x_fac  [ 1: 2,:,:]
+            del_x    [ :1,:,:] = del_x    [-2:-1,:,:]
+            del_x    [-1:,:,:] = del_x    [ 1: 2,:,:]
         if per[Z] == True:
-            link_avg_z(rho_z_fac)
-            link_avg_z(a_z_fac)
-            link_add_z(del_z)
+            rho_z_fac[:,:, :1] = rho_z_fac[:,:,-2:-1]
+            rho_z_fac[:,:,-1:] = rho_z_fac[:,:, 1: 2]
+            a_z_fac  [:,:, :1] = a_z_fac  [:,:,-2:-1]
+            a_z_fac  [:,:,-1:] = a_z_fac  [:,:, 1: 2]
+            del_z    [:,:, :1] = del_z    [:,:,-2:-1]
+            del_z    [:,:,-1:] = del_z    [:,:, 1: 2]
 
         # Velocities defined at faces including boundaries
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
@@ -200,13 +224,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 
         # Modify all of the above values for periodic boundaries
         if per[X] == True:
-            link_avg_x(rho_x_fac)  
-            link_avg_x(a_x_fac)
-            link_add_x(del_x)
+            rho_x_fac[ :1,:,:] = rho_x_fac[-2:-1,:,:]
+            rho_x_fac[-1:,:,:] = rho_x_fac[ 1: 2,:,:]
+            a_x_fac  [ :1,:,:] = a_x_fac  [-2:-1,:,:]
+            a_x_fac  [-1:,:,:] = a_x_fac  [ 1: 2,:,:]
+            del_x    [ :1,:,:] = del_x    [-2:-1,:,:]
+            del_x    [-1:,:,:] = del_x    [ 1: 2,:,:]
         if per[Y] == True:
-            link_avg_y(rho_y_fac)
-            link_avg_y(a_y_fac)
-            link_add_y(del_y)
+            rho_y_fac[:, :1,:] = rho_y_fac[:,-2:-1,:]
+            rho_y_fac[:,-1:,:] = rho_y_fac[:, 1: 2,:]
+            a_y_fac  [:, :1,:] = a_y_fac  [:,-2:-1,:]
+            a_y_fac  [:,-1:,:] = a_y_fac  [:, 1: 2,:]
+            del_y    [:, :1,:] = del_y    [:,-2:-1,:]
+            del_y    [:,-1:,:] = del_y    [:, 1: 2,:]
 
         # Facial values of velocities without boundary values
         # TAKE CARE YOU HAVE FRESH VALUES FOR PERIODIC
@@ -247,7 +277,10 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                            phi.bnd[E].val,
                            phi.bnd[E].val)))  
     else:
-        d_x = dif_x(cat_x((phi.val[-2:,:,:], phi.val, phi.val[:2,:,:])))  
+        if pos == X:
+            d_x = dif_x(cat_x((phi.val[-2:,:,:], phi.val, phi.val[:2,:,:])))
+        else:    
+            d_x = dif_x(cat_x((phi.val[-3:-1,:,:], phi.val, phi.val[1:3,:,:])))
     d_x[(d_x >  -TINY) & (d_x <=   0.0)] = -TINY
     d_x[(d_x >=   0.0) & (d_x <  +TINY)] = +TINY
 
@@ -258,7 +291,10 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                            phi.bnd[N].val,
                            phi.bnd[N].val)))
     else:
-        d_y = dif_y(cat_y((phi.val[:,-2:,:], phi.val, phi.val[:,:2,:])))  
+        if pos == Y:
+            d_y = dif_y(cat_y((phi.val[:,-2:,:], phi.val, phi.val[:,:2,:])))  
+        else:
+            d_y = dif_y(cat_y((phi.val[:,-3:-1,:], phi.val, phi.val[:,1:3,:])))  
     d_y[(d_y >  -TINY) & (d_y <=   0.0)] = -TINY
     d_y[(d_y >=   0.0) & (d_y <  +TINY)] = +TINY
 
@@ -269,7 +305,10 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                            phi.bnd[T].val,
                            phi.bnd[T].val)))
     else:    
-        d_z = dif_z(cat_z((phi.val[:,:,-2:], phi.val, phi.val[:,:,:2])))  
+        if pos == Z:
+            d_z = dif_z(cat_z((phi.val[:,:,-2:], phi.val, phi.val[:,:,:2])))  
+        else:    
+            d_z = dif_z(cat_z((phi.val[:,:,-3:-1], phi.val, phi.val[:,:,1:3])))  
     d_z[(d_z >  -TINY) & (d_z <=   0.0)] = -TINY
     d_z[(d_z >=   0.0) & (d_z <  +TINY)] = +TINY
 
