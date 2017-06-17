@@ -1,5 +1,10 @@
 """
 Matrix-vector product for PyNS matrix format.
+
+Note:
+  This function doesn't take care of periodic boundary conditions, and is
+  therefore superseeded by the "mat_vec_bnd".  Actually, it is a candidate
+  for deletion.
 """
 
 # Standard Python modules

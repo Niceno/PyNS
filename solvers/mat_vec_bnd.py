@@ -1,5 +1,8 @@
 """
 Matrix-vector product, including booundary values, for PyNS matrix format.
+
+Note:
+  Essentially, this function superseedes the plain "mat_vec".
 """
 
 # Standard Python modules
