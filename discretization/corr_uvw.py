@@ -60,8 +60,10 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst):
     uvw[Z].val[:] = uvw[Z].val[:] - dt / avg(uvw[Z].pos, rho) * p_z
 
     # Compute volume balance for checking
-    err = vol_balance(uvw, (dx,dy,dz), obst)
-    write.at(__name__)
-    print("  Maximum volume error after correction: %12.5e" % abs(err).max())
+    if not uvw[X].pos == C:
+        err = vol_balance(uvw, (dx,dy,dz), obst)
+        write.at(__name__)
+        print("  Maximum volume error after correction: %12.5e" 
+                 % abs(err).max())
 
     return  # end of function
