@@ -65,6 +65,6 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
         p.val[:] = obst_zero_val(p.pos, p.val, obst)
 
     # Finally adjust the boundary values
-    p = adj_n_bnds(p);
+    adj_n_bnds(p);
 
     return  # end of function
