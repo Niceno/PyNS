@@ -23,6 +23,8 @@ def mat_vec_bnd(a, phi):
     """
 
     r = zeros(phi.val.shape)
+    
+    phi.exchange()
 
     r[:]  = a.P[:] * phi.val[:]
     
