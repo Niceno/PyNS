@@ -34,7 +34,7 @@ def mat_vec_bnd(a, phi):
                              phi.bnd[E].val[ :1,:,:]) )
     
     r[:] -= a.S[:] * cat_y( (phi.bnd[S].val[:, :1,:], 
-                             phi.val       [:,:-1,:]) )   
+                             phi.val       [:,:-1,:]) )
     r[:] -= a.N[:] * cat_y( (phi.val       [:, 1:,:], 
                              phi.bnd[N].val[:, :1,:]) )
     
