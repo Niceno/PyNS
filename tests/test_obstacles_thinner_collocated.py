@@ -182,13 +182,8 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         corr_uvw((uc, vc, wc), p, rho, dt, (dx, dy, dz), obst)
         corr_uvw((uf, vf, wf), p, rho, dt, (dx, dy, dz), obst)
 
-        # Compute volume balance for checking
-        err = vol_balance((uf, vf, wf), (dx, dy, dz), obst)
-        print('Maximum volume error after correction: %12.5e' % abs(err).max())
-
         # Check the CFL number too
         cfl = cfl_max((uc, vc, wc), dt, (dx, dy, dz))
-        print('Maximum CFL number: %12.5e' % cfl)
 
 # =============================================================================
 #
