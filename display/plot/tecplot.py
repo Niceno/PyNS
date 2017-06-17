@@ -32,9 +32,9 @@ def tecplot(file_name, xyzn, vars):
     ny = len(yn)-1
     nz = len(zn)-1
 
-    file_id = open(file_name, 'w')
+    file_id = open(file_name + ".plt", "w")
 
-    # VisIt can't read Tecplot (TM) files which contain comments 
+    # VisIt can't read Tecplot (TM) files which contain comments
     verbatim = False
 
     # --------------------------
@@ -44,7 +44,7 @@ def tecplot(file_name, xyzn, vars):
         file_id.write("# File header \n")
     file_id.write("title=\"PyNS Output\"\n")
     file_id.write("variables=\"x\" \"y\" \"z\" ")
-    for v in variables:
+    for v in vars:
         file_id.write("\"%s\" " % v.name)
     file_id.write("\n")
     file_id.write("zone i=%d"   % (nx+1) +   \
@@ -52,7 +52,7 @@ def tecplot(file_name, xyzn, vars):
                       " k=%d\n" % (nz+1))
     file_id.write("datapacking = block\n")
     file_id.write("varlocation=([1-3]=nodal ")
-    file_id.write("[4-%d]=cellcentered)" % (3+len(variables)) )
+    file_id.write("[4-%d]=cellcentered)" % (3+len(vars)) )
 
     # -------------------------------------------------------------------
     # Write the coordinates out (remember - those are nodal coordinates)
@@ -95,20 +95,20 @@ def tecplot(file_name, xyzn, vars):
     # ------------------------
 
     # Average values to be written for staggered variables
-    for v in variables:
+    for v in vars:
         if v.pos == C:
             val = v.val
         elif v.pos == X:
-            val = avg_x(cat_x((v.bnd[W].val[:1,:,:],   \
-                               v.val,                  \
+            val = avg_x(cat_x((v.bnd[W].val[:1,:,:],
+                               v.val,
                                v.bnd[E].val[:1,:,:])))
         elif v.pos == Y:
-            val = avg_y(cat_y((v.bnd[S].val[:,:1,:],   \
-                               v.val,                  \
+            val = avg_y(cat_y((v.bnd[S].val[:,:1,:],
+                               v.val,
                                v.bnd[N].val[:,:1,:])))
         elif v.pos == Z:
-            val = avg_z(cat_z((v.bnd[B].val[:,:,:1],   \
-                               v.val,                  \
+            val = avg_z(cat_z((v.bnd[B].val[:,:,:1],
+                               v.val,
                                v.bnd[T].val[:,:,:1])))
 
         if verbatim:
@@ -127,7 +127,7 @@ def tecplot(file_name, xyzn, vars):
     return  # end of function
 
 # =============================================================================
-def tecplot(file_name, xyzn, var, pos):
+def tecplot_one(file_name, xyzn, var, pos):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -135,7 +135,7 @@ def tecplot(file_name, xyzn, var, pos):
       xyzn:      Tuple containing one-dimensional arrays with "x", "y"
                  and "z" coordinates.
       var:       Variable to be exported to Tecplot (TM)
-      pos:       Position of the variable.  
+      pos:       Position of the variable.
     Returns:
       none!
     """
@@ -148,9 +148,9 @@ def tecplot(file_name, xyzn, var, pos):
     ny = len(yn)-1
     nz = len(zn)-1
 
-    file_id = open(file_name, 'w')
+    file_id = open(file_name + ".plt", "w")
 
-    # VisIt can't read Tecplot (TM) files which contain comments 
+    # VisIt can't read Tecplot (TM) files which contain comments
     verbatim = False
 
     # --------------------------
