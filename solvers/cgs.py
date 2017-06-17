@@ -9,17 +9,17 @@ Source:
 from pyns.standard import *
 
 # PyNS modules
-from pyns.constants import *
-from pyns.operators import *
-from pyns.display   import write
+from pyns.constants      import *
+from pyns.display        import write
+from pyns.discretization import Unknown
 
-from pyns.solvers.mat_vec     import mat_vec
 from pyns.solvers.mat_vec_bnd import mat_vec_bnd
 from pyns.solvers.vec_vec     import vec_vec
 from pyns.solvers.norm        import norm
 
 # =============================================================================
-def cgs(a, phi, b, tol, ver):
+def cgs(a, phi, b, tol, 
+        verbatim = False):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -39,8 +39,8 @@ def cgs(a, phi, b, tol, ver):
       in this version of the solver.
     """
 
-    if ver:
-        print("Solver: CGS")
+    if verbatim:
+        write.at(__name__)
 
     # Helping variables
     x = phi.val
@@ -48,12 +48,14 @@ def cgs(a, phi, b, tol, ver):
 
     # Intitilize arrays
     p       = zeros(x.shape)
-    p_hat   = zeros(x.shape)
+    p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
+                      verbatim=False)
     q       = zeros(x.shape)
     r       = zeros(x.shape)
     r_tilda = zeros(x.shape)
     u       = zeros(x.shape)
-    u_hat   = zeros(x.shape)
+    u_hat   = Unknown("vec_u_hat", phi.pos, x.shape, -1, per=phi.per, 
+                      verbatim=False)
     v_hat   = zeros(x.shape)
 
     # r = b - A * x
@@ -67,7 +69,7 @@ def cgs(a, phi, b, tol, ver):
     # ---------------
     for i in range(1,n):
 
-        if ver:
+        if verbatim:
             print("  iteration: %3d:" % (i), end = "" )
 
         # rho = r~ * r
@@ -75,8 +77,9 @@ def cgs(a, phi, b, tol, ver):
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
-            write.at(__name__)
-            print("  Fails becuase rho = %12.5e" % rho)
+            if verbatim == True:  
+                write.at(__name__)
+                print("  Fails becuase rho = %12.5e" % rho)
             return x
 
         if i == 1:
@@ -97,10 +100,10 @@ def cgs(a, phi, b, tol, ver):
             p[:,:,:] = u[:,:,:] + beta * (q[:,:,:] + beta * p[:,:,:])
 
         # Solve M p_hat = p
-        p_hat[:,:,:] = p[:,:,:] / a.P[:,:,:]
+        p_hat.val[:,:,:] = p[:,:,:] / a.P[:,:,:]
 
         # v^ = A * p^
-        v_hat[:,:,:] = mat_vec(a, p_hat)
+        v_hat[:,:,:] = mat_vec_bnd(a, p_hat)
 
         # alfa = rho / (r~ * v^)
         alfa = rho / vec_vec(r_tilda, v_hat)
@@ -109,13 +112,13 @@ def cgs(a, phi, b, tol, ver):
         q[:,:,:] = u[:,:,:] - alfa * v_hat[:,:,:]
 
         # Solve M u^ = u + q
-        u_hat[:,:,:] = (u[:,:,:] + q[:,:,:]) / a.P[:,:,:]
+        u_hat.val[:,:,:] = (u[:,:,:] + q[:,:,:]) / a.P[:,:,:]
 
         # x = x + alfa u^
-        x[:,:,:] += alfa * u_hat[:,:,:]
+        x[:,:,:] += alfa * u_hat.val[:,:,:]
 
         # q^ = A u^
-        q_hat = mat_vec(a, u_hat)
+        q_hat = mat_vec_bnd(a, u_hat)
 
         # r = r - alfa q^
         r[:,:,:] -= alfa * q_hat[:,:,:]
@@ -123,7 +126,7 @@ def cgs(a, phi, b, tol, ver):
         # Compute residual
         res = norm(r)
 
-        if ver:
+        if verbatim:
             print("%12.5e" %res)
 
         # If tolerance has been reached, get out of here

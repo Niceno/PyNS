@@ -8,23 +8,28 @@ Source:
 # Standard Python modules
 from pyns.standard import *
 
-from pyns.solvers.mat_vec     import mat_vec
+# PyNS modules
+from pyns.constants      import *
+from pyns.display        import write
+from pyns.discretization import Unknown
+
 from pyns.solvers.mat_vec_bnd import mat_vec_bnd
 from pyns.solvers.vec_vec     import vec_vec
 from pyns.solvers.norm        import norm
 
 # =============================================================================
-def cg(a, phi, b, tol, ver):
+def cg(a, phi, b, tol, 
+       verbatim = False):
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:   System matrix in PyNS format (which ssentially means storing a
-           bundle of non-zero diagonals in compas directions)
-      phi: Unknown to be solved (from "create_unknown" function)
-      b:   Three-dimensional matrix holding the source term.
-      tol: Absolute solver tolerance
-      ver: Logical variable setting if solver will be verbatim (print
-           info on Python console) or not.
+      a:        System matrix in PyNS format (which ssentially means storing
+                a bundle of non-zero diagonals in compas directions)
+      phi:      Unknown to be solved (from "create_unknown" function)
+      b:        Three-dimensional matrix holding the source term.
+      tol:      Absolute solver tolerance
+      verbatim: Logical variable setting if solver will be verbatim (print
+                info on Python console) or not.
 
     Returns:
       x: Three-dimensional matrix with solution.
@@ -34,15 +39,15 @@ def cg(a, phi, b, tol, ver):
       in this version of the solver.
     """
 
-    if ver:
-        print("Solver: CG")
+    if verbatim:
+        write.at(__name__)
 
     # Helping variables
     x = phi.val
     n = prod(x.shape)
 
     # Intitilize arrays
-    p = zeros(x.shape)
+    p = Unknown("vec_p", phi.pos, x.shape, -1, per=phi.per, verbatim=False)
     q = zeros(x.shape)
     r = zeros(x.shape)
     z = zeros(x.shape)
@@ -55,7 +60,7 @@ def cg(a, phi, b, tol, ver):
     # ---------------
     for i in range(1,n):
 
-        if ver:
+        if verbatim:
             print("  iteration: %3d:" % (i), end = "" )
 
         # Solve M z = r
@@ -66,23 +71,23 @@ def cg(a, phi, b, tol, ver):
 
         if i == 1:
             # p = z
-            p[:,:,:] = z[:,:,:]
+            p.val[:,:,:] = z[:,:,:]
 
         else:
             # beta = rho / rho_old
             beta = rho / rho_old
 
             # p = z + beta p
-            p[:,:,:] = z[:,:,:] + beta * p[:,:,:]
+            p.val[:,:,:] = z[:,:,:] + beta * p.val[:,:,:]
 
         # q = A * p
-        q[  :,  :,  :]  = mat_vec(a, p)
+        q[  :,  :,  :]  = mat_vec_bnd(a, p)
 
         # alfa = rho / (p * q)
-        alfa = rho / vec_vec(p, q)
+        alfa = rho / vec_vec(p.val, q)
 
         # x = x + alfa p
-        x[:,:,:] += alfa * p[:,:,:]
+        x[:,:,:] += alfa * p.val[:,:,:]
 
         # r = r - alfa q
         r[:,:,:] -= alfa * q[:,:,:]
@@ -90,7 +95,7 @@ def cg(a, phi, b, tol, ver):
         # Compute residual
         res = norm(r)
 
-        if ver:
+        if verbatim:
             print("%12.5e" %res)
 
         # If tolerance has been reached, get out of here
