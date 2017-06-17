@@ -1,9 +1,9 @@
 """
 Defines class of the type "Unknown".  "Unknown" is the object which holds the
 values inside the computational domain and on the boundaries.  Value inside
-the domain is stored in a full three-dimensional matrix.  Boundary values are 
-also formally stored in three-dimensional matrices, but depending on their 
-position (W, E, S, N, B or T), one dimension is set to one. For boundaries, 
+the domain is stored in a full three-dimensional matrix.  Boundary values are
+also formally stored in three-dimensional matrices, but depending on their
+position (W, E, S, N, B or T), one dimension is set to one. For boundaries,
 also the type of boundary conditions are specified.
 
 To access an unknown, say its name is "phi" later in the program, the
@@ -20,20 +20,20 @@ Value on the east boundary, at coordinates (34, 56).
 Type of boundary condition at the same boundary cell from above:
 
   phi.bnd[E].typ[1, 34, 56] == NEUMANN
-  
+
 Unknowns in PyNS are shown below for a two-dimensional grid (for simplicity):
-   
+
   Here, collocated resolution is:                  Legend:
-                                 
+
     nx = 6                                            o   ... scalars
     ny = 4                                           ---  ... u-velocities
                              [N]                      |   ... v-velocities
-                                                      
+
       +-------+-------+-------+-------+-------+-------+
       |       |       |       |       |       |       |
       |   o  ---  o  ---  o  ---  o  ---  o  ---  o   | j=ny-1
       |       |       |       |       |       |       |
-      +---|---+---|---+---|---+---|---+---|---+---|---+     j=ny-2  
+      +---|---+---|---+---|---+---|---+---|---+---|---+     j=ny-2
       |       |       |       |       |       |       |
       |   o  ---  o  ---  o  ---  o  ---  o  ---  o   | ...
       |       |       |       |       |       |       |
@@ -48,12 +48,12 @@ Unknowns in PyNS are shown below for a two-dimensional grid (for simplicity):
       +-------+-------+-------+-------+-------+-------+
       .  i=0     i=1     ...     ...   i=nx-2  i=nx-1 .    (scalar)
       :      i=0      i=1    ...    i=nx-3  i=nx-2    :    (u-velocity)
-      |                      [S]                      | 
-  y   |                                               | 
- ^    |<--------------------------------------------->| 
+      |                      [S]                      |
+  y   |                                               |
+ ^    |<--------------------------------------------->|
  |                      domain lenght
  +---> x
- 
+
 """
 
 # Standard Python modules
@@ -67,26 +67,29 @@ from pyns.display   import write
 class Unknown:
 
     # =========================================================================
-    def __init__(self, name, pos, res, def_bc, per=(False, False, False)):
-    # -------------------------------------------------------------------------  
+    def __init__(self, name, pos, res, def_bc, 
+                 per = (False, False, False), 
+                 verbatim = False):
+    # -------------------------------------------------------------------------
         """
         Args:
           name:   String holding the name of the variable.  It is intended to
                   be used for post-processing.
-          pos:    Integer specifying if the variable is cell centered 
-                  (value C), staggered in "x" (value X), "y" (value Y) 
+          pos:    Integer specifying if the variable is cell centered
+                  (value C), staggered in "x" (value X), "y" (value Y)
                   or in "z" direction (value Z).
           res:    Vector specifying resolutions in "x", "y" and "z" directions.
-          def_bc: Integer specifying if the default boundary condition is 
+          def_bc: Integer specifying if the default boundary condition is
                   of Dirichlet, Neumann or Outlet type.
-          per:    Tuple holding three Boolean type variables which specify 
+          per:    Tuple holding three Boolean type variables which specify
                   if the unknown is periodic in "x", "y" or "z" direction.
-                  
+
         Returns:
           Oh well, its own self, isn't it?
         """
 
-        write.at(__name__)
+        if verbatim == True:
+            write.at(__name__)
 
         # Store name, position and resolution
         self.name = name
@@ -107,26 +110,29 @@ class Unknown:
                     key(ndarray(shape=(nx,1,nz), dtype=int), zeros((nx,1,nz))),
                     key(ndarray(shape=(nx,ny,1), dtype=int), zeros((nx,ny,1))),
                     key(ndarray(shape=(nx,ny,1), dtype=int), zeros((nx,ny,1))))
-        
+
         # Prescribe default boundary conditions
         if self.per[X] == False:
             self.bnd[W].typ[0,:,:] = def_bc
             self.bnd[E].typ[0,:,:] = def_bc
         else:
-            print(" ", self.name, "is periodic in \"x\" direction;", end="")
-            print(" skipping default boundary condition for it!")
+            if verbatim == True:
+                print(" ", self.name, "is periodic in x direction;", end="")
+                print(" skipping default boundary condition for it!")
         if self.per[Y] == False:
             self.bnd[S].typ[:,0,:] = def_bc
             self.bnd[N].typ[:,0,:] = def_bc
-        else:            
-            print(" ", self.name, "is periodic in \"y\" direction;", end="")
-            print(" skipping default boundary condition for it!")
+        else:
+            if verbatim == True:
+                print(" ", self.name, "is periodic in y direction;", end="")
+                print(" skipping default boundary condition for it!")
         if self.per[Z] == False:
             self.bnd[B].typ[:,:,0] = def_bc
             self.bnd[T].typ[:,:,0] = def_bc
-        else:            
-            print(" ", self.name, "is periodic in \"z\" direction;", end="")
-            print(" skipping default boundary condition for it!")
+        else:
+            if verbatim == True:
+                print(" ", self.name, "is periodic in z direction;", end="")
+                print(" skipping default boundary condition for it!")
 
         self.bnd[W].val[0,:,:] = 0
         self.bnd[E].val[0,:,:] = 0
@@ -135,59 +141,60 @@ class Unknown:
         self.bnd[B].val[:,:,0] = 0
         self.bnd[T].val[:,:,0] = 0
 
-        print("  Created unknown:", self.name)
-        
+        if verbatim == True:
+            print("  Created unknown:", self.name)
+
         return  # end of function
 
     # =========================================================================
     def exchange(self):
-    # -------------------------------------------------------------------------  
+    # -------------------------------------------------------------------------
         """
-        Function to refresh buffers.  For the time being it only takes 
-        care of periodic boundary conditions, but in the future it may 
+        Function to refresh buffers.  For the time being it only takes
+        care of periodic boundary conditions, but in the future it may
         also refresh buffers used in parallel execution.
-        
+
         Periodicity for scalar cells:
 
-          - value in cell "0" is identical to value in "nx-1"  
-            
-          .---<-------<-------<-------<-------<---.           
-          |                    send to buffers    |        
+          - value in cell "0" is identical to value in "nx-1"
+
+          .---<-------<-------<-------<-------<---.
+          |                    send to buffers    |
           |               +--->------->------->---)--->------->---.
           |               |                       |               |
           v --+-------+---|---+-------+-------+---|---+-------+-- v
               |       |   ^   |       |       |   ^   |       |
-          o   |   o   |   o   |   o   |   o   |   o   |   o   |   o                  
+          o   |   o   |   o   |   o   |   o   |   o   |   o   |   o
               |       |       |       |       |       |       |
-          - --+-------+-------+-------+-------+-------+-------+-- - 
-         [W]     i=0     i=1     ...     ...   i=nx-2  i=nx-1    [E] 
-          =       =                                       =       =               
-         nx-2    nx-1                                     0       1          
+          - --+-------+-------+-------+-------+-------+-------+-- -
+         [W]     i=0     i=1     ...     ...   i=nx-2  i=nx-1    [E]
+          =       =                                       =       =
+         nx-2    nx-1                                     0       1
                   |        effective domain lenght        |
                   |<------------------------------------->|
-        
+
         Periodicity for vector cells:
 
-          - value in vector "0" is east from value in "nx-2" 
+          - value in vector "0" is east from value in "nx-2"
           - value in vector "
-            
-                      .--->------->------->------->------->---.           
-                      |        send to buffers                |        
+
+                      .--->------->------->------->------->---.
+                      |        send to buffers                |
               .---<---)---<-------<-------<-------<---.       |
               |       |                               |       |
               |-------|-------+-------+-------+-------|-------|
               v       ^       |       |       |       ^       v
-             ---     ---     ---     ---     ---     ---     ---                     
+             ---     ---     ---     ---     ---     ---     ---
               |       |       |       |       |       |       |
-              +-------+-------+-------+-------+-------+-------+ 
-             [W]     i=0     i=1     ...     ...   i=nx-2    [E] 
-              =                                               =               
-            nx-2                                              0          
+              +-------+-------+-------+-------+-------+-------+
+             [W]     i=0     i=1     ...     ...   i=nx-2    [E]
+              =                                               =
+            nx-2                                              0
                   |        effective domain lenght        |
                   |<------------------------------------->|
-                    
+
         """
-        
+
         if self.per[X] == True:
             if self.pos == X:
                 self.bnd[W].val[:] = self.val[-1:,:,:]
@@ -209,38 +216,38 @@ class Unknown:
             else:
                 self.bnd[B].val[:] = self.val[:,:,-2:-1]
                 self.bnd[T].val[:] = self.val[:,:, 1: 2]
-        
+
         return  # end of function
 
 #    # =========================================================================
 #    def equalize(self):
-#    # -------------------------------------------------------------------------  
+#    # -------------------------------------------------------------------------
 #        """
 #        Function to equalize values close to the buffer which are supposed
 #        to represent the same value, but due to iterative solution procedure
 #        end up being slighlty diferent from one another.
-#        
+#
 #        It applies only for scalar cells.
-#        
+#
 #        Periodicity for scalar cells:
 #
-#          - value in cell "0" is identical to value in "nx-1"  
-#            
+#          - value in cell "0" is identical to value in "nx-1"
+#
 #                  .-------------> equalize <--------------.
 #                  |                                       |
 #            --+---|---+-------+-------+-------+-------+---|---+-- -
 #              |   ^   |       |       |       |       |   ^   |
-#          o   |   o   |   o   |   o   |   o   |   o   |   o   |   o                  
+#          o   |   o   |   o   |   o   |   o   |   o   |   o   |   o
 #              |       |       |       |       |       |       |
-#          - --+-------+-------+-------+-------+-------+-------+-- - 
-#         [W]     i=0     i=1     ...     ...   i=nx-2  i=nx-1    [E] 
-#          =       =                                       =       =               
-#         nx-2    nx-1                                     0       1          
+#          - --+-------+-------+-------+-------+-------+-------+-- -
+#         [W]     i=0     i=1     ...     ...   i=nx-2  i=nx-1    [E]
+#          =       =                                       =       =
+#         nx-2    nx-1                                     0       1
 #                  |        effective domain lenght        |
 #                  |<------------------------------------->|
-#        
+#
 #        """
-#        
+#
 #        if self.per[X] == True:
 #            if not self.pos == X:
 #                self.val[ :1,:,:] = (self.val[-1:,:,:]+self.val[ :1,:,:]) * 0.5
@@ -253,5 +260,5 @@ class Unknown:
 #            if not self.pos == Z:
 #                self.val[:,:, :1] = (self.val[:,:,-1:]+self.val[:,:, :1]) * 0.5
 #                self.val[:,:,-1:] =  self.val[:,:, :1]
-#        
+#
 #        return  # end of function
