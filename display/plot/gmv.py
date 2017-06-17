@@ -2,7 +2,7 @@
 Exports results in GMV (TM) ASCII format.
 
 Source:
-  http://www.generalmeshviewer.com/doc.color.pdf    
+  http://www.generalmeshviewer.com/doc.color.pdf
 """
 
 # Standard Python modules
@@ -35,7 +35,7 @@ def gmv(file_name, xyzn, vars):
     ny = len(yn)-1
     nz = len(zn)-1
 
-    file_id = open(file_name, 'w')
+    file_id = open(file_name + ".gmv", "w")
 
     # --------------------------
     # Write the file header out
@@ -52,27 +52,26 @@ def gmv(file_name, xyzn, vars):
                 file_id.write("%12.5e %12.5e %12.5e\n" % (xn[i], yn[j], zn[k]))
 
     # --------------------
-    # Write the cells out 
+    # Write the cells out
     # --------------------
-    # file_id.write("cells %d\n" % (nx * ny * nz))
     file_id.write("cells %d\n" % (nx*ny*nz))
-    
+
     #   cells' local numbering
-    #     
+    #
     #     ^ z
-    #     | 
-    #     | n011-------n111     
-    #     | /|         /|      
-    #     |/ |        / |      
-    #    n001-------n101|      
-    #     |  |       |  |      
-    #     |  | / y   |  |      
-    #     |  |/      |  |      
-    #     | n010-----|-n110    
-    #     | /        | /       
-    #     |/         |/        
-    #    n000-------n100 ----> 
-    #                          x 
+    #     |
+    #     | n011-------n111
+    #     | /|         /|
+    #     |/ |        / |
+    #    n001-------n101|
+    #     |  |       |  |
+    #     |  | / y   |  |
+    #     |  |/      |  |
+    #     | n010-----|-n110
+    #     | /        | /
+    #     |/         |/
+    #    n000-------n100 ---->
+    #                          x
     for k in range(0, nz):
         for j in range(0, ny):
             for i in range(0, nx):
@@ -95,7 +94,7 @@ def gmv(file_name, xyzn, vars):
     file_id.write("variables\n")
 
     # Average values to be written for staggered variables
-    for v in variables:
+    for v in vars:
         if v.pos == C:
             val = v.val
         elif v.pos == X:
@@ -124,13 +123,13 @@ def gmv(file_name, xyzn, vars):
     # Write the file footer out
     # --------------------------
     file_id.write("endgmv\n")
-    
+
     file_id.close()
 
     return  # end of function
-    
+
 # =============================================================================
-def gmv(file_name, xyzn, var, pos):
+def gmv_one(file_name, xyzn, var, pos):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -138,7 +137,7 @@ def gmv(file_name, xyzn, var, pos):
       xyzn:      Tuple containing one-dimensional arrays with "x", "y"
                  and "z" coordinates.
       var:       Variable to be exported to GMV (TM); collocated or staggered.
-      pos:       Position of the variable.  
+      pos:       Position of the variable.
     Returns:
       none!
     """
@@ -151,7 +150,7 @@ def gmv(file_name, xyzn, var, pos):
     ny = len(yn)-1
     nz = len(zn)-1
 
-    file_id = open(file_name, 'w')
+    file_id = open(file_name + ".gmv", "w")
 
     # --------------------------
     # Write the file header out
@@ -168,27 +167,27 @@ def gmv(file_name, xyzn, var, pos):
                 file_id.write("%12.5e %12.5e %12.5e\n" % (xn[i], yn[j], zn[k]))
 
     # --------------------
-    # Write the cells out 
+    # Write the cells out
     # --------------------
     # file_id.write("cells %d\n" % (nx * ny * nz))
     file_id.write("cells %d\n" % (nx*ny*nz))
-    
+
     #   cells' local numbering
-    #     
+    #
     #     ^ z
-    #     | 
-    #     | n011-------n111     
-    #     | /|         /|      
-    #     |/ |        / |      
-    #    n001-------n101|      
-    #     |  |       |  |      
-    #     |  | / y   |  |      
-    #     |  |/      |  |      
-    #     | n010-----|-n110    
-    #     | /        | /       
-    #     |/         |/        
-    #    n000-------n100 ----> 
-    #                          x 
+    #     |
+    #     | n011-------n111
+    #     | /|         /|
+    #     |/ |        / |
+    #    n001-------n101|
+    #     |  |       |  |
+    #     |  | / y   |  |
+    #     |  |/      |  |
+    #     | n010-----|-n110
+    #     | /        | /
+    #     |/         |/
+    #    n000-------n100 ---->
+    #                          x
     for k in range(0, nz):
         for j in range(0, ny):
             for i in range(0, nx):
@@ -232,7 +231,7 @@ def gmv(file_name, xyzn, var, pos):
     # Write the file footer out
     # --------------------------
     file_id.write("endgmv\n")
-    
+
     file_id.close()
 
     return  # end of function
