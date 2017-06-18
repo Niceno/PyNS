@@ -45,7 +45,7 @@ def vol_balance(uvwf, dxyz, obst):
           - dif_z(cat_z((wf.bnd[B].val, wf.val, wf.bnd[T].val)))*dx*dy
 
     # Zero it inside obstacles, if obstacle is sent as parameter
-    if obst.any() != 0:
+    if obst is not None:
         src = obst_zero_val(C, src, obst)
 
     return src  # end of function

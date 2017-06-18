@@ -1,5 +1,5 @@
 """
-Solves flow in a channel with stable or unstable stratification.  
+Solves flow in a channel with stable or unstable stratification.
 The type of stratification is set by parameter "STRATIFICATION"
 
 Uses non-Boussinesq model for buoyancy term; i.e. density depends on
@@ -19,7 +19,7 @@ from pyns.operators          import *
 from pyns.discretization     import *
 from pyns.display            import plot, write
 from pyns.physical           import properties
-from pyns.physical.constants import G 
+from pyns.physical.constants import G
 
 # =============================================================================
 #
@@ -51,51 +51,51 @@ rho   [:] =    1.25   # density              [kg/m^3]
 mu    [:] =    0.1    # viscosity            [Pa s]
 cap   [:] =    1.0    # capacity             [kg/m^3]
 kappa [:] =    0.001  # thermal conductivity [W/mK]
-     
+
 # Time-stepping parameters
 dt  =   0.2  # time step
 ndt = 500    # number of time steps
 
 # Create unknowns; names, positions and sizes
-uf = create_unknown('face-u-vel',  X, ru, DIRICHLET)
-vf = create_unknown('face-v-vel',  Y, rv, DIRICHLET)
-wf = create_unknown('face-w-vel',  Z, rw, DIRICHLET)
-p  = create_unknown('pressure',    C, rc, NEUMANN)
-t  = create_unknown('temperature', C, rc, NEUMANN)
+uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
+vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
+wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
+p  = Unknown('pressure',    C, rc, NEUMANN)
+t  = Unknown('temperature', C, rc, NEUMANN)
 p_tot = zeros(rc)
 
 # Specify boundary conditions
-uf.bnd[W].typ[:1,:,:] = DIRICHLET 
+uf.bnd[W].typ[:1,:,:] = DIRICHLET
 for k in range(0,nz):
-  uf.bnd[W].val[:1,:,k]  = par(0.1, yn)
+    uf.bnd[W].val[:1,:,k]  = par(0.1, yn)
 
-uf.bnd[E].typ[:1,:,:] = OUTLET 
-uf.bnd[E].val[:1,:,:] = 0.1 
+uf.bnd[E].typ[:1,:,:] = OUTLET
+uf.bnd[E].val[:1,:,:] = 0.1
 
 for j in (B,T):
-  uf.bnd[j].typ[:] = NEUMANN     
-  vf.bnd[j].typ[:] = NEUMANN     
-  wf.bnd[j].typ[:] = NEUMANN     
+    uf.bnd[j].typ[:] = NEUMANN
+    vf.bnd[j].typ[:] = NEUMANN
+    wf.bnd[j].typ[:] = NEUMANN
 
 t.val[:] = 70
-t.bnd[W].typ[:1,:,:] = DIRICHLET 
-t.bnd[S].typ[:,:1,:] = DIRICHLET 
-t.bnd[N].typ[:,:1,:] = DIRICHLET 
+t.bnd[W].typ[:1,:,:] = DIRICHLET
+t.bnd[S].typ[:,:1,:] = DIRICHLET
+t.bnd[N].typ[:,:1,:] = DIRICHLET
 t.bnd[E].val[:1,:,:] = 70
 
 if STRATIFICATION == 'u':
-  dtemp = (60-80)/ny
-  for k in range(0,nz):
-    t.bnd[W].val[:1,:,k] = linspace(60-dtemp/2,80+dtemp/2,ny)
-  t.bnd[S].val[:,:1,:] = 60
-  t.bnd[N].val[:,:1,:] = 80
-       
+    dtemp = (60-80)/ny
+    for k in range(0,nz):
+        t.bnd[W].val[:1,:,k] = linspace(60-dtemp/2,80+dtemp/2,ny)
+    t.bnd[S].val[:,:1,:] = 60
+    t.bnd[N].val[:,:1,:] = 80
+
 elif STRATIFICATION == 's':
-  dtemp = (80-60)/ny
-  for k in range(0,nz):
-    t.bnd[W].val[:1,:,k] = linspace(80-dtemp/2,60+dtemp/2,ny)
-  t.bnd[S].val[:,:1,:] = 80
-  t.bnd[N].val[:,:1,:] = 60
+    dtemp = (80-60)/ny
+    for k in range(0,nz):
+        t.bnd[W].val[:1,:,k] = linspace(80-dtemp/2,60+dtemp/2,ny)
+    t.bnd[S].val[:,:1,:] = 80
+    t.bnd[N].val[:,:1,:] = 60
 
 adj_n_bnds(p)
 adj_n_bnds(t)
@@ -110,60 +110,56 @@ obst = zeros(rc)
 
 # ----------
 #
-# Time loop 
+# Time loop
 #
 # ----------
 for ts in range(1,ndt+1):
 
-  write.time_step(ts)
-  
-  # -----------------
-  # Store old values
-  # -----------------
-  t.old[:]  = t.val[:]
-  uf.old[:] = uf.val[:]
-  vf.old[:] = vf.val[:]
-  wf.old[:] = wf.val[:]
-  
-  # ---------------------------
-  # Update physical properties
-  # ---------------------------
-  rho[:] = 1.06 + (t.val[:] - 60.0) * (0.99 - 1.06) / 20.0
-  
-  # -----------------------
-  # Temperature (enthalpy)
-  # -----------------------
-  calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), obst)
+    write.time_step(ts)
 
-  # ----------------------
-  # Momentum conservation
-  # ----------------------
-  g_v = -G * avg(Y, rho)
-  
-  ef = zeros(ru), g_v, zeros(rw)
-    
-  calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-           p_tot, ef, dt, (dx,dy,dz), obst)
-  
-  # ---------
-  # Pressure
-  # ---------
-  calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
-  
-  p_tot = p_tot + p.val
-  
-  # --------------------
-  # Velocity correction
-  # --------------------
-  corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
- 
-  # Compute volume balance for checking 
-  err = vol_balance((uf,vf,wf), (dx,dy,dz), obst)
-  print('Maximum volume error after correction: %12.5e' % abs(err).max())
+    # -----------------
+    # Store old values
+    # -----------------
+    t.old[:]  = t.val[:]
+    uf.old[:] = uf.val[:]
+    vf.old[:] = vf.val[:]
+    wf.old[:] = wf.val[:]
 
-  # Check the CFL number too 
-  cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))
-  print('Maximum CFL number: %12.5e' % cfl)
+    # ---------------------------
+    # Update physical properties
+    # ---------------------------
+    rho[:] = 1.06 + (t.val[:] - 60.0) * (0.99 - 1.06) / 20.0
+
+    # -----------------------
+    # Temperature (enthalpy)
+    # -----------------------
+    calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), obst)
+
+    # ----------------------
+    # Momentum conservation
+    # ----------------------
+    g_v = -G * avg(Y, rho)
+
+    ef = zeros(ru), g_v, zeros(rw)
+
+    calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
+             p_tot, dt, (dx,dy,dz), obst,
+             force = ef)
+
+    # ---------
+    # Pressure
+    # ---------
+    calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+
+    p_tot = p_tot + p.val
+
+    # --------------------
+    # Velocity correction
+    # --------------------
+    corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+
+    # Check the CFL number too
+    cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))
 
 # =============================================================================
 #
@@ -171,7 +167,7 @@ for ts in range(1,ndt+1):
 #
 # =============================================================================
 
-  if ts % 50 == 0:
-    plot.isolines(p_tot, (uf,vf,wf), (xn,yn,zn), Z)
-    plot.isolines(t.val, (uf,vf,wf), (xn,yn,zn), Z)
-    plot.isolines(rho,   (uf,vf,wf), (xn,yn,zn), Z)    
+    if ts % 50 == 0:
+        plot.isolines(p_tot, (uf,vf,wf), (xn,yn,zn), Z)
+        plot.isolines(t.val, (uf,vf,wf), (xn,yn,zn), Z)
+        plot.isolines(rho,   (uf,vf,wf), (xn,yn,zn), Z)

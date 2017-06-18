@@ -84,7 +84,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         wf.bnd[j].typ[:] = NEUMANN
 
     # Create obstacles
-    obst = zeros(rc)
+    plates = zeros(rc)
 
     class key:
         ip = -1
@@ -129,7 +129,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         for i in range(floor(block[o].im), floor(block[o].ip)):
             for j in range(floor(block[o].jm), floor(block[o].jp)):
                 for k in range(floor(block[o].km), floor(block[o].kp)):
-                    obst[i,j,k] = 1
+                    plates[i,j,k] = 1
 
 # =============================================================================
 #
@@ -156,20 +156,18 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        ef = zeros(ru), zeros(rv), zeros(rw)
-
         calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), ef, dt, (dx,dy,dz), obst)
+                 zeros(rc), dt, (dx,dy,dz), plates)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), plates)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), plates)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))

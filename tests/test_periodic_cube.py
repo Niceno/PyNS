@@ -48,11 +48,11 @@ def main(show_plot=True, time_steps=6000, plot_freq=20):
     wf = Unknown('face-w-vel',  Z, rw, DIRICHLET, per=(True, True, False))
     p  = Unknown('pressure',    C, rc, NEUMANN,   per=(True, True, False))
 
-    obst = zeros(rc)
+    cube = zeros(rc)
     for j in range(22, 38):
         for i in range(22, 38):
             for k in range(0,16):
-                obst[i,j,k] = 1
+                cube[i,j,k] = 1
 
 # =============================================================================
 #
@@ -82,17 +82,18 @@ def main(show_plot=True, time_steps=6000, plot_freq=20):
         ef = ones(ru)*0.05, zeros(rv), zeros(rw)
 
         calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), ef, dt, (dx,dy,dz), obst)
+                 zeros(rc), dt, (dx,dy,dz), cube,
+                 force = ef)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), cube)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), cube)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))

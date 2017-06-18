@@ -84,11 +84,11 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
         vf.bnd[j].typ[:] = NEUMANN
         wf.bnd[j].typ[:] = NEUMANN
 
-    obst = zeros(rc)
+    obstacle = zeros(rc)
     for j in range(0, 24):
         for i in range(64+j, 64+24):
             for k in range(0,nz):
-                obst[i,j,k] = 1
+                obstacle[i,j,k] = 1
 
 # =============================================================================
 #
@@ -115,20 +115,18 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        ef = zeros(ru), zeros(rv), zeros(rw)
-
         calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), ef, dt, (dx,dy,dz), obst)
+                 zeros(rc), dt, (dx,dy,dz), obstacle)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))
@@ -141,7 +139,7 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
         if show_plot:
             if ts % plot_freq == 0:
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
-                plot.tecplot("obst-staggered-%6.6d" % ts, 
+                plot.tecplot("obstacle-staggered-%6.6d" % ts, 
                              (xn, yn, zn), (uf, vf, wf, p))
 
 if __name__ == '__main__':

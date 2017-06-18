@@ -42,7 +42,7 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst):
     p_z = dif_z(p.val) / avg_z(dz)
 
     # Set to zero in obst
-    if obst.any() != 0:
+    if obst is not None:
         p_x = obst_zero_val(X, p_x, obst)
         p_y = obst_zero_val(Y, p_y, obst)
         p_z = obst_zero_val(Z, p_z, obst)

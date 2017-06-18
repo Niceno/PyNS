@@ -193,7 +193,7 @@ def create_matrix(phi, inn, mu, dxyz, obst, obc):
     # --------------------------------------
     # Correct system matrices for obstacles
     # --------------------------------------
-    if obst.any() != 0:
+    if obst is not None:
         c = obst_mod_matrix(phi, c, obst, obc)
 
     # ----------------------------------------------

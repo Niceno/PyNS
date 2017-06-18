@@ -25,7 +25,7 @@ def main():
         
         start = timeit.default_timer()
         test.main(show_plot  = False, 
-                  time_steps = 20, 
+                  time_steps = 4, 
                   plot_freq  = 10)
         
         duration = timeit.default_timer() - start

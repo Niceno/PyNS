@@ -62,7 +62,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     rc, ru, rv, rw = cartesian_grid(xn, yn, zn)
 
     # Set physical properties
-    rho, mu, cap, kappa = properties_for_air(rc)
+    rho, mu, cap, kappa = properties.air(rc)
 
     # Time-stepping parameters
     dt  = 0.005      # time step
@@ -91,7 +91,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     adj_n_bnds(p)
 
     # Create obstacles
-    obst = zeros(rc)
+    plates = zeros(rc)
 
     class key:
         """
@@ -139,7 +139,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         for i in range(floor(block[o].im), floor(block[o].ip)):
             for j in range(floor(block[o].jm), floor(block[o].jp)):
                 for k in range(floor(block[o].km), floor(block[o].kp)):
-                    obst[i, j, k] = 1
+                    plates[i, j, k] = 1
 
 # =============================================================================
 #
@@ -154,7 +154,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     # -----------
     for ts in range(1, ndt+1):
 
-        print_time_step(ts)
+        write.time_step(ts)
 
         # ------------------
         # Store old values
@@ -166,21 +166,19 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # -----------------------
         # Momentum conservation
         # -----------------------
-        ef = zeros(rc), zeros(rc), zeros(rc)
-
         calc_uvw((uc, vc, wc), (uf, vf, wf), rho, mu,
-                 zeros(rc), ef, dt, (dx, dy, dz), obst)
+                 zeros(rc), dt, (dx, dy, dz), plates)
 
         # ----------
         # Pressure
         # ----------
-        calc_p(p, (uf, vf, wf), rho, dt, (dx, dy, dz), obst)
+        calc_p(p, (uf, vf, wf), rho, dt, (dx, dy, dz), plates)
 
         # ---------------------
         # Velocity correction
         # ---------------------
-        corr_uvw((uc, vc, wc), p, rho, dt, (dx, dy, dz), obst)
-        corr_uvw((uf, vf, wf), p, rho, dt, (dx, dy, dz), obst)
+        corr_uvw((uc, vc, wc), p, rho, dt, (dx, dy, dz), plates)
+        corr_uvw((uf, vf, wf), p, rho, dt, (dx, dy, dz), plates)
 
         # Check the CFL number too
         cfl = cfl_max((uc, vc, wc), dt, (dx, dy, dz))

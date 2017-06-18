@@ -18,9 +18,8 @@ from pyns.discretization.create_matrix  import create_matrix
 from pyns.solvers                       import cg, cgs, bicgstab
 
 # =============================================================================
-def calc_phi(phi, uvwf, density, gamma, dt, dxyz, 
-             obst = None, 
-             src  = None):
+def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst, 
+             source = None):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -37,7 +36,7 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz,
       src:     Right hand side term.
 
     Returns:
-      none, but input argument phi is modified!
+      None, but input argument phi is modified!
     """
 
     # Unpack tuple(s)
@@ -57,10 +56,10 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz,
     i_phi = phi.old * avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
 
     # Handle external source
-    if src == None:
+    if source is None:
         s_phi = zeros(r_phi)
     else:
-        s_phi = src * avg(phi.pos, dx*dy*dz)
+        s_phi = source * avg(phi.pos, dx*dy*dz)
 
     # The entire source term
     f_phi = b_phi - c_phi + i_phi + s_phi

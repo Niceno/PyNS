@@ -60,11 +60,11 @@ def main(show_plot=True, time_steps=2000, plot_freq=200):
         vf.bnd[j].typ[:] = NEUMANN
         wf.bnd[j].typ[:] = NEUMANN
 
-    obst = zeros(rc)
+    cube = zeros(rc)
     for j in range(22, 38):
         for i in range(22, 38):
             for k in range(0,16):
-                obst[i,j,k] = 1
+                cube[i,j,k] = 1
 
 # =============================================================================
 #
@@ -91,20 +91,18 @@ def main(show_plot=True, time_steps=2000, plot_freq=200):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        ef = zeros(ru), zeros(rv), zeros(rw)
-
         calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), ef, dt, (dx,dy,dz), obst)
+                 zeros(rc), dt, (dx,dy,dz), cube)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), cube)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), cube)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))

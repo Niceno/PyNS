@@ -158,13 +158,13 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
         wf.bnd[j].typ[:] = NEUMANN
 
     # Create a cylindrical obstacle in the middle just for kicks
-    obst = zeros(rc)
+    obstacle = zeros(rc)
     for k in range(0,nz):
         for j in range(0,ny):
             for i in range(0,nx):
                 dist = sqrt( (j-ny//2+1)**2 + (i-nx//2+1)**2 )
                 if dist < ny/4:
-                    obst[i,j,k] = 1
+                    obstacle[i,j,k] = 1
 
 # =============================================================================
 #
@@ -191,20 +191,18 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        ef = zeros(ru), zeros(rv), zeros(rw)
-
         calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), ef, dt, (dx,dy,dz), obst)
+                 zeros(rc), dt, (dx,dy,dz), obstacle)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))

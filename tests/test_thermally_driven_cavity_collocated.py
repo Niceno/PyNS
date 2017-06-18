@@ -91,7 +91,7 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         vc.bnd[j].typ[:] = NEUMANN
         wc.bnd[j].typ[:] = NEUMANN
 
-    obst = zeros(rc)
+    obstacle = None
 
 # =============================================================================
 #
@@ -119,7 +119,7 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         #------------------------
         # Temperature (enthalpy)
         #------------------------
-        calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), obst)
+        calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), obstacle)
 
         #-----------------------
         # Momentum conservation
@@ -127,20 +127,21 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         ef = zeros(rc), t.val, zeros(rc)
 
         calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu,
-                 p_tot, ef, dt, (dx,dy,dz), obst)
+                 p_tot, dt, (dx,dy,dz), obstacle,
+                 force = ef)
 
         #----------
         # Pressure
         #----------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
 
         p_tot = p_tot + p.val
 
         #---------------------
         # Velocity correction
         #---------------------
-        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), obst)
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), obstacle)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle)
 
         # Check the CFL number too
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))

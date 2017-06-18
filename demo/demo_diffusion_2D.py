@@ -13,7 +13,7 @@ from pyns.operators      import *
 from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
-        
+
 def main(show_plot=True, time_steps=1, plot_freq=1):
 
 #==============================================================================
@@ -88,7 +88,8 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
         # -----------------------
         # Temperature (enthalpy)
         # -----------------------
-        calc_phi(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), src = t_src)
+        calc_phi(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), None,
+                 source = t_src)
 
 # =============================================================================
 #
@@ -98,7 +99,7 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
         if show_plot:
             if ts % plot_freq == 0:
                 plot.isolines(t.val, (uf, vf, wf), (xn, yn, zn), Z, levels=21)
-                plot.gmv("tdc-staggered-%6.6d.gmv" % ts, 
+                plot.gmv("tdc-staggered-%6.6d.gmv" % ts,
                          (xn, yn, zn), (uf, vf, wf, t))
 
 if __name__ == '__main__':

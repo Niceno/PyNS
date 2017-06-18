@@ -61,7 +61,7 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
 
     # Set to zero in obstacle (it can get strange
     # values during the iterative solution procedure)
-    if obst.any() != 0:
+    if obst is not None:
         p.val[:] = obst_zero_val(p.pos, p.val, obst)
 
     # Finally adjust the boundary values
