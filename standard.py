@@ -9,9 +9,11 @@ from matplotlib          import pyplot      as plt
 from matplotlib          import cm
 from random              import random
 from scipy               import logical_not as lnot
-from scipy               import minimum     as mn
 from scipy               import maximum     as mx
-from scipy               import array,        \
+from scipy               import minimum     as mn
+from scipy               import amax,         \
+                                amin,         \
+                                array,        \
                                 append,       \
                                 concatenate,  \
                                 copy,         \
