@@ -126,6 +126,9 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
 
     # Update velocities in boundary cells
     adj_o_bnds((u,v,w), (dx,dy,dz), dt)
+    adj_n_bnds(u)
+    adj_n_bnds(v)
+    adj_n_bnds(w)
 
     # Update face velocities
     # (For collocated arrangement also substract cell-centered
@@ -171,5 +174,7 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
         uf.val[:] = obst_zero_val(X, uf.val, obst)
         vf.val[:] = obst_zero_val(Y, vf.val, obst)
         wf.val[:] = obst_zero_val(Z, wf.val, obst)
+
+    
 
     return  # end of function
