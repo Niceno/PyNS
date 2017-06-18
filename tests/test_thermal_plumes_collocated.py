@@ -11,6 +11,8 @@ staggered and collocated arrangements always possible.
 
 #!/usr/bin/python
 
+from __future__ import division
+
 # Standard Python modules
 from pyns.standard import *
 
@@ -175,7 +177,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
             if ts % plot_freq == 0:
                 plot.isolines(t.val, (uc, vc, wc), (xn, yn, zn), Z)
                 plot.isolines(p.val, (uc, vc, wc), (xn, yn, zn), Z)
-                plot.tecplot("tp-collocated-%6.6d.plt" % ts, 
+                plot.tecplot("tp-collocated-%6.6d.plt" % ts,
                              (xn, yn, zn), (uc, vc, wc, t, p))
 
 if __name__ == '__main__':
