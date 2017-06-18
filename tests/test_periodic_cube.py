@@ -81,8 +81,7 @@ def main(show_plot=True, time_steps=6000, plot_freq=20):
         # ----------------------
         ef = ones(ru)*0.05, zeros(rv), zeros(rw)
 
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), dt, (dx,dy,dz), cube,
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), cube,
                  force = ef)
 
         # ---------

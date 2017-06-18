@@ -69,12 +69,12 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    t  = Unknown('temperature', C, rc, NEUMANN)
-    p  = Unknown('pressure',    C, rc, NEUMANN)
-    p_tot = zeros(rc)
+    uf    = Unknown('face-u-vel',     X, ru, DIRICHLET)
+    vf    = Unknown('face-v-vel',     Y, rv, DIRICHLET)
+    wf    = Unknown('face-w-vel',     Z, rw, DIRICHLET)
+    t     = Unknown('temperature',    C, rc, NEUMANN)
+    p     = Unknown('pressure',       C, rc, NEUMANN)
+    p_tot = Unknown('total-pressure', C, rc, NEUMANN)
 
     # This is a new test
     t.bnd[W].typ[:] = DIRICHLET
@@ -121,18 +121,18 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        ef = zeros(ru), avg(Y,t.val), zeros(rw)
+        ext_f = zeros(ru), avg(Y,t.val), zeros(rw)
 
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 p_tot, dt, (dx,dy,dz), obstacle,
-                 force = ef)
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle,
+                 pressure = p_tot,
+                 force    = ext_f)
 
         # ---------
         # Pressure
         # ---------
         calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
 
-        p_tot = p_tot + p.val
+        p_tot.val += p.val
 
         # --------------------
         # Velocity correction

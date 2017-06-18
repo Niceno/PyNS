@@ -156,8 +156,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), dt, (dx,dy,dz), plates)
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), plates)
 
         # ---------
         # Pressure
@@ -182,7 +181,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Y)
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
                 plot.gmv("obst-thinner-staggered-%6.6d" % ts, 
-                         (xn, yn, zn), (uf, vf, wf, p))
+                         (xn,yn,zn), (uf,vf,wf,p))
 
 if __name__ == '__main__':
     main()

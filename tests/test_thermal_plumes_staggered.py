@@ -124,8 +124,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # ----------------------
         ef = zeros(ru), 150.0 * avg(Y,t.val), zeros(rw)
 
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), dt, (dx,dy,dz), obstacle,
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle,
                  force = ef)
 
         # ---------

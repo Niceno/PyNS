@@ -144,8 +144,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # ----------------------
         ef = zeros(rc), 150.0 * t.val, zeros(rc)
 
-        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), dt, (dx,dy,dz), obstacle,
+        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle,
                  force = ef)
 
         # ---------

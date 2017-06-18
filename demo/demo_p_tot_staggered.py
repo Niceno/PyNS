@@ -55,11 +55,11 @@ dt  =   0.1  # time step
 ndt = 200    # number of time steps
 
 # Create unknowns; names, positions and sizes
-uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-p  = Unknown('pressure',    C, rc, NEUMANN)
-p_tot = zeros(rc)
+uf    = Unknown('face-u-vel',     X, ru, DIRICHLET)
+vf    = Unknown('face-v-vel',     Y, rv, DIRICHLET)
+wf    = Unknown('face-w-vel',     Z, rw, DIRICHLET)
+p     = Unknown('pressure',       C, rc, NEUMANN)
+p_tot = Unknown('total-pressure', C, rc, NEUMANN)
 
 # Specify boundary conditions
 uf.bnd[W].typ[:1,:,:] = DIRICHLET
@@ -104,18 +104,18 @@ for ts in range(1,ndt+1):
     # ----------------------
     g_v = -G * avg(Y, rho) * min(ts/100,1)
 
-    ef = zeros(ru), g_v, zeros(rw)
+    ext_f = zeros(ru), g_v, zeros(rw)
 
-    calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-             p_tot, dt, (dx,dy,dz), obst,
-             force = ef)
+    calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obst,
+             pressure = p_tot,
+             force    = ext_f)
 
     # ---------
     # Pressure
     # ---------
     calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
 
-    p_tot = p_tot + p.val
+    p_tot.val += p.val
 
     # --------------------
     # Velocity correction
@@ -132,5 +132,5 @@ for ts in range(1,ndt+1):
 # =============================================================================
 
     if ts % 20 == 0:
-        plot.isolines(p_tot, (uf,vf,wf), (xn,yn,zn), Z)
-        plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
+        plot.isolines(p_tot.val, (uf,vf,wf), (xn,yn,zn), Z)
+        plot.isolines(p.val,     (uf,vf,wf), (xn,yn,zn), Z)

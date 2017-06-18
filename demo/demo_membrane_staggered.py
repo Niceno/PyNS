@@ -66,17 +66,18 @@ dt  =    0.004  # time step
 ndt = 1000      # number of time steps
 
 # Create unknowns; names, positions and sizes
-uf = [Unknown('face-u-vel',  X, ru[AIR], DIRICHLET),  \
-      Unknown('face-u-vel',  X, ru[H2O], DIRICHLET)]
-vf = [Unknown('face-v-vel',  Y, rv[AIR], DIRICHLET),  \
-      Unknown('face-v-vel',  Y, rv[H2O], DIRICHLET)]
-wf = [Unknown('face-w-vel',  Z, rw[AIR], DIRICHLET),  \
-      Unknown('face-w-vel',  Z, rw[H2O], DIRICHLET)]
-p  = [Unknown('pressure',    C, rc[AIR], NEUMANN),  \
-      Unknown('pressure',    C, rc[H2O], NEUMANN)]
-t  = [Unknown('temperature', C, rc[AIR], NEUMANN),  \
-      Unknown('temperature', C, rc[H2O], NEUMANN)]
-p_tot = [zeros(rc[AIR]), zeros(rc[H2O])]
+uf    = [Unknown('face-u-vel',     X, ru[AIR], DIRICHLET),  \
+         Unknown('face-u-vel',     X, ru[H2O], DIRICHLET)]
+vf    = [Unknown('face-v-vel',     Y, rv[AIR], DIRICHLET),  \
+         Unknown('face-v-vel',     Y, rv[H2O], DIRICHLET)]
+wf    = [Unknown('face-w-vel',     Z, rw[AIR], DIRICHLET),  \
+         Unknown('face-w-vel',     Z, rw[H2O], DIRICHLET)]
+p     = [Unknown('pressure',       C, rc[AIR], NEUMANN),  \
+         Unknown('pressure',       C, rc[H2O], NEUMANN)]
+t     = [Unknown('temperature',    C, rc[AIR], NEUMANN),  \
+         Unknown('temperature',    C, rc[H2O], NEUMANN)]
+p_tot = [Unknown('total-pressure', C, rc[AIR], NEUMANN),  \
+         Unknown('total-pressure', C, rc[H2O], NEUMANN)]
 
 # Specify boundary conditions
 for k in range(0,nz[AIR]):
@@ -177,11 +178,12 @@ for ts in range(1,ndt+1):
     for c in (AIR,H2O):
         g_v = -G * avg(Y, rho[c])
 
-        ef = zeros(ru[c]), g_v, zeros(rw[c])
+        ext_f = zeros(ru[c]), g_v, zeros(rw[c])
 
         calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
-                 p_tot[c], dt, (dx[c],dy[c],dz[c]), obst[c],
-                 force = ef)
+                 dt, (dx[c],dy[c],dz[c]), obst[c],
+                 pressure = p_tot[c],
+                 force    = ext_f)
 
     # ---------
     # Pressure
@@ -190,7 +192,7 @@ for ts in range(1,ndt+1):
         calc_p(p[c], (uf[c],vf[c],wf[c]), rho[c],  \
                dt, (dx[c],dy[c],dz[c]), obst[c])
 
-        p_tot[c] = p_tot[c] + p[c].val
+        p_tot[c].val += p[c].val
 
     # --------------------
     # Velocity correction

@@ -166,22 +166,21 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # -----------------------
         # Momentum conservation
         # -----------------------
-        calc_uvw((uc, vc, wc), (uf, vf, wf), rho, mu,
-                 zeros(rc), dt, (dx, dy, dz), plates)
+        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), plates)
 
         # ----------
         # Pressure
         # ----------
-        calc_p(p, (uf, vf, wf), rho, dt, (dx, dy, dz), plates)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), plates)
 
         # ---------------------
         # Velocity correction
         # ---------------------
-        corr_uvw((uc, vc, wc), p, rho, dt, (dx, dy, dz), plates)
-        corr_uvw((uf, vf, wf), p, rho, dt, (dx, dy, dz), plates)
+        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), plates)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), plates)
 
         # Check the CFL number too
-        cfl = cfl_max((uc, vc, wc), dt, (dx, dy, dz))
+        cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
 
 # =============================================================================
 #
@@ -190,10 +189,10 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-                plot.isolines(p.val, (uc, vc, wc), (xn, yn, zn), Y)
-                plot.isolines(p.val, (uc, vc, wc), (xn, yn, zn), Z)
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Y)
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
                 plot.gmv("obst-thinner-collocated-%6.6d" % ts, 
-                         (xn, yn, zn), (uc, vc, wc, p))
+                         (xn,yn,zn), (uc,vc,wc,p))
 
 if __name__ == '__main__':
     main()

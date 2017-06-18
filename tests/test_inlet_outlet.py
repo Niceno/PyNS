@@ -191,8 +191,7 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu,  \
-                 zeros(rc), dt, (dx,dy,dz), obstacle)
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle)
 
         # ---------
         # Pressure
