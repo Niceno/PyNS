@@ -15,7 +15,7 @@ def adj_n_bnds(phi):
     Copies last domain cell values to Neumann boundary condition values.
 
     Args:
-      phi: Any unknown created by "pyns.create_unknown".
+      phi: Object of the type unknown.
 
     Returns:
       none, but input argument psi is modified.
@@ -32,19 +32,22 @@ def adj_n_bnds(phi):
 
     # In what follows, a linear combination of true (0] and false (0)
     # will copy the values of variable phi to the boundaries.
-    phi.bnd[W].val[0,:,:] = phi.bnd[W].val[0,:,:] * ( lnot(if_w_n) )  \
-                          + phi.val[0,:,:]        *        if_w_n
-    phi.bnd[E].val[0,:,:] = phi.bnd[E].val[0,:,:] * ( lnot(if_e_n) )  \
-                          + phi.val[-1,:,:]       *        if_e_n
+    if phi.pos != X:
+        phi.bnd[W].val[0,:,:] = phi.bnd[W].val[0,:,:] * ( lnot(if_w_n) )  \
+                              + phi.val[0,:,:]        *        if_w_n
+        phi.bnd[E].val[0,:,:] = phi.bnd[E].val[0,:,:] * ( lnot(if_e_n) )  \
+                              + phi.val[-1,:,:]       *        if_e_n
 
-    phi.bnd[S].val[:,0,:] = phi.bnd[S].val[:,0,:] * ( lnot(if_s_n) )  \
-                          + phi.val[:,0,:]        *        if_s_n
-    phi.bnd[N].val[:,0,:] = phi.bnd[N].val[:,0,:] * ( lnot(if_n_n) )  \
-                          + phi.val[:,-1,:]       *        if_n_n
+    if phi.pos != Y:
+        phi.bnd[S].val[:,0,:] = phi.bnd[S].val[:,0,:] * ( lnot(if_s_n) )  \
+                              + phi.val[:,0,:]        *        if_s_n
+        phi.bnd[N].val[:,0,:] = phi.bnd[N].val[:,0,:] * ( lnot(if_n_n) )  \
+                              + phi.val[:,-1,:]       *        if_n_n
 
-    phi.bnd[B].val[:,:,0] = phi.bnd[B].val[:,:,0] * ( lnot(if_b_n) )  \
-                          + phi.val[:,:,0]        *        if_b_n
-    phi.bnd[T].val[:,:,0] = phi.bnd[T].val[:,:,0] * ( lnot(if_t_n) )  \
-                          + phi.val[:,:,-1]       *        if_t_n
+    if phi.pos != Z:
+        phi.bnd[B].val[:,:,0] = phi.bnd[B].val[:,:,0] * ( lnot(if_b_n) )  \
+                              + phi.val[:,:,0]        *        if_b_n
+        phi.bnd[T].val[:,:,0] = phi.bnd[T].val[:,:,0] * ( lnot(if_t_n) )  \
+                              + phi.val[:,:,-1]       *        if_t_n
 
     return  # end of function
