@@ -22,9 +22,9 @@ def cartesian_grid(xn, yn, zn):
       nx: Number of cells (one less than nodes) in "x" direction.
       ny: Number of cells (one less than nodes) in "y" direction.
       nz: Number of cells (one less than nodes) in "z" direction.
-      dx: Three-dimensional matrix holding "dx" for all cells.
-      dy: Three-dimensional matrix holding "dy" for all cells.
-      dz: Three-dimensional matrix holding "dz" for all cells.
+      dx: Three-dimensional array holding "dx" for all cells.
+      dy: Three-dimensional array holding "dy" for all cells.
+      dz: Three-dimensional array holding "dz" for all cells.
       rc: Resolution tuple (nx, ny and nz) for centered variable.
       rx: Resolution tuple (nx, ny and nz) for variable staggered in "x".
       ry: Resolution tuple (nx, ny and nz) for variable staggered in "y".

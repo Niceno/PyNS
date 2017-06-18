@@ -25,7 +25,7 @@ def cg(a, phi, b, tol,
     """
     Args:
       a:        System matrix in PyNS format (which ssentially means storing 
-                a bundle of non-zero diagonals in compas directions)
+                a bundle of non-zero diagonals in compas directions).
       phi:      Object of the type "Unknown" to be solved.
       b:        Three-dimensional array holding the source term.
       tol:      Absolute solver tolerance

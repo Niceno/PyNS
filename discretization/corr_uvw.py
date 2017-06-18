@@ -22,11 +22,11 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst):
       uvw:  Tuple with three staggered or centered velocity components
             (each component is created with "create_unknown" function.
       p:    Unknown holding the pressure correction.
-      rho:  Three-dimensional matrix holding density for all cells.
+      rho:  Three-dimensional array holding density for all cells.
       dt:   Time step
       dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
             Each cell dimension is a three-dimensional array.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.
+      obst: Obstacle, three-dimensional array with zeros and ones.
             It is zero in fluid, one in solid.
 
     Returns:

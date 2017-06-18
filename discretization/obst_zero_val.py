@@ -16,7 +16,7 @@ def obst_zero_val(pos, val, obst):
     Args:
       pos:  Position of the variable (C, X, Y or Z).
       val:  Value to be set in the obstacle.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.
+      obst: Obstacle, three-dimensional array with zeros and ones.
             It is zero in fluid, one in solid.
     """
 

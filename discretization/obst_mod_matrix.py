@@ -14,17 +14,15 @@ def obst_mod_matrix(phi, c, obst, obc):
 # -----------------------------------------------------------------------------
     """
     Args:
-      phi:  Unknown (created with "pyns.create_unknown" function)
-      c:    Coefficients in system matrix.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.  It is
+      phi:  Object of the type "Unknown".
+      c:    System matrix in PyNS format (which ssentially means storing 
+            a bundle of non-zero diagonals in compas directions).
+      obst: Obstacle, three-dimensional array with zeros and ones.  It is
             zero in fluid, one in solid.
       obc:  Obstacle's boundary condition (NEUMANN or DIRICHLET).
 
     Returns:
       c: Modified system matrix.
-
-    Note:
-      The format of the system matrix is clear from function: "create_matrix"
     """
 
     pos = phi.pos

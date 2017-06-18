@@ -21,7 +21,7 @@ def vol_balance(uvwf, dxyz, obst):
             component is created with "create_unknown" function.
       dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
             Each cell dimension is a three-dimensional array.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.
+      obst: Obstacle, three-dimensional array with zeros and ones.
             It is zero in fluid, one in solid.
 
     Note:
