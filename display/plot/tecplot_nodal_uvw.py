@@ -10,7 +10,7 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def tecplot(file_name, xyzn, vars):
+def tecplot_nodal_uvw(file_name, xyzn, uvwn):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -26,6 +26,7 @@ def tecplot(file_name, xyzn, vars):
 
     # Unpack tuples
     xn, yn, zn = xyzn
+    un, vn, wn = uvwn
 
     # Compute cell resolutions (remember: cell resolutions)
     nx = len(xn)-1
@@ -43,16 +44,13 @@ def tecplot(file_name, xyzn, vars):
     if verbatim:
         file_id.write("# File header \n")
     file_id.write("title=\"PyNS Output\"\n")
-    file_id.write("variables=\"x\" \"y\" \"z\" ")
-    for v in vars:
-        file_id.write("\"%s\" " % v.name)
+    file_id.write("variables=\"x\" \"y\" \"z\" \"u\" \"v\" \"w\" ")
     file_id.write("\n")
     file_id.write("zone i=%d"   % (nx+1) +   \
                       " j=%d"   % (ny+1) +   \
                       " k=%d\n" % (nz+1))
     file_id.write("datapacking = block\n")
-    file_id.write("varlocation=([1-3]=nodal ")
-    file_id.write("[4-%d]=cellcentered)" % (3+len(vars)) )
+    file_id.write("varlocation=([1-6]=nodal)\n")
 
     # -------------------------------------------------------------------
     # Write the coordinates out (remember - those are nodal coordinates)
@@ -95,29 +93,12 @@ def tecplot(file_name, xyzn, vars):
     # ------------------------
 
     # Average values to be written for staggered variables
-    for v in vars:
-        if v.pos == C:
-            val = v.val
-        elif v.pos == X:
-            val = avg_x(cat_x((v.bnd[W].val[:1,:,:],
-                               v.val,
-                               v.bnd[E].val[:1,:,:])))
-        elif v.pos == Y:
-            val = avg_y(cat_y((v.bnd[S].val[:,:1,:],
-                               v.val,
-                               v.bnd[N].val[:,:1,:])))
-        elif v.pos == Z:
-            val = avg_z(cat_z((v.bnd[B].val[:,:,:1],
-                               v.val,
-                               v.bnd[T].val[:,:,:1])))
-
-        if verbatim:
-            file_id.write("\n# %s \n" % v.name)
+    for vel in (un, vn, wn):
         c = 0
-        for k in range(0, nz):
-            for j in range(0, ny):
-                for i in range(0, nx):
-                    file_id.write("%12.5e " % val[i,j,k])
+        for k in range(0, nz+1):
+            for j in range(0, ny+1):
+                for i in range(0, nx+1):
+                    file_id.write("%12.5e " % vel[i,j,k])
                     c = c + 1
                     if c % 4 == 0:
                         file_id.write("\n")
