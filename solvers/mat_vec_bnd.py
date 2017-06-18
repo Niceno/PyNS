@@ -1,8 +1,8 @@
 """
 Matrix-vector product, including booundary values, for PyNS matrix format.
 
-Note:
-  Essentially, this function superseedes the plain "mat_vec".
+Notes:
+  This function superseedes the plain "mat_vec".
 """
 
 # Standard Python modules
@@ -19,10 +19,11 @@ def mat_vec_bnd(a, phi):
     Args:
       a: Matrix sent for multiplication in PyNS format (essentially that
          is storing a bundle of non-zero diagonals in compas directions)
-      x: Unknown to be solved (from "create_unknown" function)
+      x: Object of the type "Unknown" to be solved.
 
     Returns:
-      r: Result of the matrix-vector product as a three-dimensional matrix
+      r: Result of the matrix-vector product, which is a vector stored
+         in a three-dimensional array.
     """
 
     r = zeros(phi.val.shape)

@@ -5,6 +5,7 @@ Compute the norm of a vector.
 # Standard Python modules
 from pyns.standard import *
 
+# Sisters from this module
 from pyns.solvers.vec_vec import vec_vec
 
 # =============================================================================

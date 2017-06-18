@@ -17,10 +17,11 @@ def mat_vec(a, x):
     Args:
       a: Matrix sent for multiplication in PyNS format (essentially that
          is storing a bundle of non-zero diagonals in compas directions)
-      x: Three-dimensional matrix with a vector for multiplication.
+      x: Three-dimensional array holding a vector for multiplication.
 
     Returns:
-      r: Result of the matrix-vector product as a three-dimensional matrix
+      r: Result of the matrix-vector product, which is a vector stored
+         in a three-dimensional array.
     """
 
     r = zeros(x.shape)

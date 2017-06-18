@@ -13,6 +13,7 @@ from pyns.constants      import *
 from pyns.display        import write
 from pyns.discretization import Unknown
 
+# Sisters from this module
 from pyns.solvers.mat_vec_bnd import mat_vec_bnd
 from pyns.solvers.vec_vec     import vec_vec
 from pyns.solvers.norm        import norm
@@ -23,20 +24,16 @@ def cg(a, phi, b, tol,
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        System matrix in PyNS format (which ssentially means storing
+      a:        System matrix in PyNS format (which ssentially means storing 
                 a bundle of non-zero diagonals in compas directions)
-      phi:      Unknown to be solved (from "create_unknown" function)
-      b:        Three-dimensional matrix holding the source term.
+      phi:      Object of the type "Unknown" to be solved.
+      b:        Three-dimensional array holding the source term.
       tol:      Absolute solver tolerance
       verbatim: Logical variable setting if solver will be verbatim (print
                 info on Python console) or not.
 
     Returns:
-      x: Three-dimensional matrix with solution.
-
-    Note:
-      One should also consider implementing periodic boundary conditions
-      in this version of the solver.
+      x: Three-dimensional array with solution.
     """
 
     if verbatim:

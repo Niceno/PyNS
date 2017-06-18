@@ -23,7 +23,7 @@ Type of boundary condition at the same boundary cell from above:
   
 Note: 
   This function has been superseeded by the class "Unknown", and its use 
-  is therefore discouraged.
+  is therefore discouraged.  It is a candidate for deletion.
 """
 
 # Standard Python modules
