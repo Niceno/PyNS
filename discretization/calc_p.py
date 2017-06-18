@@ -21,14 +21,14 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
 # -----------------------------------------------------------------------------
     """
     Args:
-      p:    Pressure unknown (created with "pyns.create_unknown" function)
+      p:    Object of the type "Unknown", holding the pressure.
       uvwf: Tuple with three staggered velocity components (where each
             component is created with "pyns.create_unknown" function.
-      rho:  Three-dimensional matrix holding density for all cells.
+      rho:  Three-dimensional array holding density for all cells.
       dt:   Time step.
       dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
-            Each cell dimension is a three-dimensional matrix.
-      obst: Obstacle, three-dimensional matrix with zeros and ones.
+            Each cell dimension is a three-dimensional array.
+      obst: Obstacle, three-dimensional array with zeros and ones.
             It is zero in fluid, one in solid.
 
     Returns:

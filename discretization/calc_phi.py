@@ -27,12 +27,12 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz,
       phi:     Generic unknown (from "create_unknown" function)
       uvwf:    a tuple with three staggered velocity components (where each
                component is created with "create_unknown" function.
-      density: Three-dimensional matrix holding density times thermal
+      density: Three-dimensional array holding density times thermal
                capactity for all cells.
       dt:      Time step.
       dxyz:    Tuple holding cell dimensions in "x", "y" and "z" directions.
-               Each cell dimension is a three-dimensional matrix.
-      obst:    Obstacle, three-dimensional matrix with zeros and ones.
+               Each cell dimension is a three-dimensional array.
+      obst:    Obstacle, three-dimensional array with zeros and ones.
                It is zero in fluid, one in solid.
       src:     Right hand side term.
 

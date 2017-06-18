@@ -16,19 +16,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
 # -----------------------------------------------------------------------------
     """
     Args:
-      rho:      Three-dimensional matrix holding physical property in advection
+      rho:      Three-dimensional array holding physical property in advection
                 term (density or density times capacity ...) for cells.
       phi:      Unknown transported by advection (from "create_unknown").
       uvwf:     Tuple with three staggered velocity components (where each
                 component is created with "create_unknown" function.
       dxyz:     Tuple holding cell dimensions in "x", "y" and "z" directions.
-                Each cell dimension is a three-dimensional matrix.
+                Each cell dimension is a three-dimensional array.
       dt:       Time step.
       lim_name: Limiter name.
                 Can be: "upwind", "minmod", "koren" and "superbee"
 
     Returns:
-      Three-dimensional matrix with advection term.
+      Three-dimensional array with advection term.
     """
 
     # Unpack tuples

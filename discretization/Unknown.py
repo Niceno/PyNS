@@ -1,8 +1,8 @@
 """
 Defines class of the type "Unknown".  "Unknown" is the object which holds the
 values inside the computational domain and on the boundaries.  Value inside
-the domain is stored in a full three-dimensional matrix.  Boundary values are
-also formally stored in three-dimensional matrices, but depending on their
+the domain is stored in a full three-dimensional array.  Boundary values are
+also formally stored in three-dimensional arrays, but depending on their
 position (W, E, S, N, B or T), one dimension is set to one. For boundaries,
 also the type of boundary conditions are specified.
 
