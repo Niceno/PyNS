@@ -9,6 +9,8 @@ Number of arguments can be one (for default format), or two, if format is
 specified with the function call.
 """
 
+from __future__ import print_function
+
 # =============================================================================
 def matrix(*args):
 # -----------------------------------------------------------------------------
