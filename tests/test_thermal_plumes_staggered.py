@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 """
 This script is to reproduce two-dimensional mixed convection case, with
 the aim of testing the outflow boundary, particularly the "convective"
@@ -9,7 +11,7 @@ similar as possible to each other, to test the differences between
 staggered and collocated arrangements always possible.
 """
 
-#!/usr/bin/python
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *
@@ -154,7 +156,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
             if ts % plot_freq == 0:
                 plot.isolines(t.val, (uf,vf,wf), (xn,yn,zn), Z)
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
-                plot.tecplot("tp-staggered-%6.6d.plt" % ts, 
+                plot.tecplot("tp-staggered-%6.6d.plt" % ts,
                              (xn, yn, zn), (uf, vf, wf, t, p))
 
 if __name__ == '__main__':
