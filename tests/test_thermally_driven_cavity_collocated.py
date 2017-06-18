@@ -99,47 +99,47 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
 #
 # =============================================================================
 
-    #-----------
+    # ----------
     #
     # Time loop
     #
-    #-----------
+    # ----------
     for ts in range(1,ndt+1):
 
         write.time_step(ts)
 
-        #------------------
+        # -----------------
         # Store old values
-        #------------------
+        # -----------------
         t.old[:]  = t.val[:]
         uc.old[:] = uc.val[:]
         vc.old[:] = vc.val[:]
         wc.old[:] = wc.val[:]
 
-        #------------------------
+        # -----------------------
         # Temperature (enthalpy)
-        #------------------------
+        # -----------------------
         calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), obstacle)
 
-        #-----------------------
+        # ----------------------
         # Momentum conservation
-        #-----------------------
+        # ----------------------
         ext_f = zeros(rc), t.val, zeros(rc)
 
         calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle,
                  pressure = p_tot,
                  force    = ext_f)
 
-        #----------
+        # ---------
         # Pressure
-        #----------
+        # ---------
         calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
 
         p_tot.val += p.val
 
-        #---------------------
+        # --------------------
         # Velocity correction
-        #---------------------
+        # --------------------
         corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), obstacle)
         corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle)
 
