@@ -30,8 +30,8 @@ from pyns.physical       import properties
 
 sens = -1, +1
 test = X, Y, Z
-SENS = sens[ floor( random() * len(sens) ) ]
-TEST = test[ floor( random() * len(test) ) ]
+SENS = sens[int(floor( random() * len(sens)))]
+TEST = test[int(floor( random() * len(test)))]
 MIN = 10
 MAX = 20
 
