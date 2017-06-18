@@ -83,13 +83,6 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
 
     uc.bnd[E].typ[:1, :, :] = OUTLET
 
-    for j in (B, T):
-        uc.bnd[j].typ[:] = NEUMANN
-        vc.bnd[j].typ[:] = NEUMANN
-        wc.bnd[j].typ[:] = NEUMANN
-
-    adj_n_bnds(p)
-
     # Create obstacles
     plates = zeros(rc)
 

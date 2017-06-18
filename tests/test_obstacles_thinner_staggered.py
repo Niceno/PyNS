@@ -78,11 +78,6 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
 
     uf.bnd[E].typ[:1,:,:] = OUTLET
 
-    for j in (B,T):
-        uf.bnd[j].typ[:] = NEUMANN
-        vf.bnd[j].typ[:] = NEUMANN
-        wf.bnd[j].typ[:] = NEUMANN
-
     # Create obstacles
     plates = zeros(rc)
 
