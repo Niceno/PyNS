@@ -62,7 +62,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     rc, ru, rv, rw = cartesian_grid(xn, yn, zn)
 
     # Set physical properties
-    rho, mu, cap, kappa = properties_for_air(rc)
+    rho, mu, cap, kappa = properties.air(rc)
 
     # Time-stepping parameters
     dt  = 0.005      # time step
@@ -154,7 +154,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     # -----------
     for ts in range(1, ndt+1):
 
-        print_time_step(ts)
+        write.time_step(ts)
 
         # ------------------
         # Store old values
