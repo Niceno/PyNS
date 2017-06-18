@@ -1,6 +1,6 @@
 """
 Program to test implementation of advection schemes in the code, using
-one-dimensoinal transport of a step function in X, Y or Z 
+one-dimensoinal transport of a step function in X, Y or Z
 direction, either in positive or negative sense.
 
 The coordinate direction is specified with the local variable "TEST",
@@ -60,10 +60,10 @@ rho   = zeros(rc)
 mu    = zeros(rc)
 kappa = zeros(rc)
 cap   = zeros(rc)
-rho  [:,:,:] = 1.0 
+rho  [:,:,:] = 1.0
 mu   [:,:,:] = 0.0
 kappa[:,:,:] = 0.0
-cap  [:,:,:] = 1.0 
+cap  [:,:,:] = 1.0
 
 # Time-stepping parameters
 dt     =   0.002;     # time step
@@ -81,11 +81,11 @@ uvwf = uf, vf, wf
 # Specify inital and boundary conditions
 t.val[:] = MIN
 if TEST == X:
-  t.val[nx/2-25:nx/2+25,:,:] = MAX
+  t.val[nx//2-25:nx//2+25,:,:] = MAX
 elif TEST == Y:
-  t.val[:,ny/2-25:ny/2+25,:] = MAX
+  t.val[:,ny//2-25:ny//2+25,:] = MAX
 elif TEST == Z:
-  t.val[:,:,nz/2-25:nz/2+25] = MAX
+  t.val[:,:,nz//2-25:nz//2+25] = MAX
 
 adj_n_bnds(t)
 
@@ -105,23 +105,23 @@ obst = zeros(rc)
 
 # ----------
 #
-# Time loop 
+# Time loop
 #
 # ----------
 for ts in range(1,40):
 
   write.time_step(ts)
-  
+
   # -----------------
   # Store old values
   # -----------------
   t.old[:] = t.val[:]
-  
+
   # -----------------------
   # Temperature (enthalpy)
   # -----------------------
   calc_t(t, uvwf, (rho*cap), kappa, dt, (dx,dy,dz), obst)
-  
+
 # =============================================================================
 #
 # Visualisation
@@ -131,15 +131,15 @@ from matplotlib  import pyplot as plt
 
 st = 'ro'
 xc = avg(xn)
-vc = t.val[:,ny/2,nz/2]
+vc = t.val[:,ny//2,nz//2]
 if TEST == Y:
   st = 'go'
   xc = avg(yn)
-  vc = t.val[nx/2,:,nz/2]
+  vc = t.val[nx//2,:,nz//2]
 elif TEST == Z:
   st = 'bo'
   xc = avg(zn)
-  vc = t.val[nx/2,ny/2,:]
+  vc = t.val[nx//2,ny//2,:]
 
 plt.plot(xc, vc, st)
-plt.show()  
+plt.show()
