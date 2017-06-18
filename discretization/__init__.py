@@ -18,4 +18,5 @@ from .cfl_max         import cfl_max
 from .corr_uvw        import corr_uvw
 from .create_unknown  import create_unknown
 from .nodes           import nodes
+from .nodal_uvw       import nodal_uvw
 from .vol_balance     import vol_balance
