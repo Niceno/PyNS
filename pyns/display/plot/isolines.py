@@ -47,13 +47,13 @@ def isolines(phi, uvw, xyzn, dir):
 
     # Pick coordinates for plotting (xp, yp) and values for plotting
     if dir == Y:
-        jp = floor(yc.size/2)
+        jp = int(floor(yc.size/2))
         xp, yp = meshgrid(xc, zc)
         zp = transpose(phi[:,jp,:], (1,0))
         up = transpose(uc [:,jp,:], (1,0))
         vp = transpose(wc [:,jp,:], (1,0))
     if dir == Z:
-        kp = floor(zc.size/2)
+        kp = int(floor(zc.size/2))
         xp, yp = meshgrid(xc, yc)
         zp = transpose(phi[:,:,kp], (1,0))
         up = transpose(uc [:,:,kp], (1,0))
