@@ -13,16 +13,15 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def gmv(file_name, xyzn, vars):
+def gmv_one_arr(file_name, xyzn, arr, pos):
 # -----------------------------------------------------------------------------
     """
     Args:
       file_name: String containing name of the file to be created.
       xyzn:      Tuple containing one-dimensional arrays with "x", "y"
                  and "z" coordinates.
-      vars:      Tuple containing "Unknowns" to be exported to GMV (TM).
-                 Individual unknowns can be either collocated or staggered.
-
+      arr:       Array to be exported to GMV (TM); collocated or staggered.
+      pos:       Position of the variable.
     Returns:
       none!
     """
@@ -54,6 +53,7 @@ def gmv(file_name, xyzn, vars):
     # --------------------
     # Write the cells out
     # --------------------
+    # file_id.write("cells %d\n" % (nx * ny * nz))
     file_id.write("cells %d\n" % (nx*ny*nz))
 
     #   cells' local numbering
@@ -88,34 +88,26 @@ def gmv(file_name, xyzn, vars):
                file_id.write("  %d %d %d %d %d %d %d %d\n"  \
                              % (n000,n100,n110,n010, n001,n101,n111,n011))
 
-    # ------------------------
-    # Write the variables out
-    # ------------------------
+    # --------------------
+    # Write the array out
+    # --------------------
     file_id.write("variables\n")
 
-    # Average values to be written for staggered variables
-    for v in vars:
-        if v.pos == C:
-            val = v.val
-        elif v.pos == X:
-            val = avg_x(cat_x((v.bnd[W].val[:1,:,:],   \
-                               v.val,                  \
-                               v.bnd[E].val[:1,:,:])))
-        elif v.pos == Y:
-            val = avg_y(cat_y((v.bnd[S].val[:,:1,:],   \
-                               v.val,                  \
-                               v.bnd[N].val[:,:1,:])))
-        elif v.pos == Z:
-            val = avg_z(cat_z((v.bnd[B].val[:,:,:1],   \
-                               v.val,                  \
-                               v.bnd[T].val[:,:,:1])))
+    if pos == C:
+        val = arr
+    elif v.pos == X:
+        val = avg_x(cat_x((arr[ :1,:,:], arr, arr[-1:,:,:])))
+    elif v.pos == Y:
+        val = avg_y(cat_y((arr[:, :1,:], arr, arr[:,-1:,:])))
+    elif v.pos == Z:
+        val = avg_z(cat_z((arr[:,:, :1], arr, arr[:,:,-1:])))
 
-        file_id.write("%s 0\n" % v.name)
-        c = 0
-        for k in range(0, nz):
-            for j in range(0, ny):
-                for i in range(0, nx):
-                    file_id.write("%12.5e\n" % val[i,j,k])
+    file_id.write("pyns-arr 0\n")
+    c = 0
+    for k in range(0, nz):
+        for j in range(0, ny):
+            for i in range(0, nx):
+                file_id.write("%12.5e\n" % val[i,j,k])
 
     file_id.write("endvars\n")
 
@@ -127,3 +119,5 @@ def gmv(file_name, xyzn, vars):
     file_id.close()
 
     return  # end of function
+
+    return

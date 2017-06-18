@@ -13,7 +13,7 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def gmv(file_name, xyzn, vars):
+def gmv_nodal_uvw(file_name, xyzn, uvwn):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -29,6 +29,7 @@ def gmv(file_name, xyzn, vars):
 
     # Unpack tuples
     xn, yn, zn = xyzn
+    un, vn, wn = uvwn
 
     # Compute cell resolutions (remember: cell resolutions)
     nx = len(xn)-1
@@ -94,28 +95,19 @@ def gmv(file_name, xyzn, vars):
     file_id.write("variables\n")
 
     # Average values to be written for staggered variables
-    for v in vars:
-        if v.pos == C:
-            val = v.val
-        elif v.pos == X:
-            val = avg_x(cat_x((v.bnd[W].val[:1,:,:],   \
-                               v.val,                  \
-                               v.bnd[E].val[:1,:,:])))
-        elif v.pos == Y:
-            val = avg_y(cat_y((v.bnd[S].val[:,:1,:],   \
-                               v.val,                  \
-                               v.bnd[N].val[:,:1,:])))
-        elif v.pos == Z:
-            val = avg_z(cat_z((v.bnd[B].val[:,:,:1],   \
-                               v.val,                  \
-                               v.bnd[T].val[:,:,:1])))
-
-        file_id.write("%s 0\n" % v.name)
-        c = 0
-        for k in range(0, nz):
-            for j in range(0, ny):
-                for i in range(0, nx):
-                    file_id.write("%12.5e\n" % val[i,j,k])
+    c = 0
+    for vel in (un, vn, wn):
+        if c == 0:
+            file_id.write("u 1\n")
+        if c == 1:
+            file_id.write("v 1\n")
+        if c == 2:
+            file_id.write("w 1\n")
+        for k in range(0, nz+1):
+            for j in range(0, ny+1):
+                for i in range(0, nx+1):
+                    file_id.write("%12.5e\n" % vel[i,j,k])
+        c += 1            
 
     file_id.write("endvars\n")
 
