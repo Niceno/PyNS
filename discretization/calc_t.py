@@ -18,7 +18,8 @@ from pyns.discretization.create_matrix  import create_matrix
 from pyns.solvers                       import cg, cgs, bicgstab
 
 # =============================================================================
-def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
+def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst, 
+           source = None):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -56,8 +57,14 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst):
     # Innertial term for enthalpy
     i_t = t.old * avg(t.pos, rho_cap) * avg(t.pos, dx*dy*dz) / dt
 
+    # Handle external source
+    if source is None:
+        s_t = zeros(r_phi)
+    else:
+        s_t = source * avg(t.pos, dx*dy*dz)
+
     # The entire source term
-    f_t = b_t - c_t + i_t
+    f_t = b_t - c_t + i_t + s_t
 
     # Solve for temperature
     t.val[:] = cgs(A_t, t, f_t, TOL, False)
