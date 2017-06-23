@@ -37,6 +37,9 @@ def gmv(file_name, xyzn, unknowns = (), arrays = ()):
     ny = len(yn)-1
     nz = len(zn)-1
 
+    # Number of columns in the output file
+    col = 10
+
     # ------------------
     #
     # Analyze the input
@@ -170,7 +173,12 @@ def gmv(file_name, xyzn, unknowns = (), arrays = ()):
             for k in range(0, nz+1):
                 for j in range(0, ny+1):
                     for i in range(0, nx+1):
-                        file_id.write("%12.5e\n" % val[i,j,k])
+                        file_id.write("%12.5e " % val[i,j,k])
+                        c = c + 1
+                        if c % col == 0:  # go to new line after col columns
+                            file_id.write("\n")
+            if c % col != 0:              # finish the line if necessary
+                file_id.write("\n")
                         
         # Write out cell variables                
         else:
@@ -179,7 +187,12 @@ def gmv(file_name, xyzn, unknowns = (), arrays = ()):
             for k in range(0, nz):
                 for j in range(0, ny):
                     for i in range(0, nx):
-                        file_id.write("%12.5e\n" % val[i,j,k])
+                        file_id.write("%12.5e " % val[i,j,k])
+                        c = c + 1
+                        if c % col == 0:  # go to new line after col columns
+                            file_id.write("\n")
+            if c % col != 0:              # finish the line if necessary
+                file_id.write("\n")
 
     file_id.write("endvars\n")
 
