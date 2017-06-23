@@ -24,7 +24,6 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = ()):
       none!
     """
 
-
     # ------------------------------------
     # Unpack tuple with nodal coordinates
     # ------------------------------------
