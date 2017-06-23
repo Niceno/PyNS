@@ -12,10 +12,10 @@ from pyns.standard import *
 from pyns.constants import *
 from pyns.operators import *
 
-from pyns.discretization.adj_n_bnds     import adj_n_bnds
-from pyns.discretization.advection      import advection
-from pyns.discretization.create_matrix  import create_matrix
-from pyns.solvers                       import cg, cgs, bicgstab
+from pyns.discretization.adj_n_bnds import adj_n_bnds
+from pyns.discretization.advection  import advection
+from pyns.discretization.diffusion  import diffusion
+from pyns.solvers                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst, 
@@ -45,21 +45,22 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst,
     dx, dy, dz = dxyz
 
     # Fetch the resolution
-    rc = t.val.shape
+    rt = t.val.shape
 
     # Discretize the diffusive part
-    A_t = create_matrix(t, rho_cap/dt, kappa, dxyz, obst, NEUMANN)
-    b_t = zeros(rc)
+    A_t = diffusion(t, rho_cap/dt, kappa, dxyz, obst, NEUMANN)
+    b_t = zeros(rt)
 
     # The advective fluxes
     c_t = advection(rho_cap, t, uvwf, dxyz, dt, 'minmod')
 
     # Innertial term for enthalpy
-    i_t = t.old * avg(t.pos, rho_cap) * avg(t.pos, dx*dy*dz) / dt
+    A_t.C       += avg(t.pos, rho_cap) * avg(t.pos, dx*dy*dz) / dt
+    i_t = t.old  * avg(t.pos, rho_cap) * avg(t.pos, dx*dy*dz) / dt
 
     # Handle external source
     if source is None:
-        s_t = zeros(r_phi)
+        s_t = zeros(rt)
     else:
         s_t = source * avg(t.pos, dx*dy*dz)
 

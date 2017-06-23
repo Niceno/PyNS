@@ -11,7 +11,7 @@ from pyns.operators import *
 from pyns.display   import write
 
 from pyns.discretization.adj_n_bnds     import adj_n_bnds
-from pyns.discretization.create_matrix  import create_matrix
+from pyns.discretization.diffusion      import diffusion
 from pyns.discretization.vol_balance    import vol_balance
 from pyns.discretization.obst_zero_val  import obst_zero_val
 from pyns.solvers                       import cg, cgs, bicgstab
@@ -39,7 +39,7 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
     rc = p.val.shape
 
     # Create system matrix and right hand side
-    A_p = create_matrix(p, zeros(rc), dt/rho, dxyz, obst, NEUMANN)
+    A_p = diffusion(p, zeros(rc), dt/rho, dxyz, obst, NEUMANN)
     b_p = zeros(rc)
 
     # Compute the source for the pressure.  Important: don't send "obst"

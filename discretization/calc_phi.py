@@ -12,10 +12,10 @@ from pyns.standard import *
 from pyns.constants import *
 from pyns.operators import *
 
-from pyns.discretization.adj_n_bnds     import adj_n_bnds
-from pyns.discretization.advection      import advection
-from pyns.discretization.create_matrix  import create_matrix
-from pyns.solvers                       import cg, cgs, bicgstab
+from pyns.discretization.adj_n_bnds import adj_n_bnds
+from pyns.discretization.advection  import advection
+from pyns.discretization.diffusion  import diffusion
+from pyns.solvers                   import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst, 
@@ -46,14 +46,15 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst,
     r_phi = phi.val.shape
 
     # Discretize the diffusive part
-    A_phi = create_matrix(phi, density/dt, gamma, dxyz, obst, NEUMANN)
+    A_phi = diffusion(phi, density/dt, gamma, dxyz, obst, NEUMANN)
     b_phi = zeros(r_phi)
 
     # The advective fluxes
     c_phi = advection(density, phi, uvwf, dxyz, dt, 'minmod')
 
     # Innertial term for enthalpy
-    i_phi = phi.old * avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
+    A_phi.P         += avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
+    i_phi = phi.old  * avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
 
     # Handle external source
     if source is None:

@@ -9,12 +9,12 @@ from pyns.standard import *
 from pyns.constants import *
 from pyns.operators import *
 
-from pyns.discretization.adj_n_bnds     import adj_n_bnds
-from pyns.discretization.adj_o_bnds     import adj_o_bnds
-from pyns.discretization.advection      import advection
-from pyns.discretization.create_matrix  import create_matrix
-from pyns.discretization.obst_zero_val  import obst_zero_val
-from pyns.solvers                       import cg, cgs, bicgstab
+from pyns.discretization.adj_n_bnds    import adj_n_bnds
+from pyns.discretization.adj_o_bnds    import adj_o_bnds
+from pyns.discretization.advection     import advection
+from pyns.discretization.diffusion     import diffusion
+from pyns.discretization.obst_zero_val import obst_zero_val
+from pyns.solvers                      import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
@@ -58,9 +58,9 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
     d = u.pos
 
     # Create system matrices and right hand sides
-    A_u = create_matrix(u, rho/dt, mu, dxyz, obst, DIRICHLET)
-    A_v = create_matrix(v, rho/dt, mu, dxyz, obst, DIRICHLET)
-    A_w = create_matrix(w, rho/dt, mu, dxyz, obst, DIRICHLET)
+    A_u = diffusion(u, rho/dt, mu, dxyz, obst, DIRICHLET)
+    A_v = diffusion(v, rho/dt, mu, dxyz, obst, DIRICHLET)
+    A_w = diffusion(w, rho/dt, mu, dxyz, obst, DIRICHLET)
     b_u = zeros(ru)
     b_v = zeros(rv)
     b_w = zeros(rw)
@@ -71,6 +71,9 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
     c_w = advection(rho, w, uvwf, dxyz, dt, 'superbee');
 
     # Innertial term for momentum (this works for collocated and staggered)
+    A_u.C      += avg(u.pos, rho) * avg(u.pos, dv) / dt
+    A_v.C      += avg(v.pos, rho) * avg(v.pos, dv) / dt
+    A_w.C      += avg(w.pos, rho) * avg(w.pos, dv) / dt
     i_u = u.old * avg(u.pos, rho) * avg(u.pos, dv) / dt
     i_v = v.old * avg(v.pos, rho) * avg(v.pos, dv) / dt
     i_w = w.old * avg(w.pos, rho) * avg(w.pos, dv) / dt
