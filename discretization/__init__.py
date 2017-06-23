@@ -16,7 +16,7 @@ from .calc_uvw        import calc_uvw
 from .cartesian_grid  import cartesian_grid
 from .cfl_max         import cfl_max
 from .corr_uvw        import corr_uvw
-from .create_unknown  import create_unknown
+from .diffusion       import diffusion
 from .nodes           import nodes
 from .nodal_uvw       import nodal_uvw
 from .vol_balance     import vol_balance
