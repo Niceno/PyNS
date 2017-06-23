@@ -15,8 +15,7 @@ def obst_mod_matrix(phi, c, obst, obc):
     """
     Args:
       phi:  Object of the type "Unknown".
-      c:    System matrix in PyNS format (which ssentially means storing 
-            a bundle of non-zero diagonals in compas directions).
+      c:    Object of the type "Matrix", holding the system matrix.
       obst: Obstacle, three-dimensional array with zeros and ones.  It is
             zero in fluid, one in solid.
       obc:  Obstacle's boundary condition (NEUMANN or DIRICHLET).
@@ -66,7 +65,7 @@ def obst_mod_matrix(phi, c, obst, obc):
         elif obc == DIRICHLET:
 
             # Set central coefficient to 1 in obst, unchanged elsewhere
-            c.P[:] = c.P[:] * lnot(obst) + obst
+            c.C[:] = c.C[:] * lnot(obst) + obst
 
             # Set neighbour coefficients to zero in obst
             c.W[:] = c.W[:] * lnot(obst)
@@ -104,7 +103,7 @@ def obst_mod_matrix(phi, c, obst, obc):
 
         # Set central coefficient to 1 in obst, unchanged elsewhere
         obst_x = mx(obst[:-1,:,:], obst[1:,:,:])
-        c.P[:] = c.P[:] * lnot(obst_x) + obst_x
+        c.C[:] = c.C[:] * lnot(obst_x) + obst_x
 
         # Set neighbour coefficients to zero in obst
         c.W[:] = c.W[:] * lnot(obst_x)
@@ -131,7 +130,7 @@ def obst_mod_matrix(phi, c, obst, obc):
 
         # Set central coefficient to 1 in obst, unchanged elsewhere
         obst_y = mx(obst[:,:-1,:], obst[:,1:,:])
-        c.P[:] = c.P[:] * lnot(obst_y) + obst_y
+        c.C[:] = c.C[:] * lnot(obst_y) + obst_y
 
         # Set neighbour coefficients to zero in obst
         c.W[:] = c.W[:] * lnot(obst_y)
@@ -158,7 +157,7 @@ def obst_mod_matrix(phi, c, obst, obc):
 
         # Set central coefficient to 1 in obst, unchanged elsewhere
         obst_z = mx(obst[:,:,:-1], obst[:,:,1:])
-        c.P[:] = c.P[:] * lnot(obst_z) + obst_z
+        c.C[:] = c.C[:] * lnot(obst_z) + obst_z
 
         # Set neighbour coefficients to zero in obst
         c.W[:] = c.W[:] * lnot(obst_z)

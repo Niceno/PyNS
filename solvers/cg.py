@@ -24,8 +24,7 @@ def cg(a, phi, b, tol,
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        System matrix in PyNS format (which ssentially means storing 
-                a bundle of non-zero diagonals in compas directions).
+      a:        Object of the type "Matrix", holding the system matrix.
       phi:      Object of the type "Unknown" to be solved.
       b:        Three-dimensional array holding the source term.
       tol:      Absolute solver tolerance
@@ -61,7 +60,7 @@ def cg(a, phi, b, tol,
             print("  iteration: %3d:" % (i), end = "" )
 
         # Solve M z = r
-        z[:,:,:] = r[:,:,:] / a.P[:,:,:]
+        z[:,:,:] = r[:,:,:] / a.C[:,:,:]
 
         # rho = r * z
         rho = vec_vec(r, z)

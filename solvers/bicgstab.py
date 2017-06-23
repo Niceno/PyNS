@@ -24,8 +24,7 @@ def bicgstab(a, phi, b, tol,
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        System matrix in PyNS format (which ssentially means storing 
-                a bundle of non-zero diagonals in compas directions)
+      a:        Object of the type "Matrix", holding the system matrix.
       phi:      Object of the type "Unknown" to be solved.
       b:        Three-dimensional array holding the source term.
       tol:      Absolute solver tolerance
@@ -89,7 +88,7 @@ def bicgstab(a, phi, b, tol,
             p[:,:,:] = r[:,:,:] + beta * (p[:,:,:] - omega * v[:,:,:])
 
         # Solve M p_hat = p
-        p_hat.val[:,:,:] = p[:,:,:] / a.P[:,:,:]
+        p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
 
         # v = A * p^
         v[:,:,:] = mat_vec_bnd(a, p_hat)
@@ -110,7 +109,7 @@ def bicgstab(a, phi, b, tol,
             return x
 
         # Solve M s^ = s
-        s_hat.val[:,:,:] = s[:,:,:] / a.P[:,:,:]
+        s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:]
 
         # t = A s^
         t = mat_vec_bnd(a, s_hat)

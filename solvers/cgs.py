@@ -24,8 +24,7 @@ def cgs(a, phi, b, tol,
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        System matrix in PyNS format (which ssentially means storing 
-                a bundle of non-zero diagonals in compas directions)
+      a:        Object of the type "Matrix", holding the system matrix.
       phi:      Object of the type "Unknown" to be solved.
       b:        Three-dimensional array holding the source term.
       tol:      Absolute solver tolerance
@@ -97,7 +96,7 @@ def cgs(a, phi, b, tol,
             p[:,:,:] = u[:,:,:] + beta * (q[:,:,:] + beta * p[:,:,:])
 
         # Solve M p_hat = p
-        p_hat.val[:,:,:] = p[:,:,:] / a.P[:,:,:]
+        p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
 
         # v^ = A * p^
         v_hat[:,:,:] = mat_vec_bnd(a, p_hat)
@@ -109,7 +108,7 @@ def cgs(a, phi, b, tol,
         q[:,:,:] = u[:,:,:] - alfa * v_hat[:,:,:]
 
         # Solve M u^ = u + q
-        u_hat.val[:,:,:] = (u[:,:,:] + q[:,:,:]) / a.P[:,:,:]
+        u_hat.val[:,:,:] = (u[:,:,:] + q[:,:,:]) / a.C[:,:,:]
 
         # x = x + alfa u^
         x[:,:,:] += alfa * u_hat.val[:,:,:]
