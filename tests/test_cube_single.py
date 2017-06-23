@@ -14,7 +14,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=2000, plot_freq=200):
+def main(show_plot=True, time_steps=2000, plot_freq=20):
 
 # =============================================================================
 #
@@ -114,14 +114,13 @@ def main(show_plot=True, time_steps=2000, plot_freq=200):
         if show_plot:
             if ts % plot_freq == 0:
                 
-                # Plot results as normal
-                plot.tecplot("cube-single-%6.6d" % ts, 
-                             (xn,yn,zn), (uf,vf,wf,p))
-                
-                # Plot nodal velocities for checking
+                # Compute nodal velocities
                 un, vn, wn = nodal_uvw((xn,yn,zn), (uf,vf,wf), cube) 
-                plot.tecplot_nodal_uvw("cube-single-nodal-uvw-%6.6d" % ts, 
-                                       (xn,yn,zn), (un,vn,wn))
+                
+                # Plot everything
+                plot.tecplot("cube-single-%6.6d" % ts, (xn,yn,zn), 
+                             unknowns = (uf, vf, wf, p),
+                             arrays   = (un, vn, wn) )
 
 if __name__ == '__main__':
     main()

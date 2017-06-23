@@ -105,14 +105,13 @@ def main(show_plot=True, time_steps=6000, plot_freq=20):
         if show_plot:
             if ts % plot_freq == 0:
                 
-                # Plot results as normal
-                plot.tecplot("cube-matrix-%6.6d" % ts, 
-                             (xn,yn,zn), (uf,vf,wf,p))
-                
-                # Plot nodal velocities for checking
+                # Compute nodal velocities
                 un, vn, wn = nodal_uvw((xn,yn,zn), (uf,vf,wf), cube) 
-                plot.tecplot_nodal_uvw("cube-matrix-nodal-uvw-%6.6d" % ts, 
-                                       (xn,yn,zn), (un,vn,wn))
-
+                
+                # Plot everything
+                plot.gmv("cube-matrix-%6.6d" % ts, (xn,yn,zn), 
+                         unknowns = (uf, vf, wf, p),
+                         arrays   = (un, vn, wn) )
+                
 if __name__ == '__main__':
     main()
