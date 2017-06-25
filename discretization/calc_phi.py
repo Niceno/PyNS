@@ -53,7 +53,7 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst,
     c_phi = advection(density, phi, uvwf, dxyz, dt, 'minmod')
 
     # Innertial term for enthalpy
-    A_phi.P         += avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
+    A_phi.C         += avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
     i_phi = phi.old  * avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
 
     # Handle external source
