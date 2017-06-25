@@ -22,9 +22,13 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
 #
 # =============================================================================
 
-    xn = nodes(0, 1, 40)
-    yn = nodes(0, 1, 40)
-    zn = nodes(0, 1, 40)
+    NX = 64
+    NY = NX
+    NZ = NX
+
+    xn = nodes(0, 1, NX)
+    yn = nodes(0, 1, NY)
+    zn = nodes(0, 1, NZ)
 
     # Cell dimensions
     nx,ny,nz, dx,dy,dz, rc,ru,rv,rw = cartesian_grid(xn,yn,zn)
@@ -59,8 +63,8 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
     t.bnd[E].val[:] = +0.0
 
     t_src = zeros(t.val.shape)
-    t_src[ 5:20,  5:20, :] =  1.0
-    t_src[25:30, 25:30, :] = -4.0
+    t_src[  NX//8 :   NY//2,   NX//8 :   NY//2, : ] =  1.0
+    t_src[5*NX//8 : 3*NY//4, 5*NX//8 : 3*NY//4, : ] = -4.0
 
 # =============================================================================
 #
