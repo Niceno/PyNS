@@ -66,7 +66,8 @@ def isolines(phi, uvw, xyzn, dir,
 
     plt.figure()
     plt.gca(aspect='equal')
-    plt.contour(xp,yp,zp, levels, cmap=plt.cm.rainbow, norm=norm)
+    CS = plt.contour(xp,yp,zp, levels, cmap=plt.cm.rainbow, norm=norm)
+    plt.clabel(CS, inline=1, fontsize=7)
     plt.quiver(xp,yp,up,vp)
     plt.axis( [min(xn), max(xn), min(yn), max(yn)] )
     plt.show()
