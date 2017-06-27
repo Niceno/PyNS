@@ -5,9 +5,11 @@ code development faster for non-IT oriendted minds.
 """
 
 # Classes in "discretization":
-from .Matrix   import Matrix
+from .Matrix import Matrix
 
 # Functions in "discretization":
-from .bicgstab import bicgstab
-from .cg       import cg
-from .cgs      import cgs
+from .bicgstab     import bicgstab
+from .cg           import cg
+from .cgs          import cgs
+from .jacobi       import jacobi
+from .coarsen      import coarsen
