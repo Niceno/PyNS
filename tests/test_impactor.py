@@ -103,19 +103,19 @@ def main(show_plot=True, time_steps=500, plot_freq=50):
 
 
     # Initialising the particles. 
-    n = 10  # number of particles 
+    n = 10000  # number of particles 
     
-    pt = initialiser(n, show_initial = True)
-
-    # Setting up the Plot.
-    fig = plt.figure()
-    ax = plt.axes(projection='3d')
-    ax.set_xlim(min(xn), max(xn)) 
-    ax.set_ylim(min(yn), max(yn))
-    ax.set_zlim(min(zn), max(zn))
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
+    pt = initialiser(n, show_initial = False)
+#
+#    # Setting up the Plot.
+#    fig = plt.figure()
+#    ax = plt.axes(projection='3d')
+#    ax.set_xlim(min(xn), max(xn)) 
+#    ax.set_ylim(min(yn), max(yn))
+#    ax.set_zlim(min(zn), max(zn))
+#    ax.set_xlabel('X')
+#    ax.set_ylabel('Y')
+#    ax.set_zlabel('Z')
     
     
 # =============================================================================
@@ -179,17 +179,19 @@ def main(show_plot=True, time_steps=500, plot_freq=50):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-#                plot.tecplot_nodal_uvw("impactor-uvw-%6.6d" % ts, 
-#                                       (xn,yn,zn), (un,vn,wn))
-                # Plotting for each Particle. 
-                for i in range(0,n):
-                    ax.scatter(pt[i].x, pt[i].y, pt[i].z)
-                    print(pt[i].x, pt[i].y, pt[i].z, pt[i].u, pt[i].v, pt[i].w)
+               particles_tecplot("particles-%6.6d" % ts, pt, n)
+#               plot.tecplot("impactor-%6.6d" % ts, (xn,yn,zn), 
+#                             unknowns = (uf, vf, wf, p),
+#                             arrays   = (un, vn, wn) )
+                 # Plotting for each Particle. 
+               #for i in range(0,n):
+#                    ax.scatter(pt[i].x, pt[i].y, pt[i].z)
+                   #print(pt[i].x, pt[i].y, pt[i].z, pt[i].u, pt[i].v, pt[i].w)
 
   
 
 
-    plt.show()
+    #plt.show()
 if __name__ == '__main__':
     main()      
   
