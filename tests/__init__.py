@@ -1,5 +1,6 @@
 from . import (test_cube_matrix,
                test_cube_single,
+               test_impactor,
                test_inlet_outlet,
                test_obstacles_collocated,
                test_obstacles_staggered,

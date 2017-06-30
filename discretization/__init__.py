@@ -20,3 +20,4 @@ from .diffusion       import diffusion
 from .nodes           import nodes
 from .nodal_uvw       import nodal_uvw
 from .vol_balance     import vol_balance
+from .calc_traj       import calc_traj
