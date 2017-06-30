@@ -15,7 +15,7 @@ from pyns.operators import *
 from pyns.discretization.adj_n_bnds import adj_n_bnds
 from pyns.discretization.advection  import advection
 from pyns.discretization.diffusion  import diffusion
-from pyns.solvers                   import cg, cgs, bicgstab
+from pyns.solvers.multigrid         import gamg_v_cycle
 
 # =============================================================================
 def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst, 
@@ -66,7 +66,9 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst,
     f_phi = b_phi - c_phi + i_phi + s_phi
     
     # Solve for temperature
-    phi.val[:] = bicgstab(A_phi, phi, f_phi, TOL)
+    # phi.val[:] = jacobi(A_phi, phi, f_phi, TOL, verbatim = True)
+    phi.val[:] = gamg_v_cycle(A_phi, phi, f_phi, TOL, verbatim = True)
+    # phi.val[:] = bicgstab(A_phi, phi, f_phi, TOL)
 
     adj_n_bnds(phi)
 
