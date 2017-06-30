@@ -14,7 +14,7 @@ from pyns.discretization.adj_o_bnds    import adj_o_bnds
 from pyns.discretization.advection     import advection
 from pyns.discretization.diffusion     import diffusion
 from pyns.discretization.obst_zero_val import obst_zero_val
-from pyns.solvers                      import cg, cgs, bicgstab
+from pyns.solvers.nonstationary        import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,

@@ -15,7 +15,7 @@ from pyns.operators import *
 from pyns.discretization.adj_n_bnds import adj_n_bnds
 from pyns.discretization.advection  import advection
 from pyns.discretization.diffusion  import diffusion
-from pyns.solvers                   import cg, cgs, bicgstab
+from pyns.solvers.nonstationary     import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst, 

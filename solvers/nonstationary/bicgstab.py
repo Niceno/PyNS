@@ -1,5 +1,5 @@
 """
-Preconditioned Conjugate Gradient Squared (CGS) solver.
+Preconditioned Bi-Conjugate Gradient Stabilized (BiCGStab) solver.
 
 Source:
   http://www.netlib.org/templates/templates.pdf
@@ -19,8 +19,9 @@ from pyns.solvers.vec_vec     import vec_vec
 from pyns.solvers.norm        import norm
 
 # =============================================================================
-def cgs(a, phi, b, tol, 
-        verbatim = False):
+def bicgstab(a, phi, b, tol, 
+             verbatim = False,
+             max_iter = -1):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -30,6 +31,7 @@ def cgs(a, phi, b, tol,
       tol:      Absolute solver tolerance
       verbatim: Logical variable setting if solver will be verbatim (print
                 info on Python console) or not.
+      max_iter: Maxiumum number of iterations.
 
     Returns:
       x: Three-dimensional array with solution.
@@ -38,21 +40,19 @@ def cgs(a, phi, b, tol,
     if verbatim:
         write.at(__name__)
 
-    # Helping variables
+    # Helping variable
     x = phi.val
-    n = prod(x.shape)
 
     # Intitilize arrays
     p       = zeros(x.shape)
     p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
                       verbatim=False)
-    q       = zeros(x.shape)
     r       = zeros(x.shape)
     r_tilda = zeros(x.shape)
-    u       = zeros(x.shape)
-    u_hat   = Unknown("vec_u_hat", phi.pos, x.shape, -1, per=phi.per, 
+    s       = zeros(x.shape)
+    s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
                       verbatim=False)
-    v_hat   = zeros(x.shape)
+    v       = zeros(x.shape)
 
     # r = b - A * x
     r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi)
@@ -63,7 +63,10 @@ def cgs(a, phi, b, tol,
     # ---------------
     # Iteration loop
     # ---------------
-    for i in range(1,n):
+    if max_iter == -1:
+        max_iter = prod(phi.val.shape)
+        
+    for i in range(1, max_iter):
 
         if verbatim:
             print("  iteration: %3d:" % (i), end = "" )
@@ -73,51 +76,56 @@ def cgs(a, phi, b, tol,
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
-            if verbatim == True:  
-                write.at(__name__)
-                print("  Fails becuase rho = %12.5e" % rho)
+            write.at(__name__)
+            print("  Fails becuase rho = %12.5e" % rho)
             return x
 
         if i == 1:
-            # u = r
-            u[:,:,:] = r[:,:,:]
-
-            # p = u
-            p[:,:,:] = u[:,:,:]
+            # p = r
+            p[:,:,:] = r[:,:,:]
 
         else:
-            # beta = rho / rho_old
-            beta = rho / rho_old
+            # beta = (rho / rho_old)(alfa/omega)
+            beta = rho / rho_old * alfa / omega
 
-            # u = r + beta q
-            u[:,:,:] = r[:,:,:] + beta * q[:,:,:]
-
-            # p = u + beta (q + beta p)
-            p[:,:,:] = u[:,:,:] + beta * (q[:,:,:] + beta * p[:,:,:])
+            # p = r + beta (p - omega v)
+            p[:,:,:] = r[:,:,:] + beta * (p[:,:,:] - omega * v[:,:,:])
 
         # Solve M p_hat = p
         p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
 
-        # v^ = A * p^
-        v_hat[:,:,:] = mat_vec_bnd(a, p_hat)
+        # v = A * p^
+        v[:,:,:] = mat_vec_bnd(a, p_hat)
 
-        # alfa = rho / (r~ * v^)
-        alfa = rho / vec_vec(r_tilda, v_hat)
+        # alfa = rho / (r~ * v)
+        alfa = rho / vec_vec(r_tilda, v)
 
-        # q = u - alfa v^
-        q[:,:,:] = u[:,:,:] - alfa * v_hat[:,:,:]
+        # s = r - alfa v
+        s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
 
-        # Solve M u^ = u + q
-        u_hat.val[:,:,:] = (u[:,:,:] + q[:,:,:]) / a.C[:,:,:]
+        # Check norm of s, if small enough set x = x + alfa p_hat and stop
+        res = norm(s)
+        if res < tol:
+            if verbatim == True:  
+                write.at(__name__)
+                print("  Fails becuase rho = %12.5e" % rho)
+            x[:,:,:] += alfa * p_hat.val[:,:,:]
+            return x
 
-        # x = x + alfa u^
-        x[:,:,:] += alfa * u_hat.val[:,:,:]
+        # Solve M s^ = s
+        s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:]
 
-        # q^ = A u^
-        q_hat = mat_vec_bnd(a, u_hat)
+        # t = A s^
+        t = mat_vec_bnd(a, s_hat)
 
-        # r = r - alfa q^
-        r[:,:,:] -= alfa * q_hat[:,:,:]
+        # omega = (t * s) / (t * t)
+        omega = vec_vec(t, s) / vec_vec(t, t)
+
+        # x = x + alfa p^ + omega * s^
+        x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
+
+        # r = s - omega q^
+        r[:,:,:] = s[:,:,:] - omega * t[:,:,:]
 
         # Compute residual
         res = norm(r)

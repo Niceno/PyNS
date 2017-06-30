@@ -20,7 +20,8 @@ from pyns.solvers.norm        import norm
 
 # =============================================================================
 def cg(a, phi, b, tol, 
-       verbatim = False):
+       verbatim = False,
+       max_iter = -1):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -30,6 +31,7 @@ def cg(a, phi, b, tol,
       tol:      Absolute solver tolerance
       verbatim: Logical variable setting if solver will be verbatim (print
                 info on Python console) or not.
+      max_iter: Maxiumum number of iterations.
 
     Returns:
       x: Three-dimensional array with solution.
@@ -38,9 +40,8 @@ def cg(a, phi, b, tol,
     if verbatim:
         write.at(__name__)
 
-    # Helping variables
+    # Helping variable
     x = phi.val
-    n = prod(x.shape)
 
     # Intitilize arrays
     p = Unknown("vec_p", phi.pos, x.shape, -1, per=phi.per, verbatim=False)
@@ -54,7 +55,10 @@ def cg(a, phi, b, tol,
     # ---------------
     # Iteration loop
     # ---------------
-    for i in range(1,n):
+    if max_iter == -1:
+        max_iter = prod(phi.val.shape)
+        
+    for i in range(1, max_iter):
 
         if verbatim:
             print("  iteration: %3d:" % (i), end = "" )
