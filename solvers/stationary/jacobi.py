@@ -16,14 +16,15 @@ from pyns.constants      import *
 from pyns.display        import write
 from pyns.discretization import Unknown
 
-# Sisters from this module
+# Modules from the parent's directory
 from pyns.solvers.mat_vec_bnd import mat_vec_bnd
-from pyns.solvers.vec_vec     import vec_vec
+#from pyns.solvers.vec_vec     import vec_vec
 from pyns.solvers.norm        import norm
 
 # =============================================================================
 def jacobi(a, phi, b, tol, 
-           verbatim = False):
+           verbatim = False,
+           max_iter = -1):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -33,6 +34,7 @@ def jacobi(a, phi, b, tol,
       tol:      Absolute solver tolerance
       verbatim: Logical variable setting if solver will be verbatim (print
                 info on Python console) or not.
+      max_iter: Maxiumum number of iterations.
 
     Returns:
       phi.val: Three-dimensional array with solution.
@@ -44,14 +46,14 @@ def jacobi(a, phi, b, tol,
     sum = zeros(phi.val.shape)
     r   = zeros(phi.val.shape)
 
-    nx, ny, nz = phi.val.shape
-    n = nx * ny * nz
+    if max_iter == -1:
+        max_iter = prod(phi.val.shape)
 
     # Under-relaxation factor
-    alfa = 1.4
+    alfa = 0.9
 
     # Main iteration loop
-    for iter in range(0, n):
+    for iter in range(0, max_iter):
 
         if verbatim:
             print("  iteration: %3d:" % (iter), end = "" )
