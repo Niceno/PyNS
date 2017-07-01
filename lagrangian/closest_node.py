@@ -1,18 +1,15 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 This script calculates the closest node to the particles position. 
 It is important when interpolating the particles velocity. 
 """
 
-# Importing the numpy module
-import numpy as np 
-
-def closest_node(nodes, particle):
+# =============================================================================
+def closest_node(xn, xp):
+# -----------------------------------------------------------------------------  
     """
     Args:
-        nodes: These are the nodes coordinates in the x, y or z direction.
-        particle: This is the particle location in the x, y or z direction.
+      xn: Nodes coordinates in the "x", "y" or "z" direction.
+      xp: Particle location in the "x", "y" or "z" direction.
         
     Returns:
         The index of the cell which the particle is closest to, in the x, y or 
@@ -20,7 +17,7 @@ def closest_node(nodes, particle):
     """
     
     # Returns the index of the closest node.
-    idx = (np.abs(nodes-particle)).argmin()
+    idx = (abs(xn-xp)).argmin()
     
     # For the interpolater we need to find the index of the node on the 
     # other side to the closest node.
@@ -33,10 +30,10 @@ def closest_node(nodes, particle):
     #                               idx1   idx
 
     
-    if nodes[idx] > particle:
+    if xn[idx] > xp:
         idx1 = idx - 1 
     else:
         idx1 = idx + 1 
         
-    return idx, idx1
+    return idx, idx1  # end of function
 

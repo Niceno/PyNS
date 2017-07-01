@@ -17,15 +17,15 @@ def lagrange_interpol(uvwn, xyzn, xyzp, iu, il, ju, jl, ku, kl,):
     Lagrange interpolation method. 
     
     Args:
-        vel:    The component of the velocity which one wishes to calculate.
-        xyzn:   Tuple containing the position of the nodes. 
-        xyzp:   Tuple containing the particle's position. 
-        iu, il: Index of the upper and lower indices (x - direction). 
-        ju, jl: Index of the upper and lower indices (y - direction).
-        ku, kl: Index of the upper and lower indices (z - direction).
+      vel:    The component of the velocity which one wishes to calculate.
+      xyzn:   Tuple containing the position of the nodes. 
+      xyzp:   Tuple containing the particle's position. 
+      iu, il: Index of the upper and lower indices (x - direction). 
+      ju, jl: Index of the upper and lower indices (y - direction).
+      ku, kl: Index of the upper and lower indices (z - direction).
         
     Returns:
-        The interpolated velocity at the particle's position. 
+      The interpolated velocity at the particle's position. 
     """
     
     # Unpack tuples
