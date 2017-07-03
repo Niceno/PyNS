@@ -28,7 +28,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 import matplotlib.pyplot as plt 
 
-def main(show_plot=True, time_steps=500, plot_freq=50):
+def main(show_plot=True, time_steps=500, plot_freq=10):
     
     # Node coordinates
     xn = nodes(0, 1,    160)
@@ -105,7 +105,7 @@ def main(show_plot=True, time_steps=500, plot_freq=50):
     # Initialising the particles. 
     n = 10000  # number of particles 
     
-    pt = initialiser(n, show_initial = False)
+    pt = initialiser(n, verbatim = False)
 #
 #    # Setting up the Plot.
 #    fig = plt.figure()
@@ -179,10 +179,11 @@ def main(show_plot=True, time_steps=500, plot_freq=50):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-               particles_tecplot("particles-%6.6d" % ts, pt, n)
-#               plot.tecplot("impactor-%6.6d" % ts, (xn,yn,zn), 
-#                             unknowns = (uf, vf, wf, p),
-#                             arrays   = (un, vn, wn) )
+#               particles_tecplot("particles-%6.6d" % ts, pt, n)
+               plot.gmv("impactor-%6.6d" % ts, (xn,yn,zn), 
+                        unknowns = (uf, vf, wf, p),
+                        arrays   = (un, vn, wn),
+                        tracers  = (pt))
                  # Plotting for each Particle. 
                #for i in range(0,n):
 #                    ax.scatter(pt[i].x, pt[i].y, pt[i].z)

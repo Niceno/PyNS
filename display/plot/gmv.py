@@ -13,7 +13,7 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def gmv(file_name, xyzn, unknowns = (), arrays = ()):
+def gmv(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -195,6 +195,43 @@ def gmv(file_name, xyzn, unknowns = (), arrays = ()):
                 file_id.write("\n")
 
     file_id.write("endvars\n")
+
+    # ----------------------
+    #
+    # Write the tracers out
+    #
+    # ----------------------
+
+    # Browse through all sets of tracers to count all particles    
+    np = len(tracers)
+
+    print("np = ", np)
+
+    # If there are any particles:
+    if np > 0:
+        file_id.write("tracers %d\n" % np)
+
+        # Write coordinates out 
+        for p in tracers:
+            file_id.write("%12.5e\n" % p.x)
+        for p in tracers:
+            file_id.write("%12.5e\n" % p.y)
+        for p in tracers:
+            file_id.write("%12.5e\n" % p.z)
+
+        # Write particle velocties too
+        file_id.write("particle-u\n")
+        for p in tracers:
+            file_id.write("%12.5e\n" % p.u)
+        file_id.write("particle-v\n")
+        for p in tracers:
+            file_id.write("%12.5e\n" % p.v)
+        file_id.write("particle-w\n")
+        for p in tracers:
+            file_id.write("%12.5e\n" % p.w)
+
+        
+        file_id.write("endtrace\n")
 
     # --------------------------
     #
