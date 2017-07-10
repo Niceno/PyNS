@@ -54,7 +54,7 @@ def calc_traj(pt, uvwn, rho, mu, xyzn, xyzc, dt, obst, n):
         
         # Check if particle is in an obstacle cell;
         # if true set the particle's velocity to zero.        
-        if (i in obst[0]) and (j in obst[1]) and (k in obst[2]):
+        if (i in obst[X]) and (j in obst[Y]) and (k in obst[Z]):
             (pt[p].u,pt[p].v,pt[p].w) = (0, 0, 0)
         
         # Check to see if the particle is still in the domain; 

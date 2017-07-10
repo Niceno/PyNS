@@ -38,4 +38,4 @@ from scipy               import amax,         \
                                 transpose,    \
                                 zeros
 from scipy.linalg        import solve
-import numpy                 as np
+# import numpy                 as np
