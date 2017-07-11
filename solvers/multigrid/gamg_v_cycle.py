@@ -78,21 +78,34 @@ def gamg_v_cycle(a, phi, b, tol,
         # --------------------        
         for level in range(1, n_steps+1):
             grid = grid + 1    
-    
+
+            # Compute ratio between grid levels 
+            rx = shape_[grid-1][X] // shape_[grid][X]
+            ry = shape_[grid-1][Y] // shape_[grid][Y]
+            rz = shape_[grid-1][Z] // shape_[grid][Z]
+            
+            # Lower bounds for browsing through grid levels
+            wl = 0
+            el = 1
+            sl = 0
+            nl = 1
+            bl = 0
+            tl = 1
+            
             # -------------------------------------
             # Restrict 
             #
             # Computes r.h.s. on the coarser level 
             # from residual on the finer level.
             # -------------------------------------
-            b_[grid][:,:,:] =  r_[grid-1].val[0::2, 0::2, 0::2]
-            b_[grid][:,:,:] += r_[grid-1].val[0::2, 1::2, 0::2]
-            b_[grid][:,:,:] += r_[grid-1].val[0::2, 0::2, 1::2]
-            b_[grid][:,:,:] += r_[grid-1].val[0::2, 1::2, 1::2]
-            b_[grid][:,:,:] += r_[grid-1].val[1::2, 0::2, 0::2]
-            b_[grid][:,:,:] += r_[grid-1].val[1::2, 1::2, 0::2]
-            b_[grid][:,:,:] += r_[grid-1].val[1::2, 0::2, 1::2]
-            b_[grid][:,:,:] += r_[grid-1].val[1::2, 1::2, 1::2]
+            b_[grid][:,:,:] =  r_[grid-1].val[wl::rx, sl::ry, bl::rz]
+            b_[grid][:,:,:] += r_[grid-1].val[wl::rx, nl::ry, bl::rz]
+            b_[grid][:,:,:] += r_[grid-1].val[wl::rx, sl::ry, tl::rz]
+            b_[grid][:,:,:] += r_[grid-1].val[wl::rx, nl::ry, tl::rz]
+            b_[grid][:,:,:] += r_[grid-1].val[el::rx, sl::ry, bl::rz]
+            b_[grid][:,:,:] += r_[grid-1].val[el::rx, nl::ry, bl::rz]
+            b_[grid][:,:,:] += r_[grid-1].val[el::rx, sl::ry, tl::rz]
+            b_[grid][:,:,:] += r_[grid-1].val[el::rx, nl::ry, tl::rz]
             
             # ------------------------------------------------
             # Solve on the coarser level and compute residual
@@ -120,6 +133,19 @@ def gamg_v_cycle(a, phi, b, tol,
         # ------------------
         for level in range(1, n_steps+1):
             grid = grid - 1
+
+            # Compute ratio between grid levels 
+            rx = shape_[grid][X] // shape_[grid+1][X]
+            ry = shape_[grid][Y] // shape_[grid+1][Y]
+            rz = shape_[grid][Z] // shape_[grid+1][Z]
+            
+            # Lower bounds for browsing through grid levels
+            wl = 0
+            el = 1
+            sl = 0
+            nl = 1
+            bl = 0
+            tl = 1
                 
             # -------------------------------------------
             # Prolongation 
@@ -131,17 +157,17 @@ def gamg_v_cycle(a, phi, b, tol,
             r_[grid].val[:] = 0
               
             # First copy in each available cell on fine level  
-            r_[grid].val[0::2, 0::2, 0::2] = phi_[grid+1].val[:,:,:]
+            r_[grid].val[wl::rx, sl::ry, bl::rz] = phi_[grid+1].val[:,:,:]
             
             # Then spread arond
-            r_[grid].val[1::2, 0::2, 0::2] = r_[grid].val[0::2, 0::2, 0::2]
-            r_[grid].val[0::2, 1::2, 0::2] = r_[grid].val[0::2, 0::2, 0::2]
-            r_[grid].val[1::2, 1::2, 0::2] = r_[grid].val[0::2, 0::2, 0::2]
+            r_[grid].val[el::rx, sl::ry, bl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
+            r_[grid].val[wl::rx, nl::ry, bl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
+            r_[grid].val[el::rx, nl::ry, bl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
 
-            r_[grid].val[0::2, 0::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
-            r_[grid].val[1::2, 0::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
-            r_[grid].val[0::2, 1::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
-            r_[grid].val[1::2, 1::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
+            r_[grid].val[wl::rx, sl::ry, tl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
+            r_[grid].val[el::rx, sl::ry, tl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
+            r_[grid].val[wl::rx, nl::ry, tl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
+            r_[grid].val[el::rx, nl::ry, tl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
 
             # Then smooth them out a little bit
             for smooth in range(0, n_smooth):
