@@ -131,17 +131,17 @@ def gamg_v_cycle(a, phi, b, tol,
             r_[grid].val[:] = 0
               
             # First copy in each available cell on fine level  
-            r_[grid].val[ ::2, ::2, ::2] = phi_[grid+1].val[:,:,:]
+            r_[grid].val[0::2, 0::2, 0::2] = phi_[grid+1].val[:,:,:]
             
             # Then spread arond
-            r_[grid].val[1::2, ::2, ::2] = r_[grid].val[ ::2, ::2, ::2]
-            r_[grid].val[ ::2,1::2, ::2] = r_[grid].val[ ::2, ::2, ::2]
-            r_[grid].val[1::2,1::2, ::2] = r_[grid].val[ ::2, ::2, ::2]
+            r_[grid].val[1::2, 0::2, 0::2] = r_[grid].val[0::2, 0::2, 0::2]
+            r_[grid].val[0::2, 1::2, 0::2] = r_[grid].val[0::2, 0::2, 0::2]
+            r_[grid].val[1::2, 1::2, 0::2] = r_[grid].val[0::2, 0::2, 0::2]
 
-            r_[grid].val[ ::2, ::2,1::2] = r_[grid].val[ ::2, ::2, ::2]
-            r_[grid].val[1::2, ::2,1::2] = r_[grid].val[ ::2, ::2, ::2]
-            r_[grid].val[ ::2,1::2,1::2] = r_[grid].val[ ::2, ::2, ::2]
-            r_[grid].val[1::2,1::2,1::2] = r_[grid].val[ ::2, ::2, ::2]
+            r_[grid].val[0::2, 0::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
+            r_[grid].val[1::2, 0::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
+            r_[grid].val[0::2, 1::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
+            r_[grid].val[1::2, 1::2, 1::2] = r_[grid].val[0::2, 0::2, 0::2]
 
             # Then smooth them out a little bit
             for smooth in range(0, n_smooth):
