@@ -14,6 +14,7 @@ from pyns.discretization import Unknown
 # Sisters from this module
 from pyns.solvers.Matrix              import Matrix
 from pyns.solvers.multigrid.coarsable import coarsable
+from pyns.solvers.multigrid.coarsen   import coarsen
 
 # =============================================================================
 def gamg_coarsen_system(a, phi, b,
@@ -63,13 +64,11 @@ def gamg_coarsen_system(a, phi, b,
     # memory for coarser levels
     # ------------------------------
     grid = 1  # level counter
-    while coarsable(array(shape_[grid-1])):
+    while coarsable(shape_[grid-1]):
       
         print("  coarsening!")
 
-        shape_ += ((shape_[grid-1][0]//2,       # resolution at level "grid"
-                    shape_[grid-1][1]//2, 
-                    shape_[grid-1][2]//2),)
+        shape_ += (coarsen(shape_[grid-1]),)    # resolution at level "grid"
         a_     += (Matrix(shape_[grid]),)
         phi_   += (Unknown("phi_%d" % grid,     # unknown at level "grid"
                            phi.pos, 
@@ -119,6 +118,13 @@ def gamg_coarsen_system(a, phi, b,
         bl = 0
         tl = 1
 
+        if rx < 2:
+            el = 0
+        if ry < 2:
+            nl = 0
+        if rz < 2:
+            tl = 0
+
         #------------------------------------------------------------------
         # Think of the order of magnitude for neighboring coefficients 
         # derived from finite volume method in, a geometric progression
@@ -134,61 +140,62 @@ def gamg_coarsen_system(a, phi, b,
         #------------------------------------------------------------------
         
         # West coefficient
-        a_[grid].W[:,:,:] =  a_[grid-1].W[wl::rx, sl::ry, bl::rz]
-        a_[grid].W[:,:,:] += a_[grid-1].W[wl::rx, nl::ry, bl::rz]
-        a_[grid].W[:,:,:] += a_[grid-1].W[wl::rx, sl::ry, tl::rz]
-        a_[grid].W[:,:,:] += a_[grid-1].W[wl::rx, nl::ry, tl::rz]
-        a_[grid].W[:,:,:] = a_[grid].W[:,:,:] / rx
+        a_[grid].W[:] =  a_[grid-1].W[wl::rx, sl::ry, bl::rz]
+        a_[grid].W[:] += a_[grid-1].W[wl::rx, nl::ry, bl::rz]
+        a_[grid].W[:] += a_[grid-1].W[wl::rx, sl::ry, tl::rz]
+        a_[grid].W[:] += a_[grid-1].W[wl::rx, nl::ry, tl::rz]
+        a_[grid].W[:] =  a_[grid].W[:] / (rx * (3-ry) * (3-rz))
 
-        # West coefficient
-        a_[grid].E[:,:,:] =  a_[grid-1].E[el::rx, sl::ry, bl::rz]
-        a_[grid].E[:,:,:] += a_[grid-1].E[el::rx, nl::ry, bl::rz]
-        a_[grid].E[:,:,:] += a_[grid-1].E[el::rx, sl::ry, tl::rz]
-        a_[grid].E[:,:,:] += a_[grid-1].E[el::rx, nl::ry, tl::rz]
-        a_[grid].E[:,:,:] = a_[grid].E[:,:,:] / rx
+        # East coefficient
+        a_[grid].E[:] =  a_[grid-1].E[el::rx, sl::ry, bl::rz]
+        a_[grid].E[:] += a_[grid-1].E[el::rx, nl::ry, bl::rz]
+        a_[grid].E[:] += a_[grid-1].E[el::rx, sl::ry, tl::rz]
+        a_[grid].E[:] += a_[grid-1].E[el::rx, nl::ry, tl::rz]
+        a_[grid].E[:] =  a_[grid].E[:] / (rx * (3-ry) * (3-rz))
 
         # South coefficient
-        a_[grid].S[:,:,:] =  a_[grid-1].S[wl::rx, sl::ry, bl::rz]
-        a_[grid].S[:,:,:] += a_[grid-1].S[el::rx, sl::ry, bl::rz]
-        a_[grid].S[:,:,:] += a_[grid-1].S[wl::rx, sl::ry, tl::rz]
-        a_[grid].S[:,:,:] += a_[grid-1].S[el::rx, sl::ry, tl::rz]
-        a_[grid].S[:,:,:] = a_[grid].S[:,:,:] / ry
+        a_[grid].S[:] =  a_[grid-1].S[wl::rx, sl::ry, bl::rz]
+        a_[grid].S[:] += a_[grid-1].S[el::rx, sl::ry, bl::rz]
+        a_[grid].S[:] += a_[grid-1].S[wl::rx, sl::ry, tl::rz]
+        a_[grid].S[:] += a_[grid-1].S[el::rx, sl::ry, tl::rz]
+        a_[grid].S[:] =  a_[grid].S[:] / ((3-rx) * ry * (3-rz))
 
         # North coefficient
-        a_[grid].N[:,:,:] =  a_[grid-1].N[wl::rx, nl::ry, bl::rz]
-        a_[grid].N[:,:,:] += a_[grid-1].N[el::rx, nl::ry, bl::rz]
-        a_[grid].N[:,:,:] += a_[grid-1].N[wl::rx, nl::ry, tl::rz]
-        a_[grid].N[:,:,:] += a_[grid-1].N[el::rx, nl::ry, tl::rz]
-        a_[grid].N[:,:,:] = a_[grid].N[:,:,:] / ry
+        a_[grid].N[:] =  a_[grid-1].N[wl::rx, nl::ry, bl::rz]
+        a_[grid].N[:] += a_[grid-1].N[el::rx, nl::ry, bl::rz]
+        a_[grid].N[:] += a_[grid-1].N[wl::rx, nl::ry, tl::rz]
+        a_[grid].N[:] += a_[grid-1].N[el::rx, nl::ry, tl::rz]
+        a_[grid].N[:] =  a_[grid].N[:] / ((3-rx) * ry * (3-rz))
 
         # Bottom coefficient
-        a_[grid].B[:,:,:] =  a_[grid-1].B[wl::rx, sl::ry, bl::rz]
-        a_[grid].B[:,:,:] += a_[grid-1].B[el::rx, sl::ry, bl::rz]
-        a_[grid].B[:,:,:] += a_[grid-1].B[wl::rx, nl::ry, bl::rz]
-        a_[grid].B[:,:,:] += a_[grid-1].B[el::rx, nl::ry, bl::rz]
-        a_[grid].B[:,:,:] = a_[grid].B[:,:,:] / rz
+        a_[grid].B[:] =  a_[grid-1].B[wl::rx, sl::ry, bl::rz]
+        a_[grid].B[:] += a_[grid-1].B[el::rx, sl::ry, bl::rz]
+        a_[grid].B[:] += a_[grid-1].B[wl::rx, nl::ry, bl::rz]
+        a_[grid].B[:] += a_[grid-1].B[el::rx, nl::ry, bl::rz]
+        a_[grid].B[:] =  a_[grid].B[:] / ((3-rx) * (3-ry) * rz)
 
         # Top coefficient
-        a_[grid].T[:,:,:] =  a_[grid-1].T[wl::rx, sl::ry, tl::rz]
-        a_[grid].T[:,:,:] += a_[grid-1].T[el::rx, sl::ry, tl::rz]
-        a_[grid].T[:,:,:] += a_[grid-1].T[wl::rx, nl::ry, tl::rz]
-        a_[grid].T[:,:,:] += a_[grid-1].T[el::rx, nl::ry, tl::rz]
-        a_[grid].T[:,:,:] = a_[grid].T[:,:,:] / rz
+        a_[grid].T[:] =  a_[grid-1].T[wl::rx, sl::ry, tl::rz]
+        a_[grid].T[:] += a_[grid-1].T[el::rx, sl::ry, tl::rz]
+        a_[grid].T[:] += a_[grid-1].T[wl::rx, nl::ry, tl::rz]
+        a_[grid].T[:] += a_[grid-1].T[el::rx, nl::ry, tl::rz]
+        a_[grid].T[:] =  a_[grid].T[:] / ((3-rx) * (3-ry) * rz)
 
         # Central coefficient goes in two stages:
         # 1. add the innertial term like a simple summation
-        a_[grid].C[:,:,:] =  i_[grid-1][wl::rx, sl::ry, bl::rz]
-        a_[grid].C[:,:,:] += i_[grid-1][wl::rx, nl::ry, bl::rz]
-        a_[grid].C[:,:,:] += i_[grid-1][wl::rx, sl::ry, tl::rz]
-        a_[grid].C[:,:,:] += i_[grid-1][wl::rx, nl::ry, tl::rz]
-        a_[grid].C[:,:,:] += i_[grid-1][el::rx, sl::ry, bl::rz]
-        a_[grid].C[:,:,:] += i_[grid-1][el::rx, nl::ry, bl::rz]
-        a_[grid].C[:,:,:] += i_[grid-1][el::rx, sl::ry, tl::rz]
-        a_[grid].C[:,:,:] += i_[grid-1][el::rx, nl::ry, tl::rz]
+        a_[grid].C[:] =  i_[grid-1][wl::rx, sl::ry, bl::rz]
+        a_[grid].C[:] += i_[grid-1][wl::rx, nl::ry, bl::rz]
+        a_[grid].C[:] += i_[grid-1][wl::rx, sl::ry, tl::rz]
+        a_[grid].C[:] += i_[grid-1][wl::rx, nl::ry, tl::rz]
+        a_[grid].C[:] += i_[grid-1][el::rx, sl::ry, bl::rz]
+        a_[grid].C[:] += i_[grid-1][el::rx, nl::ry, bl::rz]
+        a_[grid].C[:] += i_[grid-1][el::rx, sl::ry, tl::rz]
+        a_[grid].C[:] += i_[grid-1][el::rx, nl::ry, tl::rz]
+        a_[grid].C[:] =  a_[grid].C[:] / ((3-rx) * (3-ry) * (3-rz))
 
         # 2. add newly formed diffusion terms 
-        a_[grid].C[:,:,:] += (  a_[grid].W[:,:,:] + a_[grid].E[:,:,:]
-                              + a_[grid].S[:,:,:] + a_[grid].N[:,:,:]
-                              + a_[grid].B[:,:,:] + a_[grid].T[:,:,:]) 
+        a_[grid].C[:] += (  a_[grid].W[:] + a_[grid].E[:]
+                          + a_[grid].S[:] + a_[grid].N[:]
+                          + a_[grid].B[:] + a_[grid].T[:]) 
 
     return n_, shape_, a_, i_, d_, phi_, b_, r_  # end of function
