@@ -22,7 +22,7 @@ def adj_o_bnds(uvw, dxyz, dt):
       dt:   time step.
 
     Returns:
-      none
+      None!
 
     In order to apply convective outlfow, the function needs bulk velocities
     in the domain, which is computed from volume fluxes coming and and out
@@ -278,13 +278,13 @@ def adj_o_bnds(uvw, dxyz, dt):
                              + w_bnd_t_corr         *      if_t_out_w
 
     if verbatim == True:
-        print('+----------------------------+'     )
-        print('|  ub_in     = %12.5e  |' %ub_in    )
-        print('|  a_in      = %12.5e  |' %area_in  )
-        print('|  v_in      = %12.5e  |' %vol_in   )
-        print('|  ub_out    = %12.5e  |' %ub_out   )
-        print('|  a_out     = %12.5e  |' %area_out )
-        print('|  v_out_1   = %12.5e  |' %vol_out_1)
+        print("+----------------------------+"     )
+        print("|  ub_in     = %12.5e  |" %ub_in    )
+        print("|  a_in      = %12.5e  |" %area_in  )
+        print("|  v_in      = %12.5e  |" %vol_in   )
+        print("|  ub_out    = %12.5e  |" %ub_out   )
+        print("|  a_out     = %12.5e  |" %area_out )
+        print("|  v_out_1   = %12.5e  |" %vol_out_1)
 
     # ---------------------------------------------
     # Scaling correction to whatever you did above
@@ -304,10 +304,10 @@ def adj_o_bnds(uvw, dxyz, dt):
         factor = 1.0
 
     if verbatim == True:
-        print('+----------------------------+')
-        print('|  v_out_2   = %12.5e  |' %vol_out_2)
-        print('|  factor    = %12.5e  |' %factor   )
-        print('+----------------------------+')
+        print("+----------------------------+")
+        print("|  v_out_2   = %12.5e  |" %vol_out_2)
+        print("|  factor    = %12.5e  |" %factor   )
+        print("+----------------------------+")
 
     # -------------------------------------
     # Correction to satisfy volume balance

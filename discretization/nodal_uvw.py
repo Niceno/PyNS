@@ -10,8 +10,21 @@ from pyns.constants      import *
 from pyns.operators      import *
 
 # =============================================================================
-def nodal_uvw(xyzn, uvwf, obst):
+def nodal_uvw(xyzn, uvwf, 
+              obstacle = None):
 # -----------------------------------------------------------------------------
+    """
+    Args:
+      xyzn: ... Tuple containing nodal coordinates in "x", "y" and "z" 
+                directions.
+      uvwf: ... Tuple with three staggered velocity components. 
+                (Each component is an object of type "Unknown".)
+      obstacle: Obstacle, three-dimensional array with zeros and ones.
+
+    Returns:
+      un, vn, wn: Three three-dimensional arrays containing nodal velocities in
+                  "x", "y" and "z" directions.
+    """
 
     # Unpack tuples
     xn, yn, zn = xyzn
@@ -145,11 +158,11 @@ def nodal_uvw(xyzn, uvwf, obst):
     # ------------------------
     # Filter the obstacle out
     # ------------------------
-    if obst is not None:
+    if obstacle is not None:
         on = zeros( (nx, ny, nz) )
  
         # Nodify the obstacle
-        on[0:-1, 0:-1, 0:-1] = obst[:, :, :]     
+        on[0:-1, 0:-1, 0:-1] = obstacle[:, :, :]     
         on[1:  , 0:-1, 0:-1] = mx(on[1:   , 0:-1, 0:-1], on[0:-1, 0:-1, 0:-1])
         on[0:-1, 1:  , 0:-1] = mx(on[0:-1:, 1:  , 0:-1], on[0:-1, 0:-1, 0:-1])
         on[0:-1, 0:-1, 1:  ] = mx(on[0:-1:, 0:-1, 1:  ], on[0:-1, 0:-1, 0:-1])

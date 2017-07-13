@@ -9,4 +9,5 @@ from . import (test_cube_matrix,
                test_thermal_plumes_collocated,
                test_thermal_plumes_staggered,
                test_thermally_driven_cavity_collocated,
-               test_thermally_driven_cavity_staggered)
+               test_thermally_driven_cavity_staggered,
+               test_thermally_driven_cavity_staggered_simple)

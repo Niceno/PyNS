@@ -18,13 +18,17 @@ def gmv(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     """
     Args:
       file_name: String containing name of the file to be created.
-      xyzn:      Tuple containing one-dimensional arrays with "x", "y"
+      xyzn: .... Tuple containing one-dimensional arrays with "x", "y"
                  and "z" coordinates.
-      vars:      Tuple containing "Unknowns" to be exported to GMV (TM).
+      unknowns:  Tuple containing "Unknowns" to be exported to Tecplot (TM).
                  Individual unknowns can be either collocated or staggered.
-
+      arrays: .. Tuple containing three-dimensional arrays to be exported.
+                 Individual arrays can be either node-centered, cell-centered
+                 collocated or cell-centered staggered.
+      tracers:   Tuple containing tracers to be exported.
+      
     Returns:
-      none!
+      None!
     """
 
     # ------------------------------------
@@ -47,7 +51,7 @@ def gmv(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     # ------------------
     
     # Browse through input arguments to find their names, positions and values
-    key = namedtuple('key', 'name pos val bnd')
+    key = namedtuple("key", "name pos val bnd")
     vars = ()
 
     # First through unknowns (they have their names and positions)

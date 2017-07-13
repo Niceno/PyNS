@@ -28,12 +28,10 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
 #
 # =============================================================================
 
-    planes = ('XY', 'XZ', 'YZ')
+    planes = ("XY", "XZ", "YZ")
     tests  = array([11,12,13,14, 21,22,23,24, 31,32,33,34, 41,42,43,44])
     TEST   = tests[ floor(random()*16) ]
     PLANE  = planes[ floor(random()*3) ]
-
-    TEST = 23
 
     # Node coordinates
     xn = nodes(0, 1,    160)
@@ -56,10 +54,10 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
     ndt = time_steps  # number of time steps
 
     # Create unknowns names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    p  = Unknown('pressure',    C, rc, NEUMANN)
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    p  = Unknown("pressure",    C, rc, NEUMANN)
 
     print(TEST)
 
@@ -158,13 +156,13 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
         wf.bnd[j].typ[:] = NEUMANN
 
     # Create a cylindrical obstacle in the middle just for kicks
-    obstacle = zeros(rc)
+    disc = zeros(rc)
     for k in range(0,nz):
         for j in range(0,ny):
             for i in range(0,nx):
                 dist = sqrt( (j-ny//2+1)**2 + (i-nx//2+1)**2 )
                 if dist < ny/4:
-                    obstacle[i,j,k] = 1
+                    disc[i,j,k] = 1
 
 # =============================================================================
 #
@@ -191,17 +189,20 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle)
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), 
+                 obstacle = disc)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), 
+               obstacle = disc)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), 
+                 obstacle = disc)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))
@@ -215,5 +216,5 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
             if ts % plot_freq == 0:
                 plot.isolines(p.val, (uf,vf,wf), (xn,yn,zn), Z)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

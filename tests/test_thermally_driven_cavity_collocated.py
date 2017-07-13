@@ -69,15 +69,15 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uc    = Unknown('cell-u-vel',     C, rc, DIRICHLET)
-    vc    = Unknown('cell-v-vel',     C, rc, DIRICHLET)
-    wc    = Unknown('cell-w-vel',     C, rc, DIRICHLET)
-    uf    = Unknown('face-u-vel',     X, ru, DIRICHLET)
-    vf    = Unknown('face-v-vel',     Y, rv, DIRICHLET)
-    wf    = Unknown('face-w-vel',     Z, rw, DIRICHLET)
-    t     = Unknown('temperature',    C, rc, NEUMANN)
-    p     = Unknown('pressure',       C, rc, NEUMANN)
-    p_tot = Unknown('total-pressure', C, rc, NEUMANN)
+    uc    = Unknown("cell-u-vel",     C, rc, DIRICHLET)
+    vc    = Unknown("cell-v-vel",     C, rc, DIRICHLET)
+    wc    = Unknown("cell-w-vel",     C, rc, DIRICHLET)
+    uf    = Unknown("face-u-vel",     X, ru, DIRICHLET)
+    vf    = Unknown("face-v-vel",     Y, rv, DIRICHLET)
+    wf    = Unknown("face-w-vel",     Z, rw, DIRICHLET)
+    t     = Unknown("temperature",    C, rc, NEUMANN)
+    p     = Unknown("pressure",       C, rc, NEUMANN)
+    p_tot = Unknown("total-pressure", C, rc, NEUMANN)
 
     # This is a new test
     t.bnd[W].typ[:] = DIRICHLET
@@ -90,8 +90,6 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         uc.bnd[j].typ[:] = NEUMANN
         vc.bnd[j].typ[:] = NEUMANN
         wc.bnd[j].typ[:] = NEUMANN
-
-    obstacle = None
 
 # =============================================================================
 #
@@ -119,29 +117,29 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
         # -----------------------
         # Temperature (enthalpy)
         # -----------------------
-        calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), obstacle)
+        calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz))
 
         # ----------------------
         # Momentum conservation
         # ----------------------
         ext_f = zeros(rc), t.val, zeros(rc)
 
-        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle,
+        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz),
                  pressure = p_tot,
                  force    = ext_f)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz))
 
         p_tot.val += p.val
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), obstacle)
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle)
+        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz))
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz))
 
         # Check the CFL number too
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
@@ -157,5 +155,5 @@ def main(show_plot=True, time_steps=1200, plot_freq=120):
                 plot.gmv("tdc-collocated-%6.6d" % ts, 
                          (xn, yn, zn), (uc, vc, wc, t))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

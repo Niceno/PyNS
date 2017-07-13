@@ -15,23 +15,24 @@ from pyns.discretization.obst_zero_val import obst_zero_val
 from pyns.discretization.vol_balance   import vol_balance
 
 # =============================================================================
-def corr_uvw(uvw, p, rho, dt, dxyz, obst,
+def corr_uvw(uvw, p, rho, dt, dxyz, 
+             obstacle = None,
              verbatim = True):
 # -----------------------------------------------------------------------------
     """
     Args:
-      uvw:  Tuple with three staggered or centered velocity components
-            (each component is created with "create_unknown" function.
-      p:    Unknown holding the pressure correction.
-      rho:  Three-dimensional array holding density for all cells.
-      dt:   Time step
-      dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
-            Each cell dimension is a three-dimensional array.
-      obst: Obstacle, three-dimensional array with zeros and ones.
-            It is zero in fluid, one in solid.
+      uvw: .... Tuple with three staggered or centered velocity components.
+                (Each component is object of type "Unknown").
+      p: ...... Unknown holding the pressure correction.
+      rho: .... Three-dimensional array holding density for all cells.
+      dt: ..... Time step
+      dxyz: ... Tuple holding cell dimensions in "x", "y" and "z" directions.
+                Each cell dimension is a three-dimensional array.
+      obstacle: Obstacle, three-dimensional array with zeros and ones.
+                It is zero in fluid, one in solid.
 
     Returns:
-      none, but input argument uvw is modified.
+      None, but input argument uvw is modified.
     """
 
     # Unpack received tuples
@@ -43,10 +44,10 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst,
     p_z = dif_z(p.val) / avg_z(dz)
 
     # Set to zero in obst
-    if obst is not None:
-        p_x = obst_zero_val(X, p_x, obst)
-        p_y = obst_zero_val(Y, p_y, obst)
-        p_z = obst_zero_val(Z, p_z, obst)
+    if obstacle is not None:
+        p_x = obst_zero_val(X, p_x, obstacle)
+        p_y = obst_zero_val(Y, p_y, obstacle)
+        p_z = obst_zero_val(Z, p_z, obstacle)
 
     # Pad with boundary values by expanding from interior
     # (This is done only for collocated formulation)
@@ -63,7 +64,7 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst,
     # Compute volume balance for checking
     if verbatim is True:
         if not uvw[X].pos == C:
-            err = vol_balance(uvw, (dx,dy,dz), obst)
+            err = vol_balance(uvw, (dx,dy,dz), obstacle)
             write.at(__name__)
             print("  Maximum volume error after correction: %12.5e" 
                      % abs(err).max())

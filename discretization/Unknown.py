@@ -67,22 +67,23 @@ from pyns.display   import write
 class Unknown:
 
     # =========================================================================
-    def __init__(self, name, pos, res, def_bc, 
+    def __init__(self, name, pos, res, default_bc, 
                  per = (False, False, False), 
                  verbatim = False):
     # -------------------------------------------------------------------------
         """
         Args:
-          name:   String holding the name of the variable.  It is intended to
-                  be used for post-processing.
-          pos:    Integer specifying if the variable is cell centered
-                  (value C), staggered in "x" (value X), "y" (value Y)
-                  or in "z" direction (value Z).
-          res:    Vector specifying resolutions in "x", "y" and "z" directions.
-          def_bc: Integer specifying if the default boundary condition is
-                  of Dirichlet, Neumann or Outlet type.
-          per:    Tuple holding three Boolean type variables which specify
-                  if the unknown is periodic in "x", "y" or "z" direction.
+          name: ..... String holding the name of the variable.  
+                      It is intended to be used for post-processing.
+          pos: ...... Integer specifying if the variable is cell centered
+                      (value C), staggered in "x" (value X), "y" (value Y)
+                      or in "z" direction (value Z).
+          res: ...... Vector specifying resolutions in "x", "y" and "z" 
+                      directions.
+          default_bc: Integer specifying if the default boundary condition is
+                      of Dirichlet, Neumann or Outlet type.
+          per: ...... Tuple holding three Boolean type variables which specify
+                      if the unknown is periodic in "x", "y" or "z" direction.
 
         Returns:
           Oh well, its own self, isn't it?
@@ -103,7 +104,7 @@ class Unknown:
 
         # Create boundary tuple
         nx, ny, nz = res
-        key = namedtuple('key', 'typ val')
+        key = namedtuple("key", "typ val")
         self.bnd = (key(ndarray(shape=(1,ny,nz), dtype=int), zeros((1,ny,nz))),
                     key(ndarray(shape=(1,ny,nz), dtype=int), zeros((1,ny,nz))),
                     key(ndarray(shape=(nx,1,nz), dtype=int), zeros((nx,1,nz))),
@@ -113,26 +114,26 @@ class Unknown:
 
         # Prescribe default boundary conditions
         if self.per[X] == False:
-            self.bnd[W].typ[0,:,:] = def_bc
-            self.bnd[E].typ[0,:,:] = def_bc
+            self.bnd[W].typ[0,:,:] = default_bc
+            self.bnd[E].typ[0,:,:] = default_bc
         else:
             if verbatim == True:
-                print(" ", self.name, "is periodic in x direction;", end="")
-                print(" skipping default boundary condition for it!")
+                print("  ", self.name, "is periodic in x direction;", end="")
+                print("  skipping default boundary condition for it!")
         if self.per[Y] == False:
-            self.bnd[S].typ[:,0,:] = def_bc
-            self.bnd[N].typ[:,0,:] = def_bc
+            self.bnd[S].typ[:,0,:] = default_bc
+            self.bnd[N].typ[:,0,:] = default_bc
         else:
             if verbatim == True:
-                print(" ", self.name, "is periodic in y direction;", end="")
-                print(" skipping default boundary condition for it!")
+                print("  ", self.name, "is periodic in y direction;", end="")
+                print("  skipping default boundary condition for it!")
         if self.per[Z] == False:
-            self.bnd[B].typ[:,:,0] = def_bc
-            self.bnd[T].typ[:,:,0] = def_bc
+            self.bnd[B].typ[:,:,0] = default_bc
+            self.bnd[T].typ[:,:,0] = default_bc
         else:
             if verbatim == True:
-                print(" ", self.name, "is periodic in z direction;", end="")
-                print(" skipping default boundary condition for it!")
+                print("  ", self.name, "is periodic in z direction;", end="")
+                print("  skipping default boundary condition for it!")
 
         self.bnd[W].val[0,:,:] = 0
         self.bnd[E].val[0,:,:] = 0
@@ -218,47 +219,3 @@ class Unknown:
                 self.bnd[T].val[:] = self.val[:,:, 1: 2]
 
         return  # end of function
-
-#    # =========================================================================
-#    def equalize(self):
-#    # -------------------------------------------------------------------------
-#        """
-#        Function to equalize values close to the buffer which are supposed
-#        to represent the same value, but due to iterative solution procedure
-#        end up being slighlty diferent from one another.
-#
-#        It applies only for scalar cells.
-#
-#        Periodicity for scalar cells:
-#
-#          - value in cell "0" is identical to value in "nx-1"
-#
-#                  .-------------> equalize <--------------.
-#                  |                                       |
-#            --+---|---+-------+-------+-------+-------+---|---+-- -
-#              |   ^   |       |       |       |       |   ^   |
-#          o   |   o   |   o   |   o   |   o   |   o   |   o   |   o
-#              |       |       |       |       |       |       |
-#          - --+-------+-------+-------+-------+-------+-------+-- -
-#         [W]     i=0     i=1     ...     ...   i=nx-2  i=nx-1    [E]
-#          =       =                                       =       =
-#         nx-2    nx-1                                     0       1
-#                  |        effective domain lenght        |
-#                  |<------------------------------------->|
-#
-#        """
-#
-#        if self.per[X] == True:
-#            if not self.pos == X:
-#                self.val[ :1,:,:] = (self.val[-1:,:,:]+self.val[ :1,:,:]) * 0.5
-#                self.val[-1:,:,:] =  self.val[ :1,:,:]
-#        if self.per[Y] == True:
-#            if not self.pos == Y:
-#                self.val[:, :1,:] = (self.val[:,-1:,:]+self.val[:, :1,:]) * 0.5
-#                self.val[:,-1:,:] =  self.val[:, :1,:]
-#        if self.per[Z] == True:
-#            if not self.pos == Z:
-#                self.val[:,:, :1] = (self.val[:,:,-1:]+self.val[:,:, :1]) * 0.5
-#                self.val[:,:,-1:] =  self.val[:,:, :1]
-#
-#        return  # end of function

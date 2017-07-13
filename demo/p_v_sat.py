@@ -24,7 +24,7 @@ def p_v_sat(t):
     elif (t >273 and t<=304):
       p_v= 1E+5 * np.power(10,5.40221 - 1838.675/(t-31.737))
     else:
-      p_v= float('nan')
+      p_v= float("nan")
  
   else:
     dim=t.ndim
@@ -60,7 +60,7 @@ def p_v_sat(t):
             elif (t[ii,jj,kk] >273 and t[ii,jj,kk]<=304):
               p_v[ii,jj,kk]= 1E+5 * np.power(10,5.40221 - 1838.675/(t[ii,jj,kk]-31.737))
   
-    p_v[p_v==0]= float('nan')
+    p_v[p_v==0]= float("nan")
   
   return p_v # end of function
   
@@ -86,7 +86,7 @@ def t_sat(p_v):
     elif (p_v >604.1854 and p_v<=4.4556e+03):
       t = 31.737 + 1838.675 /(5.40221 - np.log10(p_v * 1E-5))
     else:
-      t= float('nan')
+      t= float("nan")
  
   else:
     dim=p_v.ndim
@@ -122,7 +122,7 @@ def t_sat(p_v):
             elif (p_v[ii,jj,kk] >604.1854 and p_v[ii,jj,kk]<=4.4556e+03):
               t[ii,jj,kk]= 31.737 + 1838.675 /(5.40221 - np.log10(p_v[ii,jj,kk] * 1E-5))
   
-    t[t==0]= float('nan')
+    t[t==0]= float("nan")
   
   t = t - 273.15    # convert to °C
     

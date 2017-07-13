@@ -18,31 +18,36 @@ from pyns.solvers.nonstationary        import cg, cgs, bicgstab
 from pyns.solvers.norm                 import norm
 
 # =============================================================================
-def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
+def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, 
+             obstacle = None,
              pressure = None,
              force    = None,
              under_relaxation = 1.0,
-             advection_scheme = 'superbee'):
+             advection_scheme = "superbee"):
 # -----------------------------------------------------------------------------
     """
     Args:
-      uvw:      Tuple with three velocity components, staggered or collocated.
-                (Each component is created with "create_unknown" function.)
-      uvwf:     Tuple with three staggered velocity components (where each
-                component is created with "pyns.create_unknown" function.
-      rho:      Three-dimensional array holding density for all cells.
-      mu:       Three-dimensional array holding dynamic viscosity.
-      pressure: Object "Unknown" holding total pressure.
-      force:    Tuple containing three-dimensional matrices holding external
-                forces in each direction.
-      dt:       Time step.
-      dxyz:     Tuple holding cell dimensions in "x", "y" and "z" directions.
-                Each cell dimension is a three-dimensional array.
-      obst:     Obstacle, three-dimensional array with zeros and ones.
-                It is zero in fluid, one in solid.
+      uvw: ............ Tuple with three velocity components, staggered or 
+                        collocated.  
+                        (Each component is object of type "Unknown".)
+      uvwf: ........... Tuple with three staggered velocity components. 
+                        (Each component is object of type "Unknown".)
+      rho: ............ Three-dimensional array holding density for all cells.
+      mu: ............. Three-dimensional array holding dynamic viscosity.
+      pressure: ....... Object "Unknown" holding total pressure.
+      force: .......... Tuple containing three-dimensional matrices holding 
+                        external forces in each direction.
+      dt: ............. Time step.
+      dxyz: ........... Tuple holding cell dimensions in "x", "y" and "z" 
+                        directions.  Each component (each cell dimension) is 
+                        a three-dimensional array.
+      obstacle: ....... Obstacle, three-dimensional array with zeros and ones.
+                        It is zero in fluid, one in solid.
+      under_relaxation: Under relaxation factor.
+      advection_scheme: Advection scheme.
 
     Returns:
-      none, but input argument uvw is modified!
+      None, but input argument uvw is modified!
     """
 
     # Unpack tuples
@@ -61,9 +66,9 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
     d = u.pos
 
     # Create system matrices and right hand sides
-    A_u = diffusion(u, rho/dt, mu, dxyz, obst, DIRICHLET)
-    A_v = diffusion(v, rho/dt, mu, dxyz, obst, DIRICHLET)
-    A_w = diffusion(w, rho/dt, mu, dxyz, obst, DIRICHLET)
+    A_u = diffusion(u, rho/dt, mu, dxyz, obstacle, DIRICHLET)
+    A_v = diffusion(v, rho/dt, mu, dxyz, obstacle, DIRICHLET)
+    A_w = diffusion(w, rho/dt, mu, dxyz, obstacle, DIRICHLET)
     b_u = zeros(ru)
     b_v = zeros(rv)
     b_w = zeros(rw)
@@ -123,10 +128,10 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
         f_w += e_w * avg(w.pos, dv)
 
     # Take care of obsts in the domian
-    if obst is not None:
-        f_u = obst_zero_val(u.pos, f_u, obst)
-        f_v = obst_zero_val(v.pos, f_v, obst)
-        f_w = obst_zero_val(w.pos, f_w, obst)
+    if obstacle is not None:
+        f_u = obst_zero_val(u.pos, f_u, obstacle)
+        f_v = obst_zero_val(v.pos, f_v, obstacle)
+        f_w = obst_zero_val(w.pos, f_w, obstacle)
 
     # Solve for velocities
     ur = under_relaxation
@@ -180,9 +185,9 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
             vf.bnd[j].val[:] = v.bnd[j].val[:]
             wf.bnd[j].val[:] = w.bnd[j].val[:]
 
-    if obst is not None:
-        uf.val[:] = obst_zero_val(X, uf.val, obst)
-        vf.val[:] = obst_zero_val(Y, vf.val, obst)
-        wf.val[:] = obst_zero_val(Z, wf.val, obst)
+    if obstacle is not None:
+        uf.val[:] = obst_zero_val(X, uf.val, obstacle)
+        vf.val[:] = obst_zero_val(Y, vf.val, obstacle)
+        wf.val[:] = obst_zero_val(Z, wf.val, obstacle)
 
     return  # end of function

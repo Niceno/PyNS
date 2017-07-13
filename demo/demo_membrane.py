@@ -21,7 +21,7 @@ from pyns.physical.constants import G
 from p_v_sat import *
 # from latent_heat import *
 
-plt.close('all')
+plt.close("all")
 
 #==========================================================================
 #
@@ -92,7 +92,7 @@ R = 8.314
 pi = 3.1415
 
 # Membrane properties
-membrane = namedtuple('membrane', 'd kap eps tau r p t pv j t_old')
+membrane = namedtuple("membrane", "d kap eps tau r p t pv j t_old")
   # d is thickness in m, kap is thermal conductivity in W/mK
   # eps is porosity, tau is tortuosity
   # r is pore radius
@@ -109,30 +109,30 @@ mem = membrane(166E-6,   \
                  zeros((nx[AIR],1,nz[AIR])))
  
 # Create unknowns; names, positions and sizes
-uf    = [Unknown('face-u-vel',    X, ru[AIR], DIRICHLET),  \
-         Unknown('face-u-vel',    X, ru[H2O], DIRICHLET),  \
-         Unknown('face-u-vel',    X, ru[FIL], DIRICHLET)]
-vf    = [Unknown('face-v-vel',    Y, rv[AIR], DIRICHLET),  \
-         Unknown('face-v-vel',    Y, rv[H2O], DIRICHLET),  \
-         Unknown('face-v-vel',    Y, rv[FIL], DIRICHLET)]
-wf    = [Unknown('face-w-vel',    Z, rw[AIR], DIRICHLET),  \
-         Unknown('face-w-vel',    Z, rw[H2O], DIRICHLET),  \
-         Unknown('face-w-vel',    Z, rw[FIL], DIRICHLET)]
-p     = [Unknown('pressure',      C, rc[AIR], NEUMANN),  \
-         Unknown('pressure',      C, rc[H2O], NEUMANN),  \
-         Unknown('pressure',      C, rc[FIL], NEUMANN)]
-t     = [Unknown('temperature',   C, rc[AIR], NEUMANN),  \
-         Unknown('temperature',   C, rc[H2O], NEUMANN),  \
-         Unknown('temperature',   C, rc[FIL], NEUMANN)]
-a     = [Unknown('concentration', C, rc[AIR], NEUMANN),  \
-         Unknown('concentration', C, rc[H2O], NEUMANN),  \
-         Unknown('concentration', C, rc[FIL], NEUMANN)]
-p_tot = [Unknown('pressure-tot',  C, rc[AIR], NEUMANN),  \
-         Unknown('pressure-tot',  C, rc[H2O], NEUMANN)]
+uf    = [Unknown("face-u-vel",    X, ru[AIR], DIRICHLET),  \
+         Unknown("face-u-vel",    X, ru[H2O], DIRICHLET),  \
+         Unknown("face-u-vel",    X, ru[FIL], DIRICHLET)]
+vf    = [Unknown("face-v-vel",    Y, rv[AIR], DIRICHLET),  \
+         Unknown("face-v-vel",    Y, rv[H2O], DIRICHLET),  \
+         Unknown("face-v-vel",    Y, rv[FIL], DIRICHLET)]
+wf    = [Unknown("face-w-vel",    Z, rw[AIR], DIRICHLET),  \
+         Unknown("face-w-vel",    Z, rw[H2O], DIRICHLET),  \
+         Unknown("face-w-vel",    Z, rw[FIL], DIRICHLET)]
+p     = [Unknown("pressure",      C, rc[AIR], NEUMANN),  \
+         Unknown("pressure",      C, rc[H2O], NEUMANN),  \
+         Unknown("pressure",      C, rc[FIL], NEUMANN)]
+t     = [Unknown("temperature",   C, rc[AIR], NEUMANN),  \
+         Unknown("temperature",   C, rc[H2O], NEUMANN),  \
+         Unknown("temperature",   C, rc[FIL], NEUMANN)]
+a     = [Unknown("concentration", C, rc[AIR], NEUMANN),  \
+         Unknown("concentration", C, rc[H2O], NEUMANN),  \
+         Unknown("concentration", C, rc[FIL], NEUMANN)]
+p_tot = [Unknown("pressure-tot",  C, rc[AIR], NEUMANN),  \
+         Unknown("pressure-tot",  C, rc[H2O], NEUMANN)]
 
 # just for air
-p_v =[Unknown('vapor_pressure',C, rc[AIR], NEUMANN)]
-M  = [Unknown('molar mass',    C, rc[AIR], NEUMANN)]
+p_v =[Unknown("vapor_pressure",C, rc[AIR], NEUMANN)]
+M  = [Unknown("molar mass",    C, rc[AIR], NEUMANN)]
 
 # Specify boundary conditions
 
@@ -253,7 +253,7 @@ for ts in range(1,ndt+1):
   p_v[AIR].bnd[S].val[:,:,:] = a[AIR].bnd[S].val[:,:,:] *M[AIR].bnd[S].val[:,:,:]/M_H2O * (p_tot[AIR].val[:,:1,:] +1E5)
   
   t_int_film = t_sat(p_v[AIR].bnd[S].val[:,:,:])
-  print('t_int_film = ' + '%3.4f' %np.mean(t_int_film))
+  print("t_int_film = " + "%3.4f" %np.mean(t_int_film))
   
   t[AIR].bnd[S].val[:,:,:] = t_int_film
   t[FIL].bnd[N].val[:,:,:] = t_int_film
@@ -264,7 +264,7 @@ for ts in range(1,ndt+1):
                   (t_int_film - t[FIL].val[:,-1:,:]))   \
           * dx[AIR][:,:1,:] * dz[AIR][:,:1,:] / h_d[FIL]  # kg/s
   
-  print('m_out = ' + '%3.4e' %np.mean(m_out))  
+  print("m_out = " + "%3.4e" %np.mean(m_out))  
     
   #------------------------
   # Membrane
@@ -304,7 +304,7 @@ for ts in range(1,ndt+1):
         p_v_sat_salt(t, a[H2O].val[ii,:1,kk], M_salt) - rhs_mem[ii,:1,kk]
       t_int_mem[ii,:1,kk] = fsolve(jump_cond_mem, t[H2O].val[ii,-1:,kk])
   
-  print('t_int_mem = ' + '%3.4f' %np.mean(t_int_mem))
+  print("t_int_mem = " + "%3.4f" %np.mean(t_int_mem))
   
   t[H2O].bnd[S].val[:,:1,:] = t_int_mem
   const_mem_2 = 2*kappa[AIR][:,-1:,:]*mem.d/kappa_mem/dy[AIR][:,-1:,:];
@@ -326,7 +326,8 @@ for ts in range(1,ndt+1):
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
   for c in range(AIR,H2O):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
-           dt, (dx[c],dy[c],dz[c]), obst[c],
+           dt, (dx[c],dy[c],dz[c]), 
+           obstacle = obst[c],
            source = q_a[c])
 
   #------------------------
@@ -344,7 +345,8 @@ for ts in range(1,ndt+1):
   
   for c in range(AIR,FIL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
-           dt, (dx[c],dy[c],dz[c]), obst[c],
+           dt, (dx[c],dy[c],dz[c]), 
+           obstacle = obst[c],
            source = q_t[c])
 
   for c in range(AIR,FIL):
@@ -360,7 +362,8 @@ for ts in range(1,ndt+1):
     ef = zeros(ru[c]), g_v, zeros(rw[c])
     
     calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
-             dt, (dx[c],dy[c],dz[c]), obst[c],
+             dt, (dx[c],dy[c],dz[c]), 
+             obstacle = obst[c],
              pressure = p_tot[c],
              force = ef)
   
@@ -369,7 +372,8 @@ for ts in range(1,ndt+1):
   #----------
   for c in (AIR,H2O):
     calc_p(p[c], (uf[c],vf[c],wf[c]), rho[c],  \
-           dt, (dx[c],dy[c],dz[c]), obst[c])
+           dt, (dx[c],dy[c],dz[c]), 
+           obstacle = obst[c])
   
     p_tot[c].val = p_tot[c].val + p[c].val
   
@@ -378,18 +382,20 @@ for ts in range(1,ndt+1):
   #---------------------
   for c in (AIR,H2O):
     corr_uvw((uf[c],vf[c],wf[c]), p[c], rho[c],  \
-             dt, (dx[c],dy[c],dz[c]), obst[c])
+             dt, (dx[c],dy[c],dz[c]), 
+             obstacle = obst[c])
  
   # Compute volume balance for checking 
   for c in (AIR,H2O):
     err = vol_balance((uf[c],vf[c],wf[c]),  \
-                      (dx[c],dy[c],dz[c]), obst[c])
-    print('Maximum volume error after correction: %12.5e' % abs(err).max())
+                      (dx[c],dy[c],dz[c]), 
+                      obstacle = obst[c])
+    print("Maximum volume error after correction: %12.5e" % abs(err).max())
 
   # Check the CFL number too 
   for c in (AIR,H2O):
     cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
-    print('Maximum CFL number: %12.5e' % cfl)
+    print("Maximum CFL number: %12.5e" % cfl)
 
 #==========================================================================
 #
@@ -398,7 +404,7 @@ for ts in range(1,ndt+1):
 #==========================================================================
 #%%
   if ts % dt_plot == 0:
-    plt.close('all')
+    plt.close("all")
     
     z_pos = 10
     
@@ -420,31 +426,31 @@ for ts in range(1,ndt+1):
     plt.subplot(2,2,1)
     levels_t=linspace( t_plot.min(), t_plot.max(), 11)
     norm_t=cm.colors.Normalize( vmax=t_plot.max(), vmin=t_plot.min() )
-    cax_t=plt.contourf(xc,yc,t_plot,levels_t,cmap='rainbow',norm=norm_t)
+    cax_t=plt.contourf(xc,yc,t_plot,levels_t,cmap="rainbow",norm=norm_t)
     cbar_t=plt.colorbar(cax_t)
-    plt.title('Temperature')
-    plt.xlabel('x [m]')
+    plt.title("Temperature")
+    plt.xlabel("x [m]")
     #plt.ylim([-1E1,1E1])
-    plt.ylabel('y [m]' )
+    plt.ylabel("y [m]" )
     
     plt.subplot(2,2,2)
-    matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
-    cax_p=plt.contourf(xc,yc,p_plot,cmap='rainbow')
-    cax_p2=plt.contour(xc,yc,p_plot,colors='k')
+    matplotlib.rcParams["contour.negative_linestyle"] = "solid"
+    cax_p=plt.contourf(xc,yc,p_plot,cmap="rainbow")
+    cax_p2=plt.contour(xc,yc,p_plot,colors="k")
     plt.clabel(cax_p2, fontsize=12, inline=1)
     cbar_p = plt.colorbar(cax_p)
-    plt.title('Pressure Correction')
-    plt.xlabel('x [m]')
+    plt.title("Pressure Correction")
+    plt.xlabel("x [m]")
     #plt.ylim([-1E1,1E1])
-    plt.ylabel('y [m]' )
+    plt.ylabel("y [m]" )
     
     plt.subplot(2,2,3)
-    cax_a=plt.contourf(xc,yc,a_plot,cmap='rainbow')
+    cax_a=plt.contourf(xc,yc,a_plot,cmap="rainbow")
     cbar_a=plt.colorbar(cax_a)
-    plt.title('Concentration')
-    plt.xlabel('x [m]')
+    plt.title("Concentration")
+    plt.xlabel("x [m]")
     #plt.ylim([-1E1,1E1])
-    plt.ylabel('y [m]' )
+    plt.ylabel("y [m]" )
     
     pylab.show()
 

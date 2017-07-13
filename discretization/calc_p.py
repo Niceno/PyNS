@@ -17,30 +17,31 @@ from pyns.discretization.obst_zero_val  import obst_zero_val
 from pyns.solvers.nonstationary         import cg, cgs, bicgstab
 
 # =============================================================================
-def calc_p(p, uvwf, rho, dt, dxyz, obst,
+def calc_p(p, uvwf, rho, dt, dxyz, 
+           obstacle = None,
            verbatim = True):
 # -----------------------------------------------------------------------------
     """
     Args:
-      p:    Object of the type "Unknown", holding the pressure.
-      uvwf: Tuple with three staggered velocity components (where each
-            component is created with "pyns.create_unknown" function.
-      rho:  Three-dimensional array holding density for all cells.
-      dt:   Time step.
-      dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
-            Each cell dimension is a three-dimensional array.
-      obst: Obstacle, three-dimensional array with zeros and ones.
-            It is zero in fluid, one in solid.
+      p: ...... Object of the type "Unknown", holding the pressure.
+      uvwf: ... Tuple with three staggered velocity components (where each
+                component is an object of type "Unknown".
+      rho: .... Three-dimensional array holding density for all cells.
+      dt: ..... Time step.
+      dxyz: ... Tuple holding cell dimensions in "x", "y" and "z" directions.
+                Each cell dimension is a three-dimensional array.
+      obstacle: Obstacle, three-dimensional array with zeros and ones.
+                It is zero in fluid, one in solid.
 
     Returns:
-      none, but input argument p is modified!
+      None, but input argument p is modified!
     """
 
     # Fetch the resolution
     rc = p.val.shape
 
     # Create system matrix and right hand side
-    A_p = diffusion(p, zeros(rc), dt/rho, dxyz, obst, NEUMANN)
+    A_p = diffusion(p, zeros(rc), dt/rho, dxyz, obstacle, NEUMANN)
     b_p = zeros(rc)
 
     # Compute the source for the pressure.  Important: don't send "obst"
@@ -63,8 +64,8 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst,
 
     # Set to zero in obstacle (it can get strange
     # values during the iterative solution procedure)
-    if obst is not None:
-        p.val[:] = obst_zero_val(p.pos, p.val, obst)
+    if obstacle is not None:
+        p.val[:] = obst_zero_val(p.pos, p.val, obstacle)
 
     # Finally adjust the boundary values
     adj_n_bnds(p);

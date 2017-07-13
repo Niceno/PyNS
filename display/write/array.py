@@ -25,7 +25,7 @@ def array(*args):
         args[1]: String with desired format.
 
     Returns:
-      none!
+      None!
     """
 
     if len((args)) == 1:
@@ -35,7 +35,7 @@ def array(*args):
         a      = args[0]
         format = args[1]
 
-    print('Array ['+('%d' %a.shape[0])+']')
+    print("Array ["+("%d" %a.shape[0])+"]")
     rows = a.shape[0]
     for i in range(0,rows):
         print(format %a[i])

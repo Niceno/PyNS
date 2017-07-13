@@ -18,7 +18,7 @@ def adj_n_bnds(phi):
       phi: Object of the type unknown.
 
     Returns:
-      none, but input argument psi is modified.
+      None, but input argument psi is modified.
     """
 
     # These arrays will hold values true (0) in cells with boundary ...

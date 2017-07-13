@@ -10,18 +10,18 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def obst_mod_matrix(phi, c, obst, obc):
+def obst_mod_matrix(phi, matrix, obstacle, obstacle_bc):
 # -----------------------------------------------------------------------------
     """
     Args:
-      phi:  Object of the type "Unknown".
-      c:    Object of the type "Matrix", holding the system matrix.
-      obst: Obstacle, three-dimensional array with zeros and ones.  It is
-            zero in fluid, one in solid.
-      obc:  Obstacle's boundary condition (NEUMANN or DIRICHLET).
+      phi: ....... Object of the type "Unknown".
+      matrix: .... Object of the type "Matrix", holding the system matrix.
+      obstacle: .. Obstacle, three-dimensional array with zeros and ones.  
+                   It is zero in fluid, one in solid.
+      obstacle_bc: Obstacle's boundary condition (NEUMANN or DIRICHLET).
 
     Returns:
-      c: Modified system matrix.
+      matrix: Modified system matrix.
     """
 
     pos = phi.pos
@@ -36,63 +36,63 @@ def obst_mod_matrix(phi, c, obst, obc):
         # -----------------------------------
         # Neumann's boundary on the obstacle
         # -----------------------------------
-        if obc == NEUMANN:
+        if obstacle_bc == NEUMANN:
 
             # Correct west and east
-            sol_x = dif_x(obst)  # will be +1 east of obst, -1 west of obst
+            sol_x = dif_x(obstacle)  # +1 east of obstacle, -1 west of it
             corr = 1 - (sol_x < 0)
-            c.W[1:,:,:] = c.W[1:,:,:] * corr
+            matrix.W[1:,:,:] = matrix.W[1:,:,:] * corr
             corr = 1 - (sol_x > 0)
-            c.E[:-1,:,:] = c.E[:-1,:,:] * corr
+            matrix.E[:-1,:,:] = matrix.E[:-1,:,:] * corr
 
             # Correct south and north
-            sol_y = dif_y(obst)  # will be +1 north of obst, -1 south of obst
+            sol_y = dif_y(obstacle)  # +1 north of obstacle, -1 south of it
             corr = 1 - (sol_y < 0)
-            c.S[:,1:,:] = c.S[:,1:,:] * corr
+            matrix.S[:,1:,:] = matrix.S[:,1:,:] * corr
             corr = 1 - (sol_y > 0)
-            c.N[:,:-1,:] = c.N[:,:-1,:] * corr
+            matrix.N[:,:-1,:] = matrix.N[:,:-1,:] * corr
 
             # Correct bottom and top
-            sol_z = dif_z(obst)  # will be +1 north of obst, -1 south of obst
+            sol_z = dif_z(obstacle)  # +1 north of obstacle, -1 south of it
             corr = 1 - (sol_z < 0)
-            c.B[:,:,1:] = c.B[:,:,1:] * corr
+            matrix.B[:,:,1:] = matrix.B[:,:,1:] * corr
             corr = 1 - (sol_z > 0)
-            c.T[:,:,:-1] = c.T[:,:,:-1] * corr
+            matrix.T[:,:,:-1] = matrix.T[:,:,:-1] * corr
 
         # -------------------------------------
         # Dirichlet's boundary on the obstacle
         # -------------------------------------
-        elif obc == DIRICHLET:
+        elif obstacle_bc == DIRICHLET:
 
             # Set central coefficient to 1 in obst, unchanged elsewhere
-            c.C[:] = c.C[:] * lnot(obst) + obst
+            matrix.C[:] = matrix.C[:] * lnot(obstacle) + obstacle
 
             # Set neighbour coefficients to zero in obst
-            c.W[:] = c.W[:] * lnot(obst)
-            c.E[:] = c.E[:] * lnot(obst)
-            c.S[:] = c.S[:] * lnot(obst)
-            c.N[:] = c.N[:] * lnot(obst)
-            c.B[:] = c.B[:] * lnot(obst)
-            c.T[:] = c.T[:] * lnot(obst)
+            matrix.W[:] = matrix.W[:] * lnot(obstacle)
+            matrix.E[:] = matrix.E[:] * lnot(obstacle)
+            matrix.S[:] = matrix.S[:] * lnot(obstacle)
+            matrix.N[:] = matrix.N[:] * lnot(obstacle)
+            matrix.B[:] = matrix.B[:] * lnot(obstacle)
+            matrix.T[:] = matrix.T[:] * lnot(obstacle)
 
             # Increase coefficients close to obst (makes sense for momentum)
-            sol_x = dif_x(obst)  # will be +1 east of obst, -1 west of obst
+            sol_x = dif_x(obstacle)  # +1 east of obstacle, -1 west of it
             corr = 1 + (sol_x > 0)
-            c.E[:-1,:,:] = c.E[:-1,:,:] * corr
+            matrix.E[:-1,:,:] = matrix.E[:-1,:,:] * corr
             corr = 1 + (sol_x < 0)
-            c.W[1:,:,:] = c.W[1:,:,:] * corr
+            matrix.W[1:,:,:] = matrix.W[1:,:,:] * corr
 
-            sol_y = dif_y(obst)  # will be +1 north of obst, -1 south of obst
+            sol_y = dif_y(obstacle)  # +1 north of obstacle, -1 south of it
             corr = 1 + (sol_y > 0)
-            c.N[:,:-1,:] = c.N[:,:-1,:] * corr
+            matrix.N[:,:-1,:] = matrix.N[:,:-1,:] * corr
             corr = 1 + (sol_y < 0)
-            c.S[:,1:,:] = c.S[:,1:,:] * corr
+            matrix.S[:,1:,:] = matrix.S[:,1:,:] * corr
 
-            sol_z = dif_z(obst)  # will be +1 top of obst, -1 bottom of obst
+            sol_z = dif_z(obstacle)  # +1 top of obstacle, -1 bottom of it
             corr = 1 + (sol_z > 0)
-            c.T[:,:,:-1] = c.T[:,:,:-1] * corr
+            matrix.T[:,:,:-1] = matrix.T[:,:,:-1] * corr
             corr = 1 + (sol_z < 0)
-            c.B[:,:,1:] = c.B[:,:,1:] * corr
+            matrix.B[:,:,1:] = matrix.B[:,:,1:] * corr
 
     # ------------------------
     #
@@ -102,82 +102,82 @@ def obst_mod_matrix(phi, c, obst, obc):
     elif pos == X:
 
         # Set central coefficient to 1 in obst, unchanged elsewhere
-        obst_x = mx(obst[:-1,:,:], obst[1:,:,:])
-        c.C[:] = c.C[:] * lnot(obst_x) + obst_x
+        obst_x = mx(obstacle[:-1,:,:], obstacle[1:,:,:])
+        matrix.C[:] = matrix.C[:] * lnot(obst_x) + obst_x
 
         # Set neighbour coefficients to zero in obst
-        c.W[:] = c.W[:] * lnot(obst_x)
-        c.E[:] = c.E[:] * lnot(obst_x)
-        c.S[:] = c.S[:] * lnot(obst_x)
-        c.N[:] = c.N[:] * lnot(obst_x)
-        c.B[:] = c.B[:] * lnot(obst_x)
-        c.T[:] = c.T[:] * lnot(obst_x)
+        matrix.W[:] = matrix.W[:] * lnot(obst_x)
+        matrix.E[:] = matrix.E[:] * lnot(obst_x)
+        matrix.S[:] = matrix.S[:] * lnot(obst_x)
+        matrix.N[:] = matrix.N[:] * lnot(obst_x)
+        matrix.B[:] = matrix.B[:] * lnot(obst_x)
+        matrix.T[:] = matrix.T[:] * lnot(obst_x)
 
         # Increase coefficients close to obst (makes sense for momentum)
         sol_y = dif_y(obst_x)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_y > 0)
-        c.N[:,:-1,:] = c.N[:,:-1,:] * corr
+        matrix.N[:,:-1,:] = matrix.N[:,:-1,:] * corr
         corr = 1 + (sol_y < 0)
-        c.S[:,1:,:] = c.S[:,1:,:] * corr
+        matrix.S[:,1:,:] = matrix.S[:,1:,:] * corr
 
         sol_z = dif_z(obst_x)  # will be +1 top of obst, -1 bottom of obst
         corr = 1 + (sol_z > 0)
-        c.T[:,:,:-1] = c.T[:,:,:-1] * corr
+        matrix.T[:,:,:-1] = matrix.T[:,:,:-1] * corr
         corr = 1 + (sol_z < 0)
-        c.B[:,:,1:] = c.B[:,:,1:] * corr
+        matrix.B[:,:,1:] = matrix.B[:,:,1:] * corr
 
     elif pos == Y:
 
         # Set central coefficient to 1 in obst, unchanged elsewhere
-        obst_y = mx(obst[:,:-1,:], obst[:,1:,:])
-        c.C[:] = c.C[:] * lnot(obst_y) + obst_y
+        obst_y = mx(obstacle[:,:-1,:], obstacle[:,1:,:])
+        matrix.C[:] = matrix.C[:] * lnot(obst_y) + obst_y
 
         # Set neighbour coefficients to zero in obst
-        c.W[:] = c.W[:] * lnot(obst_y)
-        c.E[:] = c.E[:] * lnot(obst_y)
-        c.S[:] = c.S[:] * lnot(obst_y)
-        c.N[:] = c.N[:] * lnot(obst_y)
-        c.B[:] = c.B[:] * lnot(obst_y)
-        c.T[:] = c.T[:] * lnot(obst_y)
+        matrix.W[:] = matrix.W[:] * lnot(obst_y)
+        matrix.E[:] = matrix.E[:] * lnot(obst_y)
+        matrix.S[:] = matrix.S[:] * lnot(obst_y)
+        matrix.N[:] = matrix.N[:] * lnot(obst_y)
+        matrix.B[:] = matrix.B[:] * lnot(obst_y)
+        matrix.T[:] = matrix.T[:] * lnot(obst_y)
 
         # Increase coefficients close to obst (makes sense for momentum)
         sol_x = dif_x(obst_y)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_x > 0)
-        c.E[:-1,:,:] = c.E[:-1,:,:] * corr
+        matrix.E[:-1,:,:] = matrix.E[:-1,:,:] * corr
         corr = 1 + (sol_x < 0)
-        c.W[1:,:,:] = c.W[1:,:,:] * corr
+        matrix.W[1:,:,:] = matrix.W[1:,:,:] * corr
 
         sol_z = dif_z(obst_y)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_z > 0)
-        c.T[:,:,:-1] = c.T[:,:,:-1] * corr
+        matrix.T[:,:,:-1] = matrix.T[:,:,:-1] * corr
         corr = 1 + (sol_z < 0)
-        c.B[:,:,1:] = c.B[:,:,1:] * corr
+        matrix.B[:,:,1:] = matrix.B[:,:,1:] * corr
 
     elif pos == Z:
 
         # Set central coefficient to 1 in obst, unchanged elsewhere
-        obst_z = mx(obst[:,:,:-1], obst[:,:,1:])
-        c.C[:] = c.C[:] * lnot(obst_z) + obst_z
+        obst_z = mx(obstacle[:,:,:-1], obstacle[:,:,1:])
+        matrix.C[:] = matrix.C[:] * lnot(obst_z) + obst_z
 
         # Set neighbour coefficients to zero in obst
-        c.W[:] = c.W[:] * lnot(obst_z)
-        c.E[:] = c.E[:] * lnot(obst_z)
-        c.S[:] = c.S[:] * lnot(obst_z)
-        c.N[:] = c.N[:] * lnot(obst_z)
-        c.B[:] = c.B[:] * lnot(obst_z)
-        c.T[:] = c.T[:] * lnot(obst_z)
+        matrix.W[:] = matrix.W[:] * lnot(obst_z)
+        matrix.E[:] = matrix.E[:] * lnot(obst_z)
+        matrix.S[:] = matrix.S[:] * lnot(obst_z)
+        matrix.N[:] = matrix.N[:] * lnot(obst_z)
+        matrix.B[:] = matrix.B[:] * lnot(obst_z)
+        matrix.T[:] = matrix.T[:] * lnot(obst_z)
 
         # Increase coefficients close to obst (makes sense for momentum)
         sol_x = dif_x(obst_z)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_x > 0)
-        c.E[:-1,:,:] = c.E[:-1,:,:] * corr
+        matrix.E[:-1,:,:] = matrix.E[:-1,:,:] * corr
         corr = 1 + (sol_x < 0)
-        c.W[1:,:,:] = c.W[1:,:,:] * corr
+        matrix.W[1:,:,:] = matrix.W[1:,:,:] * corr
 
         sol_y = dif_y(obst_z)  # will be +1 north of obst, -1 south of obst
         corr = 1 + (sol_y > 0)
-        c.N[:,:-1,:] = c.N[:,:-1,:] * corr
+        matrix.N[:,:-1,:] = matrix.N[:,:-1,:] * corr
         corr = 1 + (sol_y < 0)
-        c.S[:,1:,:] = c.S[:,1:,:] * corr
+        matrix.S[:,1:,:] = matrix.S[:,1:,:] * corr
 
-    return c  # end of function
+    return matrix  # end of function

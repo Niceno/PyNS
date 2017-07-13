@@ -67,13 +67,13 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
     ndt = time_steps # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uc = Unknown('cell-u-vel',  C, rc, DIRICHLET)
-    vc = Unknown('cell-v-vel',  C, rc, DIRICHLET)
-    wc = Unknown('cell-w-vel',  C, rc, DIRICHLET)
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    p  = Unknown('pressure',    C, rc, NEUMANN)
+    uc = Unknown("cell-u-vel",  C, rc, DIRICHLET)
+    vc = Unknown("cell-v-vel",  C, rc, DIRICHLET)
+    wc = Unknown("cell-w-vel",  C, rc, DIRICHLET)
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    p  = Unknown("pressure",    C, rc, NEUMANN)
 
     # Specify boundary conditions
     uc.bnd[W].typ[:1,:,:] = DIRICHLET
@@ -87,11 +87,11 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
         vf.bnd[j].typ[:] = NEUMANN
         wf.bnd[j].typ[:] = NEUMANN
 
-    obstacle = zeros(rc)
+    fin = zeros(rc)
     for j in range(0, 24):
         for i in range(64+j, 64+24):
             for k in range(0,nz):
-                obstacle[i,j,k] = 1
+                fin[i,j,k] = 1
 
 # =============================================================================
 #
@@ -118,18 +118,23 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle)
+        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), 
+                 obstacle = fin)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), 
+               obstacle = fin)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), obstacle)
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle)
+        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), 
+                 obstacle = fin)
+        
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), 
+                 obstacle = fin)
 
         # Check the CFL number too
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
@@ -145,5 +150,5 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
                 plot.tecplot("obstacle-collocated-%6.6d" % ts, 
                              (xn, yn, zn), (uc, vc, wc, p))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

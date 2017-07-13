@@ -43,10 +43,10 @@ def main(show_plot=True, time_steps=6000, plot_freq=20):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET, per=(True, True, False))
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET, per=(True, True, False))
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET, per=(True, True, False))
-    p  = Unknown('pressure',    C, rc, NEUMANN,   per=(True, True, False))
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET, per=(True, True, False))
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET, per=(True, True, False))
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET, per=(True, True, False))
+    p  = Unknown("pressure",    C, rc, NEUMANN,   per=(True, True, False))
 
     cube = zeros(rc)
     for j in range(22, 38):
@@ -113,5 +113,5 @@ def main(show_plot=True, time_steps=6000, plot_freq=20):
                          unknowns = (uf, vf, wf, p),
                          arrays   = (un, vn, wn) )
                 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

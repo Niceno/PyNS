@@ -50,10 +50,10 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    t  = Unknown('temperature', C, rc, NEUMANN, per=(False, True, True))
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    t  = Unknown("temperature", C, rc, NEUMANN, per=(False, True, True))
 
     # This is a new test
     t.bnd[W].typ[:] = DIRICHLET
@@ -92,7 +92,7 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
         # -----------------------
         # Temperature (enthalpy)
         # -----------------------
-        calc_phi(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), None,
+        calc_phi(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz),
                  source = t_src)
 
 # =============================================================================
@@ -106,5 +106,5 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
                 plot.gmv("tdc-staggered-%6.6d.gmv" % ts,
                          (xn, yn, zn), (uf, vf, wf, t))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

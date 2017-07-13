@@ -8,12 +8,13 @@ from pyns.operators import *
 from pyns.display   import write
 
 # =============================================================================
-def cfl_max(uvw, dt, dxyz):
+def cfl_max(uvw, dt, dxyz,
+            verbatim = True):
 # -----------------------------------------------------------------------------
     """
     Args:
-      uvw:  Tuple with three staggered or centered velocity components
-            (each component is created with "create_unknown" function.
+      uvw:  Tuple with three staggered or centered velocity components.
+            (Each component is an object of type "Unknown".
       dt:   Time step
       dxyz: Tuple holding cell dimensions in "x", "y" and "z" directions.
             Each cell dimension is a three-dimensional array.
@@ -45,7 +46,8 @@ def cfl_max(uvw, dt, dxyz):
                         abs(v.val/avg_y(dy)).max(),   \
                         abs(w.val/avg_z(dz)).max() )
 
-    write.at(__name__)
-    print("  Maximum CFL number: %12.5e" % cfl)
+    if verbatim:
+        write.at(__name__)
+        print("  Maximum CFL number: %12.5e" % cfl)
 
     return cfl

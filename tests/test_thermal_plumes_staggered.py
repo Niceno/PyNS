@@ -57,11 +57,11 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    t  = Unknown('temperature', C, rc, NEUMANN)
-    p  = Unknown('pressure',    C, rc, NEUMANN)
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    t  = Unknown("temperature", C, rc, NEUMANN)
+    p  = Unknown("pressure",    C, rc, NEUMANN)
 
     # Specify boundary conditions
     uf.bnd[W].typ[:1,:,:] = DIRICHLET
@@ -152,5 +152,5 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
                 plot.tecplot("tp-staggered-%6.6d" % ts, 
                              (xn, yn, zn), (uf, vf, wf, t, p))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

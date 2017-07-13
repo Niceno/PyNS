@@ -21,7 +21,9 @@ from pyns.solvers.multigrid.gamg_coarsen_system import gamg_coarsen_system
 
 # =============================================================================
 def gamg_v_cycle(a, phi, b, tol, 
-                 verbatim = False):
+                 verbatim = False,
+                 max_cycles = 8,
+                 max_smooth = 4):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -48,7 +50,6 @@ def gamg_v_cycle(a, phi, b, tol,
 
     # Set a couple of parameters for the solver
     n_steps  = n_-1  # number of steps down the "V" cycle      
-    n_smooth = 4     # number of smoothing sweeps   
 
     # -----------------------------------------------------
     #
@@ -69,7 +70,7 @@ def gamg_v_cycle(a, phi, b, tol,
     # Start the V-cycle
     #
     # =========================================================================
-    for cycle in range(0, 9):    
+    for cycle in range(0, max_cycles):    
 
         # --------------------
         #
@@ -121,7 +122,7 @@ def gamg_v_cycle(a, phi, b, tol,
             phi_[grid].val[:] = 0  # nulify to forget previous corrections
             phi_[grid].val = jacobi(a_[grid], phi_[grid], b_[grid], TOL, 
                                     verbatim = False, 
-                                    max_iter = level * n_smooth)
+                                    max_iter = max_smooth)
             # r = b - A * x
             r_[grid].val[:] = b_[grid][:] - mat_vec_bnd(a_[grid], phi_[grid])
             if verbatim:
@@ -184,7 +185,7 @@ def gamg_v_cycle(a, phi, b, tol,
             r_[grid].val[el::rx, nl::ry, tl::rz] = r_[grid].val[wl::rx, sl::ry, bl::rz]
 
             # Then smooth them out a little bit
-            for smooth in range(0, n_smooth):
+            for smooth in range(0, max_smooth):
                 r_[grid].exchange()
                 summ = zeros((shape_[grid]))
                 summ[:] += cat_x((r_[grid].bnd[W].val, 
@@ -208,7 +209,7 @@ def gamg_v_cycle(a, phi, b, tol,
             phi_[grid].val[:] += r_[grid].val[:]
             phi_[grid].val = jacobi(a_[grid], phi_[grid], b_[grid], TOL, 
                                     verbatim = False, 
-                                    max_iter = n_smooth)
+                                    max_iter = max_smooth)
             # r = b - A * x
             r_[grid].val[:] = b_[grid][:]  \
                                 - mat_vec_bnd(a_[grid], phi_[grid])

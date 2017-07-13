@@ -69,13 +69,13 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     ndt = time_steps # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uc = Unknown('cell-u-vel', C, rc, DIRICHLET)
-    vc = Unknown('cell-v-vel', C, rc, DIRICHLET)
-    wc = Unknown('cell-w-vel', C, rc, DIRICHLET)
-    uf = Unknown('face-u-vel', X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel', Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel', Z, rw, DIRICHLET)
-    p  = Unknown('pressure', C, rc, NEUMANN)
+    uc = Unknown("cell-u-vel", C, rc, DIRICHLET)
+    vc = Unknown("cell-v-vel", C, rc, DIRICHLET)
+    wc = Unknown("cell-w-vel", C, rc, DIRICHLET)
+    uf = Unknown("face-u-vel", X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel", Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel", Z, rw, DIRICHLET)
+    p  = Unknown("pressure", C, rc, NEUMANN)
 
     # Specify boundary conditions
     uc.bnd[W].typ[:1, :, :] = DIRICHLET
@@ -159,18 +159,23 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # -----------------------
         # Momentum conservation
         # -----------------------
-        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), plates)
+        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), 
+                 obstacle = plates)
 
         # ----------
         # Pressure
         # ----------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), plates)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), 
+               obstacle = plates)
 
         # ---------------------
         # Velocity correction
         # ---------------------
-        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), plates)
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), plates)
+        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), 
+                 obstacle = plates)
+        
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), 
+                 obstacle = plates)
 
         # Check the CFL number too
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
@@ -187,5 +192,5 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
                 plot.gmv("obst-thinner-collocated-%6.6d" % ts, 
                          (xn,yn,zn), (uc,vc,wc,p))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

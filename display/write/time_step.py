@@ -10,13 +10,13 @@ def time_step(ts):
       ts: Time step.
 
     Returns:
-      none!
+      None!
     """
 
-    print('+====================+')
-    print('|                    |')
-    print('| Time step = ' +'%6d' %ts + ' |')
-    print('|                    |')
-    print('+====================+')
+    print("+====================+")
+    print("|                    |")
+    print("| Time step = " +"%6d" %ts + " |")
+    print("|                    |")
+    print("+====================+")
 
     return  # end of function

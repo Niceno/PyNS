@@ -6,8 +6,8 @@ direction, either in positive or negative sense.
 The coordinate direction is specified with the local variable "TEST",
 which can be either X, Y or Z.
 
-Sense is specified with the variable "FLOW", which can assume values 'p'
-for positive, and 'n' for negative sense.
+Sense is specified with the variable "FLOW", which can assume values "p"
+for positive, and "n" for negative sense.
 """
 
 #!/usr/bin/python
@@ -78,10 +78,10 @@ def main(show_plot=True, time_steps=180, plot_freq=180):
     ndt = time_steps  # number of time steps
     
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    t  = Unknown('temperature', Y, rv, NEUMANN, per)
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    t  = Unknown("temperature", Y, rv, NEUMANN, per)
     
     # Make a tuple with all velocity components
     uvwf = uf, vf, wf
@@ -137,15 +137,15 @@ def main(show_plot=True, time_steps=180, plot_freq=180):
 # =============================================================================
         if show_plot:            
             if ts % plot_freq == 0:
-                st = 'ro'
+                st = "ro"
                 xc = avg(xn)
                 vc = t.val[:,ny//2,nz//2]
                 if TEST == Y:
-                    st = 'go'
+                    st = "go"
                     xc = avg(yn)
                     vc = t.val[nx//2,:,nz//2]
                 elif TEST == Z:
-                    st = 'bo'
+                    st = "bo"
                     xc = avg(zn)
                     vc = t.val[nx//2,ny//2,:]
                 
@@ -155,5 +155,5 @@ def main(show_plot=True, time_steps=180, plot_freq=180):
                 plt.plot(xc, vc, st)
                 plt.show()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

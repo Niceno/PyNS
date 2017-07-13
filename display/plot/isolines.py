@@ -24,7 +24,7 @@ def isolines(phi, uvw, xyzn, dir,
       dir:  Direction for cutting, can be X, Y or Z.
 
     Returns:
-      none!
+      None!
     """
 
     # Unpack tuples
@@ -65,7 +65,7 @@ def isolines(phi, uvw, xyzn, dir,
     norm   = cm.colors.Normalize( vmax=zp.max(), vmin=zp.min() )
 
     plt.figure()
-    plt.gca(aspect='equal')
+    plt.gca(aspect="equal")
     CS = plt.contour(xp,yp,zp, levels, cmap=plt.cm.rainbow, norm=norm)
     plt.clabel(CS, inline=1, fontsize=7)
     plt.quiver(xp,yp,up,vp)

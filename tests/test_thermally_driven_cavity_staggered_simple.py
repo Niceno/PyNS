@@ -70,12 +70,12 @@ def main(show_plot=True, time_steps=12, plot_freq=1):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf    = Unknown('face-u-vel',     X, ru, DIRICHLET)
-    vf    = Unknown('face-v-vel',     Y, rv, DIRICHLET)
-    wf    = Unknown('face-w-vel',     Z, rw, DIRICHLET)
-    t     = Unknown('temperature',    C, rc, NEUMANN)
-    p     = Unknown('pressure',       C, rc, NEUMANN)
-    p_tot = Unknown('total-pressure', C, rc, NEUMANN)
+    uf    = Unknown("face-u-vel",     X, ru, DIRICHLET)
+    vf    = Unknown("face-v-vel",     Y, rv, DIRICHLET)
+    wf    = Unknown("face-w-vel",     Z, rw, DIRICHLET)
+    t     = Unknown("temperature",    C, rc, NEUMANN)
+    p     = Unknown("pressure",       C, rc, NEUMANN)
+    p_tot = Unknown("total-pressure", C, rc, NEUMANN)
 
     # This is a new test
     t.bnd[W].typ[:] = DIRICHLET
@@ -88,8 +88,6 @@ def main(show_plot=True, time_steps=12, plot_freq=1):
         uf.bnd[j].typ[:] = NEUMANN
         vf.bnd[j].typ[:] = NEUMANN
         wf.bnd[j].typ[:] = NEUMANN
-
-    obstacle = None
 
 # =============================================================================
 #
@@ -135,27 +133,27 @@ def main(show_plot=True, time_steps=12, plot_freq=1):
             w_prev[:] = wf.val[:]
           
             # Temperature (enthalpy)
-            calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz), obstacle,
-                   advection_scheme = 'upwind',
+            calc_t(t, (uf,vf,wf), (rho*cap), kappa, dt, (dx,dy,dz),
+                   advection_scheme = "upwind",
                    under_relaxation = 0.75)
     
             # Momentum conservation
             ext_f = zeros(ru), avg(Y, t.val), zeros(rw)
     
-            calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obstacle,
+            calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz),
                      pressure = p_tot,
                      force    = ext_f,
-                     advection_scheme = 'upwind',
+                     advection_scheme = "upwind",
                      under_relaxation = 0.75)
     
             # Pressure
-            calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obstacle,
+            calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz),
                    verbatim = False)
     
             p_tot.val += 0.25 * p.val
 
             # Velocity correction
-            corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obstacle,
+            corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz),
                      verbatim = False)
 
             # Print differences in results between two iterations
@@ -163,10 +161,10 @@ def main(show_plot=True, time_steps=12, plot_freq=1):
             u_diff = abs(uf.val[:] - u_prev)
             v_diff = abs(vf.val[:] - v_prev)
             w_diff = abs(wf.val[:] - w_prev)
-            print("t_diff = ", norm(t_diff)/norm(rc))
-            print("u_diff = ", norm(u_diff)/norm(ru))
-            print("v_diff = ", norm(v_diff)/norm(rv))
-            print("w_diff = ", norm(w_diff)/norm(rw))
+            print("t_diff = ", norm(t_diff))
+            print("u_diff = ", norm(u_diff))
+            print("v_diff = ", norm(v_diff))
+            print("w_diff = ", norm(w_diff))
 
         # --------------------------------------------------
         # Check the CFL number at the end of iteration loop
@@ -184,5 +182,5 @@ def main(show_plot=True, time_steps=12, plot_freq=1):
                 plot.gmv("tdc-staggered-%6.6d" % ts, 
                          (xn, yn, zn), (uf, vf, wf, t))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

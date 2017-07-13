@@ -12,21 +12,24 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def advection(rho, phi, uvwf, dxyz, dt, lim_name, 
+def advection(rho, phi, uvwf, dxyz, dt, limiter, 
               matrix = None):
 # -----------------------------------------------------------------------------
     """
     Args:
-      rho:      Three-dimensional array holding physical property in advection
-                term (density or density times capacity ...) for cells.
-      phi:      Unknown transported by advection (from "create_unknown").
-      uvwf:     Tuple with three staggered velocity components (where each
-                component is created with "create_unknown" function.
-      dxyz:     Tuple holding cell dimensions in "x", "y" and "z" directions.
-                Each cell dimension is a three-dimensional array.
-      dt:       Time step.
-      lim_name: Limiter name.
-                Can be: "upwind", "minmod", "koren" and "superbee"
+      rho: ... Three-dimensional array holding physical property in advection
+               term (density or density times capacity ...) for cells.
+      phi: ... Unknown transported by advection (object "Unknown").
+      uvwf: .. Tuple with three staggered velocity components (where each
+               component is created with "create_unknown" function.
+      dxyz: .. Tuple holding cell dimensions in "x", "y" and "z" directions.
+               Each cell dimension is a three-dimensional array.
+      dt: .... Time step.
+      limiter: Limiter to be used.
+               (It can be: "upwind", "minmod", "koren" and "superbee")
+      matrix:  System matrix.  If sent, the function will insert upwind 
+               contributins to neighbouring coefficients, and also subtract
+               upwind advection source from the one specified by the limiter.
 
     Returns:
       Three-dimensional array with advection term.
@@ -333,19 +336,19 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name,
     r_z = r_z_bt * flow_bt + r_z_tb * flow_tb
 
     # Apply a limiter
-    if lim_name == 'upwind':
+    if limiter == "upwind":
         psi_x = r_x * 0.0
         psi_y = r_y * 0.0
         psi_z = r_z * 0.0
-    elif lim_name == 'minmod':
+    elif limiter == "minmod":
         psi_x = mx(zeros(r_x.shape),mn(r_x,ones(r_x.shape)))
         psi_y = mx(zeros(r_y.shape),mn(r_y,ones(r_y.shape)))
         psi_z = mx(zeros(r_z.shape),mn(r_z,ones(r_z.shape)))
-    elif lim_name == 'superbee':
+    elif limiter == "superbee":
         psi_x = mx(zeros(r_x.shape),mn(2.*r_x, ones(r_x.shape)),mn(r_x, 2.))
         psi_y = mx(zeros(r_y.shape),mn(2.*r_y, ones(r_y.shape)),mn(r_y, 2.))
         psi_z = mx(zeros(r_z.shape),mn(2.*r_z, ones(r_z.shape)),mn(r_z, 2.))
-    elif lim_name == 'koren':
+    elif limiter == "koren":
         psi_x = mx(zeros(r_x.shape),mn(2.*r_x,(2.+r_x)/3.,2.*ones(r_x.shape)))
         psi_y = mx(zeros(r_y.shape),mn(2.*r_y,(2.+r_y)/3.,2.*ones(r_y.shape)))
         psi_z = mx(zeros(r_z.shape),mn(2.*r_z,(2.+r_z)/3.,2.*ones(r_z.shape)))

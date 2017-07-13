@@ -10,11 +10,11 @@ def iteration(it):
       it: Iteration.
 
     Returns:
-      none!
+      None!
     """
 
-    print('+-----------------+')
-    print('| Iteration = ' +'%3d' % it + ' |')
-    print('+-----------------+')
+    print("+-----------------+")
+    print("| Iteration = " +"%3d" % it + " |")
+    print("+-----------------+")
 
     return  # end of function

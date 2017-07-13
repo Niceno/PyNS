@@ -67,10 +67,10 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     ndt = time_steps # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    p  = Unknown('pressure',    C, rc, NEUMANN)
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    p  = Unknown("pressure",    C, rc, NEUMANN)
 
     # Specify boundary conditions
     uf.bnd[W].typ[:1,:,:] = DIRICHLET
@@ -151,17 +151,20 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # ----------------------
         # Momentum conservation
         # ----------------------
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), plates)
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), 
+                 obstacle = plates)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), plates)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), 
+               obstacle = plates)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), plates)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), 
+                 obstacle = plates)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))
@@ -178,5 +181,5 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
                 plot.gmv("obst-thinner-staggered-%6.6d" % ts, 
                          (xn,yn,zn), (uf,vf,wf,p))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

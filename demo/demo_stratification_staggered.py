@@ -27,7 +27,7 @@ from pyns.physical.constants import G
 #
 # =============================================================================
 
-STRATIFICATION = 's'  # 's' or 'u'
+STRATIFICATION = "s"  # "s" or "u"
 
 # Node coordinates
 xn = nodes(0, 10,   80)
@@ -57,12 +57,12 @@ dt  =   0.2  # time step
 ndt = 500    # number of time steps
 
 # Create unknowns; names, positions and sizes
-uf    = Unknown('face-u-vel',     X, ru, DIRICHLET)
-vf    = Unknown('face-v-vel',     Y, rv, DIRICHLET)
-wf    = Unknown('face-w-vel',     Z, rw, DIRICHLET)
-p     = Unknown('pressure',       C, rc, NEUMANN)
-t     = Unknown('temperature',    C, rc, NEUMANN)
-p_tot = Unknown('total-pressure', C, rc, NEUMANN)
+uf    = Unknown("face-u-vel",     X, ru, DIRICHLET)
+vf    = Unknown("face-v-vel",     Y, rv, DIRICHLET)
+wf    = Unknown("face-w-vel",     Z, rw, DIRICHLET)
+p     = Unknown("pressure",       C, rc, NEUMANN)
+t     = Unknown("temperature",    C, rc, NEUMANN)
+p_tot = Unknown("total-pressure", C, rc, NEUMANN)
 
 # Specify boundary conditions
 uf.bnd[W].typ[:1,:,:] = DIRICHLET
@@ -83,14 +83,14 @@ t.bnd[S].typ[:,:1,:] = DIRICHLET
 t.bnd[N].typ[:,:1,:] = DIRICHLET
 t.bnd[E].val[:1,:,:] = 70
 
-if STRATIFICATION == 'u':
+if STRATIFICATION == "u":
     dtemp = (60-80)/ny
     for k in range(0,nz):
         t.bnd[W].val[:1,:,k] = linspace(60-dtemp/2,80+dtemp/2,ny)
     t.bnd[S].val[:,:1,:] = 60
     t.bnd[N].val[:,:1,:] = 80
 
-elif STRATIFICATION == 's':
+elif STRATIFICATION == "s":
     dtemp = (80-60)/ny
     for k in range(0,nz):
         t.bnd[W].val[:1,:,k] = linspace(80-dtemp/2,60+dtemp/2,ny)

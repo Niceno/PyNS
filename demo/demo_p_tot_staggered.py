@@ -55,11 +55,11 @@ dt  =   0.1  # time step
 ndt = 200    # number of time steps
 
 # Create unknowns; names, positions and sizes
-uf    = Unknown('face-u-vel',     X, ru, DIRICHLET)
-vf    = Unknown('face-v-vel',     Y, rv, DIRICHLET)
-wf    = Unknown('face-w-vel',     Z, rw, DIRICHLET)
-p     = Unknown('pressure',       C, rc, NEUMANN)
-p_tot = Unknown('total-pressure', C, rc, NEUMANN)
+uf    = Unknown("face-u-vel",     X, ru, DIRICHLET)
+vf    = Unknown("face-v-vel",     Y, rv, DIRICHLET)
+wf    = Unknown("face-w-vel",     Z, rw, DIRICHLET)
+p     = Unknown("pressure",       C, rc, NEUMANN)
+p_tot = Unknown("total-pressure", C, rc, NEUMANN)
 
 # Specify boundary conditions
 uf.bnd[W].typ[:1,:,:] = DIRICHLET

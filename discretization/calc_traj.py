@@ -27,7 +27,6 @@ def calc_traj(pt, uvwn, rho, mu, xyzn, xyzc, dt, obst, n):
       obst: The obstacle.
       n: Number of particles
     
-
     Returns:
       Updated location and velocities of the particles
     """

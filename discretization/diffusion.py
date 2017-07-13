@@ -188,7 +188,7 @@ def diffusion(phi, inn, mu, dxyz, obst, obc):
     # Correct system matrices for obstacles
     # --------------------------------------
     if obst is not None:
-        c = obst_mod_matrix(phi, c, obst, obc)
+        matrix = obst_mod_matrix(phi, matrix, obst, obc)
 
     # ----------------------------------------------
     # Add all neighbours to the central matrix,

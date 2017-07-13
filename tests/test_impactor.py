@@ -52,10 +52,10 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
     ndt = time_steps  # number of time steps
 
     # Create unknowns names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    p  = Unknown('pressure',    C, rc, NEUMANN)
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    p  = Unknown("pressure",    C, rc, NEUMANN)
     
     # Imposing the geometry by creating an obstacle
     #
@@ -89,12 +89,10 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
             for j in range(ny//4,ny):
                 obst[i,j,k] = 1
     
-
-
     for k in range(0,nz):
         vf.bnd[N].val[nx//3:2*nx//3, 0, k] = -par(0.01, xn[nx//3:2*nx//3+1])
         uf.bnd[E].typ[0, :ny//4, k] = OUTLET
-        uf.bnd[W].typ[0, :ny//4, k] =  OUTLET
+        uf.bnd[W].typ[0, :ny//4, k] = OUTLET
         
     for j in (B,T):
         uf.bnd[j].typ[:] = NEUMANN
@@ -109,13 +107,13 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
 #
 #    # Setting up the Plot.
 #    fig = plt.figure()
-#    ax = plt.axes(projection='3d')
+#    ax = plt.axes(projection="3d")
 #    ax.set_xlim(min(xn), max(xn)) 
 #    ax.set_ylim(min(yn), max(yn))
 #    ax.set_zlim(min(zn), max(zn))
-#    ax.set_xlabel('X')
-#    ax.set_ylabel('Y')
-#    ax.set_zlabel('Z')
+#    ax.set_xlabel("X")
+#    ax.set_ylabel("Y")
+#    ax.set_zlabel("Z")
     
     
 # =============================================================================
@@ -144,24 +142,28 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
         # ----------------------
         ef = zeros(ru), zeros(rv), zeros(rw)
 
-        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obst)
+        calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), 
+                 obstacle = obst)
 
         # ---------
         # Pressure
         # ---------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), obst)
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), 
+               obstacle = obst)
 
         # --------------------
         # Velocity correction
         # --------------------
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), obst)
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), 
+                 obstacle = obst)
 
         # Check the CFL number too
         cfl = cfl_max((uf,vf,wf), dt, (dx,dy,dz))
         
         # Calculate the nodal velocities
         
-        (un, vn, wn) = nodal_uvw((xn,yn,zn), (uf,vf,wf), obst)
+        (un, vn, wn) = nodal_uvw((xn,yn,zn), (uf,vf,wf), 
+                                  obstacle = obst)
 
         # ----------------------------
         # Lagrangian Particle Tracking
@@ -193,6 +195,6 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
 
 
     #plt.show()
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()      
   

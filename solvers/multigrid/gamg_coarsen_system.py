@@ -31,31 +31,31 @@ def gamg_coarsen_system(a, phi, b,
     # Copy Matrix shape into array for easier (shorter) syntax    
     # ---------------------------------------------------------
     shape = array(a.C.shape)    
-        
-    # -------------------------------------------------------
+         
+    # -------------------
+    # Store zeroth level
+    # -------------------
+    shape_ = (shape,)                # resolution
+    a_     = (a,)                    # system matrix
+    phi_   = (phi,)                  # unknown
+    r_     = (Unknown("res_%d" % 0,  # residual at level "0"
+                     phi.pos, 
+                     shape_[0], -1, 
+                     per = phi.per, 
+                     verbatim = False),)
+    b_     = (b,)                    # source
+    d_     = (zeros(shape),)         # to store diffusion term 
+    i_     = (zeros(shape),)         # to store innertial term 
+    
+    # -------------------------------------             
     # Check if any coarsening is possible
     #
-    # Essentially, you do it by ensuring that all dimensions 
-    # are greater than four, and all divideable by two, 
-    #
-    # If that is the case, also store the zeroth level.
-    # -------------------------------------------------------
-    if coarsable(shape):
-        shape_ = (shape,)                # resolution
-        a_     = (a,)                    # system matrix
-        phi_   = (phi,)                  # unknown
-        r_     = (Unknown("res_%d" % 0,  # residual at level "0"
-                         phi.pos, 
-                         shape_[0], -1, 
-                         per = phi.per, 
-                         verbatim = False),)
-        b_     = (b,)                    # source
-        d_     = (zeros(shape),)         # to store diffusion term 
-        i_     = (zeros(shape),)         # to store innertial term 
-    else:
+    # If not, just return the zeroth level
+    # -------------------------------------             
+    if not coarsable(shape):
         if verbatim:
             print("  Coarsening not possible!")
-        return 1, None, None, None, None, None, None, None
+        return 1, shape_, a_, i_, d_, phi_, b_, r_
 
     print(shape_[0])
         

@@ -43,10 +43,10 @@ def main(show_plot=True, time_steps=2000, plot_freq=20):
     ndt = time_steps  # number of time steps
 
     # Create unknowns; names, positions and sizes
-    uf = Unknown('face-u-vel',  X, ru, DIRICHLET)
-    vf = Unknown('face-v-vel',  Y, rv, DIRICHLET)
-    wf = Unknown('face-w-vel',  Z, rw, DIRICHLET)
-    p  = Unknown('pressure',    C, rc, NEUMANN)
+    uf = Unknown("face-u-vel",  X, ru, DIRICHLET)
+    vf = Unknown("face-v-vel",  Y, rv, DIRICHLET)
+    wf = Unknown("face-w-vel",  Z, rw, DIRICHLET)
+    p  = Unknown("pressure",    C, rc, NEUMANN)
 
     # Specify boundary conditions
     uf.bnd[W].typ[:1,:,:] = DIRICHLET
@@ -122,5 +122,5 @@ def main(show_plot=True, time_steps=2000, plot_freq=20):
                              unknowns = (uf, vf, wf, p),
                              arrays   = (un, vn, wn) )
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
