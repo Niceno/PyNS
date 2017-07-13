@@ -41,7 +41,7 @@ def diffusion(phi, inn, mu, dxyz, obst, obc):
     # -----------------------------------
     # Create default matrix coefficients
     # -----------------------------------
-    c = Matrix(res)
+    matrix = Matrix(res)
 
     d = phi.pos
 
@@ -92,49 +92,49 @@ def diffusion(phi, inn, mu, dxyz, obst, obc):
         # West
         c_bc_x[:] = avg(d, mu[ :1,:,:]) * avg(d,  sx[ :1,:,:])         \
                                         / avg(d, (dx[ :1,:,:]) / 2.0)
-        c.W[:] = cat_x((c_bc_x, avg(d, avg_x(mu)) * avg(d, avg_x(sx))
-                                                  / avg(d, avg_x(dx))))
+        matrix.W[:] = cat_x((c_bc_x, avg(d, avg_x(mu)) * avg(d, avg_x(sx))
+                                                       / avg(d, avg_x(dx))))
         # East
         c_bc_x[:] = avg(d, mu[-1:,:,:]) * avg(d,  sx[-1:,:,:])         \
                                         / avg(d, (dx[-1:,:,:]) / 2.0)      
-        c.E[:] = cat_x((avg(d, avg_x(mu)) * avg(d, avg_x(sx))
-                                          / avg(d, avg_x(dx)), c_bc_x))
+        matrix.E[:] = cat_x((avg(d, avg_x(mu)) * avg(d, avg_x(sx))
+                                               / avg(d, avg_x(dx)), c_bc_x))
         # Correct for periodicity
         if phi.per[X] == True:
-            c.W[ :1,:,:] = c.W[-1:,:,:]
-            c.E[-1:,:,:] = c.E[ :1,:,:]
+            matrix.W[ :1,:,:] = matrix.W[-1:,:,:]
+            matrix.E[-1:,:,:] = matrix.E[ :1,:,:]
 
     if d != Y:
         # South
         c_bc_y[:] = avg(d, mu[:, :1,:]) * avg(d,  sy[:, :1,:])         \
                                         / avg(d, (dy[:, :1,:]) / 2.0)
-        c.S[:] = cat_y((c_bc_y, avg(d, avg_y(mu)) * avg(d, avg_y(sy))
+        matrix.S[:] = cat_y((c_bc_y, avg(d, avg_y(mu)) * avg(d, avg_y(sy))
                                                   / avg(d, avg_y(dy))))
         # North
         c_bc_y[:] = avg(d, mu[:,-1:,:]) * avg(d,  sy[:,-1:,:])         \
                                         / avg(d, (dy[:,-1:,:]) / 2.0)      
-        c.N[:] = cat_y((avg(d, avg_y(mu)) * avg(d, avg_y(sy))
+        matrix.N[:] = cat_y((avg(d, avg_y(mu)) * avg(d, avg_y(sy))
                                           / avg(d, avg_y(dy)), c_bc_y))
         # Correct for periodicity
         if phi.per[Y] == True:
-            c.S[:, :1,:] = c.S[:,-1:,:]
-            c.N[:,-1:,:] = c.N[:, :1,:]
+            matrix.S[:, :1,:] = matrix.S[:,-1:,:]
+            matrix.N[:,-1:,:] = matrix.N[:, :1,:]
 
     if d != Z:
         # Bottom
         c_bc_z[:] = avg(d, mu[:,:, :1]) * avg(d,  sz[:,:, :1])         \
                                         / avg(d, (dz[:,:, :1]) / 2.0)            
-        c.B[:] = cat_z((c_bc_z, avg(d, avg_z(mu)) * avg(d, avg_z(sz))
+        matrix.B[:] = cat_z((c_bc_z, avg(d, avg_z(mu)) * avg(d, avg_z(sz))
                                                   / avg(d, avg_z(dz))))
         # Top
         c_bc_z[:] = avg(d, mu[:,:,-1:]) * avg(d,  sz[:,:,-1:])         \
                                         / avg(d, (dz[:,:,-1:]) / 2.0)            
-        c.T[:] = cat_z((avg(d, avg_z(mu)) * avg(d, avg_z(sz))
+        matrix.T[:] = cat_z((avg(d, avg_z(mu)) * avg(d, avg_z(sz))
                                           / avg(d, avg_z(dz)), c_bc_z))
         # Correct for periodicity
         if phi.per[Z] == True:
-            c.B[:,:, :1] = c.B[:,:,-1:]
-            c.T[:,:,-1:] = c.T[:,:, :1]
+            matrix.B[:,:, :1] = matrix.B[:,:,-1:]
+            matrix.T[:,:,-1:] = matrix.T[:,:, :1]
 
     # Correct for staggered variables.  For staggered variables, near wall
     # cells are not at a half-distance from the wall, but at full distance.
@@ -162,14 +162,14 @@ def diffusion(phi, inn, mu, dxyz, obst, obc):
     #         |<------->|<------->|           |<------->|<------->|
     #
     if d == X:
-        c.W[:] = mu[0:-1,:,:] * sx[0:-1,:,:] / dx[0:-1,:,:]
-        c.E[:] = mu[1:,  :,:] * sx[1:,  :,:] / dx[1:,  :,:]
+        matrix.W[:] = mu[0:-1,:,:] * sx[0:-1,:,:] / dx[0:-1,:,:]
+        matrix.E[:] = mu[1:,  :,:] * sx[1:,  :,:] / dx[1:,  :,:]
     elif d == Y:
-        c.S[:] = mu[:,0:-1,:] * sy[:,0:-1,:] / dy[:,0:-1,:]
-        c.N[:] = mu[:,1:,  :] * sy[:,1:,  :] / dy[:,1:,  :]
+        matrix.S[:] = mu[:,0:-1,:] * sy[:,0:-1,:] / dy[:,0:-1,:]
+        matrix.N[:] = mu[:,1:,  :] * sy[:,1:,  :] / dy[:,1:,  :]
     elif d == Z:
-        c.B[:] = mu[:,:,0:-1] * sz[:,:,0:-1] / dz[:,:,0:-1]
-        c.T[:] = mu[:,:,1:  ] * sz[:,:,1:  ] / dz[:,:,1:  ]
+        matrix.B[:] = mu[:,:,0:-1] * sz[:,:,0:-1] / dz[:,:,0:-1]
+        matrix.T[:] = mu[:,:,1:  ] * sz[:,:,1:  ] / dz[:,:,1:  ]
 
     # ----------------------------------------------------------------------
     # Zero them (correct them) for vanishing derivative boundary condition.
@@ -177,12 +177,12 @@ def diffusion(phi, inn, mu, dxyz, obst, obc):
 
     # The values defined here will be false (numerical value 0)
     # wherever there is Neumann boundary condition.
-    c.W[ :1,  :,  :] *= ( phi.bnd[W].typ[:] != NEUMANN )
-    c.E[-1:,  :,  :] *= ( phi.bnd[E].typ[:] != NEUMANN )
-    c.S[  :, :1,  :] *= ( phi.bnd[S].typ[:] != NEUMANN )
-    c.N[  :,-1:,  :] *= ( phi.bnd[N].typ[:] != NEUMANN )
-    c.B[  :,  :, :1] *= ( phi.bnd[B].typ[:] != NEUMANN )
-    c.T[  :,  :,-1:] *= ( phi.bnd[T].typ[:] != NEUMANN )
+    matrix.W[ :1,  :,  :] *= ( phi.bnd[W].typ[:] != NEUMANN )
+    matrix.E[-1:,  :,  :] *= ( phi.bnd[E].typ[:] != NEUMANN )
+    matrix.S[  :, :1,  :] *= ( phi.bnd[S].typ[:] != NEUMANN )
+    matrix.N[  :,-1:,  :] *= ( phi.bnd[N].typ[:] != NEUMANN )
+    matrix.B[  :,  :, :1] *= ( phi.bnd[B].typ[:] != NEUMANN )
+    matrix.T[  :,  :,-1:] *= ( phi.bnd[T].typ[:] != NEUMANN )
 
     # --------------------------------------
     # Correct system matrices for obstacles
@@ -194,6 +194,8 @@ def diffusion(phi, inn, mu, dxyz, obst, obc):
     # Add all neighbours to the central matrix,
     # and zero the coefficients towards boundaries
     # ----------------------------------------------
-    c.C[:] += c.W[:] + c.E[:] + c.S[:] + c.N[:] + c.B[:] + c.T[:]
+    matrix.C[:] += matrix.W[:] + matrix.E[:]  \
+                +  matrix.S[:] + matrix.N[:]  \
+                +  matrix.B[:] + matrix.T[:]
 
-    return c  # end of function
+    return matrix  # end of function
