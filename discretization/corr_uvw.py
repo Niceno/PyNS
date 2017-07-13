@@ -15,7 +15,8 @@ from pyns.discretization.obst_zero_val import obst_zero_val
 from pyns.discretization.vol_balance   import vol_balance
 
 # =============================================================================
-def corr_uvw(uvw, p, rho, dt, dxyz, obst):
+def corr_uvw(uvw, p, rho, dt, dxyz, obst,
+             verbatim = True):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -60,10 +61,11 @@ def corr_uvw(uvw, p, rho, dt, dxyz, obst):
     uvw[Z].val[:] = uvw[Z].val[:] - dt / avg(uvw[Z].pos, rho) * p_z
 
     # Compute volume balance for checking
-    if not uvw[X].pos == C:
-        err = vol_balance(uvw, (dx,dy,dz), obst)
-        write.at(__name__)
-        print("  Maximum volume error after correction: %12.5e" 
-                 % abs(err).max())
+    if verbatim is True:
+        if not uvw[X].pos == C:
+            err = vol_balance(uvw, (dx,dy,dz), obst)
+            write.at(__name__)
+            print("  Maximum volume error after correction: %12.5e" 
+                     % abs(err).max())
 
     return  # end of function
