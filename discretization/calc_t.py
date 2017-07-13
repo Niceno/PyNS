@@ -19,7 +19,9 @@ from pyns.solvers.nonstationary     import cg, cgs, bicgstab
 
 # =============================================================================
 def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst, 
-           source = None):
+           source = None,
+           under_relaxation = 1.0,
+           advection_scheme = 'minmod'):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -52,7 +54,8 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst,
     b_t = zeros(rt)
 
     # The advective fluxes
-    c_t = advection(rho_cap, t, uvwf, dxyz, dt, 'minmod')
+    c_t = advection(rho_cap, t, uvwf, dxyz, dt, advection_scheme,
+                    matrix = A_t)
 
     # Innertial term for enthalpy
     A_t.C       += avg(t.pos, rho_cap) * avg(t.pos, dx*dy*dz) / dt
@@ -68,7 +71,8 @@ def calc_t(t, uvwf, rho_cap, kappa, dt, dxyz, obst,
     f_t = b_t - c_t + i_t + s_t
 
     # Solve for temperature
-    t.val[:] = cgs(A_t, t, f_t, TOL, False)
+    ur = under_relaxation
+    t.val[:] = (1-ur)*t.val[:] + ur * bicgstab(A_t, t, f_t, TOL, False)
 
     adj_n_bnds(t)
 
