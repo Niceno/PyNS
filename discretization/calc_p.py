@@ -17,7 +17,8 @@ from pyns.discretization.obst_zero_val  import obst_zero_val
 from pyns.solvers.nonstationary         import cg, cgs, bicgstab
 
 # =============================================================================
-def calc_p(p, uvwf, rho, dt, dxyz, obst):
+def calc_p(p, uvwf, rho, dt, dxyz, obst,
+           verbatim = True):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -47,9 +48,10 @@ def calc_p(p, uvwf, rho, dt, dxyz, obst):
     # account at this stage.  After velocity corrections, you should.
     b_p = vol_balance(uvwf, dxyz, zeros(rc))
 
-    write.at(__name__)
-    print("  Maximum volume error before correction: %12.5e" % abs(b_p).max())
-    print("  Volume imbalance before correction    : %12.5e" % b_p.sum())
+    if verbatim is True:
+        write.at(__name__)
+        print("  Volume error before correction     : %12.5e" % abs(b_p).max())
+        print("  Volume imbalance before correction : %12.5e" % b_p.sum())
 
     # Solve for pressure
     p.val[:] = bicgstab(A_p, p, b_p, TOL, False)
