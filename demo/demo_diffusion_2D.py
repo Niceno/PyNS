@@ -22,9 +22,9 @@ def main(show_plot=True, time_steps=1, plot_freq=1):
 #
 # =============================================================================
 
-    NX = 64
+    NX = 32
     NY = NX
-    NZ = NX
+    NZ = 32
 
     xn = nodes(0, 1, NX)
     yn = nodes(0, 1, NY)

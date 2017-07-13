@@ -15,11 +15,14 @@ from pyns.discretization.advection     import advection
 from pyns.discretization.diffusion     import diffusion
 from pyns.discretization.obst_zero_val import obst_zero_val
 from pyns.solvers.nonstationary        import cg, cgs, bicgstab
+from pyns.solvers.norm                 import norm
 
 # =============================================================================
 def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
              pressure = None,
-             force    = None):
+             force    = None,
+             under_relaxation = 1.0,
+             advection_scheme = 'superbee'):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -66,9 +69,12 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
     b_w = zeros(rw)
 
     # Advection terms for momentum
-    c_u = advection(rho, u, uvwf, dxyz, dt, 'superbee');
-    c_v = advection(rho, v, uvwf, dxyz, dt, 'superbee');
-    c_w = advection(rho, w, uvwf, dxyz, dt, 'superbee');
+    c_u = advection(rho, u, uvwf, dxyz, dt, advection_scheme, 
+                    matrix = A_u);
+    c_v = advection(rho, v, uvwf, dxyz, dt, advection_scheme, 
+                    matrix = A_v);
+    c_w = advection(rho, w, uvwf, dxyz, dt, advection_scheme, 
+                    matrix = A_w);
 
     # Innertial term for momentum (this works for collocated and staggered)
     A_u.C      += avg(u.pos, rho) * avg(u.pos, dv) / dt
@@ -123,9 +129,10 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
         f_w = obst_zero_val(w.pos, f_w, obst)
 
     # Solve for velocities
-    u.val[:] = cgs(A_u, u, f_u, TOL, False)
-    v.val[:] = cgs(A_v, v, f_v, TOL, False)
-    w.val[:] = cgs(A_w, w, f_w, TOL, False)
+    ur = under_relaxation
+    u.val[:] = (1-ur) * u.val[:] + ur * bicgstab(A_u, u, f_u, TOL, False)
+    v.val[:] = (1-ur) * v.val[:] + ur * bicgstab(A_v, v, f_v, TOL, False)
+    w.val[:] = (1-ur) * w.val[:] + ur * bicgstab(A_w, w, f_w, TOL, False)
 
     # Update velocities in boundary cells
     adj_o_bnds((u,v,w), (dx,dy,dz), dt)
@@ -177,7 +184,5 @@ def calc_uvw(uvw, uvwf, rho, mu, dt, dxyz, obst,
         uf.val[:] = obst_zero_val(X, uf.val, obst)
         vf.val[:] = obst_zero_val(Y, vf.val, obst)
         wf.val[:] = obst_zero_val(Z, wf.val, obst)
-
-    
 
     return  # end of function

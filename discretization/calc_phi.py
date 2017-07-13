@@ -19,7 +19,9 @@ from pyns.solvers.multigrid         import gamg_v_cycle
 
 # =============================================================================
 def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst, 
-             source = None):
+             source = None,
+             under_relaxation = 1.0,
+             advection_scheme = 'minmod'):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -50,7 +52,7 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz, obst,
     b_phi = zeros(r_phi)
 
     # The advective fluxes
-    c_phi = advection(density, phi, uvwf, dxyz, dt, 'minmod')
+    c_phi = advection(density, phi, uvwf, dxyz, dt, advection_scheme)
 
     # Innertial term for enthalpy
     A_phi.C         += avg(phi.pos, density) * avg(phi.pos, dx*dy*dz) / dt
