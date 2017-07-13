@@ -12,7 +12,8 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def advection(rho, phi, uvwf, dxyz, dt, lim_name):
+def advection(rho, phi, uvwf, dxyz, dt, lim_name, 
+              matrix = None):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -366,13 +367,50 @@ def advection(rho, phi, uvwf, dxyz, dt, lim_name):
                         + psi_z[:,:,:] * d_z[:,:,1:-1] * flow_tb )
 
     # Multiply with face areas
-    flux_fac_lim_x = rho_x_fac * flux_fac_lim_x * a_x_fac
-    flux_fac_lim_y = rho_y_fac * flux_fac_lim_y * a_y_fac
-    flux_fac_lim_z = rho_z_fac * flux_fac_lim_z * a_z_fac
+    flux_fac_lim_x *= rho_x_fac * a_x_fac
+    flux_fac_lim_y *= rho_y_fac * a_y_fac
+    flux_fac_lim_z *= rho_z_fac * a_z_fac
 
     # Sum contributions from all directions up
-    c = dif_x(flux_fac_lim_x) + \
-        dif_y(flux_fac_lim_y) + \
-        dif_z(flux_fac_lim_z)
+    c_lim = dif_x(flux_fac_lim_x) + \
+            dif_y(flux_fac_lim_y) + \
+            dif_z(flux_fac_lim_z)
 
-    return c  # end of function
+    # If matrix is sent as an input parameter, fill it up with upwind terms                   
+    if matrix != None:
+        matrix.W[:] += (u_fac * flow_we * rho_x_fac * a_x_fac)[:-1,:,:] 
+        matrix.E[:] -= (u_fac * flow_ew * rho_x_fac * a_x_fac)[ 1:,:,:]
+        matrix.C[:] += (u_fac * flow_we * rho_x_fac * a_x_fac)[:-1,:,:]  \
+                    -  (u_fac * flow_ew * rho_x_fac * a_x_fac)[ 1:,:,:]
+        
+        matrix.S[:] += (v_fac * flow_sn * rho_y_fac * a_y_fac)[:,:-1,:]  
+        matrix.N[:] -= (v_fac * flow_ns * rho_y_fac * a_y_fac)[:, 1:,:]
+        matrix.C[:] += (v_fac * flow_sn * rho_y_fac * a_y_fac)[:,:-1,:]  \
+                    -  (v_fac * flow_ns * rho_y_fac * a_y_fac)[:, 1:,:]
+        
+        matrix.B[:] += (w_fac * flow_bt * rho_z_fac * a_z_fac)[:,:,:-1]
+        matrix.T[:] -= (w_fac * flow_tb * rho_z_fac * a_z_fac)[:,:, 1:]
+        matrix.C[:] += (w_fac * flow_bt * rho_z_fac * a_z_fac)[:,:,:-1]  \
+                    -  (w_fac * flow_tb * rho_z_fac * a_z_fac)[:,:, 1:]
+
+        # Compute upwind fluxes
+        flux_fac_upw_x = cat_x((phi.bnd[W].val, phi.val)) * u_fac * flow_we  \
+                       + cat_x((phi.val, phi.bnd[E].val)) * u_fac * flow_ew
+        flux_fac_upw_y = cat_y((phi.bnd[S].val, phi.val)) * v_fac * flow_sn  \
+                       + cat_y((phi.val, phi.bnd[N].val)) * v_fac * flow_ns
+        flux_fac_upw_z = cat_z((phi.bnd[B].val, phi.val)) * w_fac * flow_bt  \
+                       + cat_z((phi.val, phi.bnd[T].val)) * w_fac * flow_tb
+
+        # Multiply with face areas
+        flux_fac_upw_x *= rho_x_fac * a_x_fac
+        flux_fac_upw_y *= rho_y_fac * a_y_fac
+        flux_fac_upw_z *= rho_z_fac * a_z_fac
+
+        # Sum contributions from all directions up
+        c_upw = dif_x(flux_fac_upw_x) + \
+                dif_y(flux_fac_upw_y) + \
+                dif_z(flux_fac_upw_z)
+
+        return c_lim - c_upw
+
+    return c_lim  # end of function
