@@ -72,6 +72,9 @@ def gamg_v_cycle(a, phi, b, tol,
     # =========================================================================
     for cycle in range(0, max_cycles):    
 
+        if verbose is True:
+            write.cycle(cycle)
+      
         # --------------------
         #
         # Go down a few steps
