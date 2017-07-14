@@ -69,7 +69,7 @@ class Unknown:
     # =========================================================================
     def __init__(self, name, pos, res, default_bc, 
                  per = (False, False, False), 
-                 verbatim = False):
+                 verbose = False):
     # -------------------------------------------------------------------------
         """
         Args:
@@ -89,7 +89,7 @@ class Unknown:
           Oh well, its own self, isn't it?
         """
 
-        if verbatim == True:
+        if verbose is True:
             write.at(__name__)
 
         # Store name, position and resolution
@@ -117,21 +117,21 @@ class Unknown:
             self.bnd[W].typ[0,:,:] = default_bc
             self.bnd[E].typ[0,:,:] = default_bc
         else:
-            if verbatim == True:
+            if verbose is True:
                 print("  ", self.name, "is periodic in x direction;", end="")
                 print("  skipping default boundary condition for it!")
         if self.per[Y] == False:
             self.bnd[S].typ[:,0,:] = default_bc
             self.bnd[N].typ[:,0,:] = default_bc
         else:
-            if verbatim == True:
+            if verbose is True:
                 print("  ", self.name, "is periodic in y direction;", end="")
                 print("  skipping default boundary condition for it!")
         if self.per[Z] == False:
             self.bnd[B].typ[:,:,0] = default_bc
             self.bnd[T].typ[:,:,0] = default_bc
         else:
-            if verbatim == True:
+            if verbose is True:
                 print("  ", self.name, "is periodic in z direction;", end="")
                 print("  skipping default boundary condition for it!")
 
@@ -142,7 +142,7 @@ class Unknown:
         self.bnd[B].val[:,:,0] = 0
         self.bnd[T].val[:,:,0] = 0
 
-        if verbatim == True:
+        if verbose is True:
             print("  Created unknown:", self.name)
 
         return  # end of function

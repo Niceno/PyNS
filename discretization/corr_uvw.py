@@ -17,7 +17,7 @@ from pyns.discretization.vol_balance   import vol_balance
 # =============================================================================
 def corr_uvw(uvw, p, rho, dt, dxyz, 
              obstacle = None,
-             verbatim = True):
+             verbose = True):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -62,7 +62,7 @@ def corr_uvw(uvw, p, rho, dt, dxyz,
     uvw[Z].val[:] = uvw[Z].val[:] - dt / avg(uvw[Z].pos, rho) * p_z
 
     # Compute volume balance for checking
-    if verbatim is True:
+    if verbose is True:
         if not uvw[X].pos == C:
             err = vol_balance(uvw, (dx,dy,dz), obstacle)
             write.at(__name__)

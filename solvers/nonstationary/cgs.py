@@ -20,16 +20,16 @@ from pyns.solvers.norm        import norm
 
 # =============================================================================
 def cgs(a, phi, b, tol, 
-        verbatim = False,
+        verbose = False,
         max_iter = -1):
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        Object of the type "Matrix", holding the system matrix.
-      phi:      Object of the type "Unknown" to be solved.
-      b:        Three-dimensional array holding the source term.
-      tol:      Absolute solver tolerance
-      verbatim: Logical variable setting if solver will be verbatim (print
+      a: ...... Object of the type "Matrix", holding the system matrix.
+      phi: .... Object of the type "Unknown" to be solved.
+      b: ...... Three-dimensional array holding the source term.
+      tol: .... Absolute solver tolerance
+      verbose:  Logical variable setting if solver will be verbose (print
                 info on Python console) or not.
       max_iter: Maxiumum number of iterations.
       
@@ -37,7 +37,7 @@ def cgs(a, phi, b, tol,
       x: Three-dimensional array with solution.
     """
 
-    if verbatim:
+    if verbose is True:
         write.at(__name__)
 
     # Helping variable
@@ -46,13 +46,13 @@ def cgs(a, phi, b, tol,
     # Intitilize arrays
     p       = zeros(x.shape)
     p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
-                      verbatim=False)
+                      verbose=False)
     q       = zeros(x.shape)
     r       = zeros(x.shape)
     r_tilda = zeros(x.shape)
     u       = zeros(x.shape)
     u_hat   = Unknown("vec_u_hat", phi.pos, x.shape, -1, per=phi.per, 
-                      verbatim=False)
+                      verbose=False)
     v_hat   = zeros(x.shape)
 
     # r = b - A * x
@@ -69,7 +69,7 @@ def cgs(a, phi, b, tol,
         
     for i in range(1, max_iter):
 
-        if verbatim:
+        if verbose is True:
             print("  iteration: %3d:" % (i), end = "" )
 
         # rho = r~ * r
@@ -77,7 +77,7 @@ def cgs(a, phi, b, tol,
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
-            if verbatim == True:  
+            if verbose is True == True:  
                 write.at(__name__)
                 print("  Fails becuase rho = %12.5e" % rho)
             return x
@@ -126,7 +126,7 @@ def cgs(a, phi, b, tol,
         # Compute residual
         res = norm(r)
 
-        if verbatim:
+        if verbose is True:
             print("%12.5e" %res)
 
         # If tolerance has been reached, get out of here

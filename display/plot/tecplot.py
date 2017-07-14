@@ -40,8 +40,8 @@ def tecplot(file_name, xyzn,
     nz = len(zn)-1
 
     # VisIt can't read Tecplot (TM) files with
-    # comments, so keep verbatim "False"
-    verbatim = True
+    # comments, so keep verbose "False"
+    verbose = True
     
     # Number of columns in the output file
     col = 10
@@ -102,7 +102,7 @@ def tecplot(file_name, xyzn,
     # Write the file header out
     #
     # --------------------------
-    if verbatim:
+    if verbose is True:
         file_id.write("# File header \n")
     file_id.write("title=\"PyNS Output\"\n")
     file_id.write("variables=\"x\" \"y\" \"z\" ")
@@ -128,7 +128,7 @@ def tecplot(file_name, xyzn,
     # Write the coordinates out (remember - those are nodal coordinates)
     #
     # -------------------------------------------------------------------
-    if verbatim:
+    if verbose is True:
         file_id.write("# X coordinates\n")
     c = 0                                # column counter
     for k in range(0, nz+1):
@@ -141,7 +141,7 @@ def tecplot(file_name, xyzn,
     if c % col != 0:                     # finish the line if necessary
         file_id.write("\n")
 
-    if verbatim:
+    if verbose is True:
         file_id.write("# Y coordinates\n")
     c = 0                                # column counter
     for k in range(0, nz+1):
@@ -154,7 +154,7 @@ def tecplot(file_name, xyzn,
     if c % col != 0:                     # finish the line if necessary
         file_id.write("\n")
 
-    if verbatim:
+    if verbose is True:
         file_id.write("# Z coordinates\n")
     c = 0                                # column counter
     for k in range(0, nz+1):
@@ -211,7 +211,7 @@ def tecplot(file_name, xyzn,
                                    vars[v].val,
                                    vars[v].bnd[T].val[:,:,:1])))
 
-            if verbatim:
+            if verbose is True:
                 file_id.write("# %s \n" % vars[v].name)
             c = 0
             for k in range(0, nz):

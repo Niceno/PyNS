@@ -18,21 +18,20 @@ from pyns.discretization import Unknown
 
 # Modules from the parent's directory
 from pyns.solvers.mat_vec_bnd import mat_vec_bnd
-#from pyns.solvers.vec_vec     import vec_vec
 from pyns.solvers.norm        import norm
 
 # =============================================================================
 def jacobi(a, phi, b, tol, 
-           verbatim = False,
+           verbose = False,
            max_iter = -1):
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        Object of the type "Matrix", holding the system matrix.
-      phi:      Object of the type "Unknown" to be solved.
-      b:        Three-dimensional array holding the source term.
-      tol:      Absolute solver tolerance
-      verbatim: Logical variable setting if solver will be verbatim (print
+      a: ...... Object of the type "Matrix", holding the system matrix.
+      phi: .... Object of the type "Unknown" to be solved.
+      b: ...... Three-dimensional array holding the source term.
+      tol: .... Absolute solver tolerance
+      verbose:  Logical variable setting if solver will be verbose (print
                 info on Python console) or not.
       max_iter: Maxiumum number of iterations.
 
@@ -40,7 +39,7 @@ def jacobi(a, phi, b, tol,
       phi.val: Three-dimensional array with solution.
     """
 
-    if verbatim:
+    if verbose is True:
         write.at(__name__)
 
     sum = zeros(phi.val.shape)
@@ -55,7 +54,7 @@ def jacobi(a, phi, b, tol,
     # Main iteration loop
     for iter in range(0, max_iter):
 
-        if verbatim:
+        if verbose is True:
             print("  iteration: %3d:" % (iter), end = "" )
       
         # Add source term 
@@ -95,7 +94,7 @@ def jacobi(a, phi, b, tol,
         # Compute residual
         res = norm(r)
 
-        if verbatim:
+        if verbose is True:
             print("%12.5e" %res)
 
         # If tolerance has been reached, get out of here

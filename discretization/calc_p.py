@@ -19,7 +19,7 @@ from pyns.solvers.nonstationary         import cg, cgs, bicgstab
 # =============================================================================
 def calc_p(p, uvwf, rho, dt, dxyz, 
            obstacle = None,
-           verbatim = True):
+           verbose = True):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -49,7 +49,7 @@ def calc_p(p, uvwf, rho, dt, dxyz,
     # account at this stage.  After velocity corrections, you should.
     b_p = vol_balance(uvwf, dxyz, zeros(rc))
 
-    if verbatim is True:
+    if verbose is True:
         write.at(__name__)
         print("  Volume error before correction     : %12.5e" % abs(b_p).max())
         print("  Volume imbalance before correction : %12.5e" % b_p.sum())

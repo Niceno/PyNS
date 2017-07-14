@@ -148,13 +148,13 @@ def main(show_plot=True, time_steps=12, plot_freq=1):
     
             # Pressure
             calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz),
-                   verbatim = False)
+                   verbose = False)
     
             p_tot.val += 0.25 * p.val
 
             # Velocity correction
             corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz),
-                     verbatim = False)
+                     verbose = False)
 
             # Print differences in results between two iterations
             t_diff = abs(t.val[:] - t_prev)

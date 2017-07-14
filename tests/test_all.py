@@ -25,8 +25,8 @@ def main():
         
         start = timeit.default_timer()
         test.main(show_plot  = True, 
-                  time_steps = 20, 
-                  plot_freq  = 10)
+                  time_steps = 40, 
+                  plot_freq  = 20)
         
         duration = timeit.default_timer() - start
         total_time += duration

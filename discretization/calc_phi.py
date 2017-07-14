@@ -72,9 +72,9 @@ def calc_phi(phi, uvwf, density, gamma, dt, dxyz,
     f_phi = b_phi - c_phi + i_phi + s_phi
     
     # Solve for temperature
-    # phi.val[:] = jacobi(A_phi, phi, f_phi, TOL, verbatim = True)
+    # phi.val[:] = jacobi(A_phi, phi, f_phi, TOL, verbose = True)
     phi.val[:] = gamg_v_cycle(A_phi, phi, f_phi, TOL, 
-                              verbatim = True,
+                              verbose = True,
                               max_smooth = 8)
     # phi.val[:] = bicgstab(A_phi, phi, f_phi, TOL)
 

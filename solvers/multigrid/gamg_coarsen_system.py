@@ -18,7 +18,7 @@ from pyns.solvers.multigrid.coarsen   import coarsen
 
 # =============================================================================
 def gamg_coarsen_system(a, phi, b,
-                        verbatim = True):
+                        verbose = True):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -42,7 +42,7 @@ def gamg_coarsen_system(a, phi, b,
                      phi.pos, 
                      shape_[0], -1, 
                      per = phi.per, 
-                     verbatim = False),)
+                     verbose = False),)
     b_     = (b,)                    # source
     d_     = (zeros(shape),)         # to store diffusion term 
     i_     = (zeros(shape),)         # to store innertial term 
@@ -53,7 +53,7 @@ def gamg_coarsen_system(a, phi, b,
     # If not, just return the zeroth level
     # -------------------------------------             
     if not coarsable(shape):
-        if verbatim:
+        if verbose is True:
             print("  Coarsening not possible!")
         return 1, shape_, a_, i_, d_, phi_, b_, r_
 
@@ -74,12 +74,12 @@ def gamg_coarsen_system(a, phi, b,
                            phi.pos, 
                            shape_[grid], -1, 
                            per = phi.per, 
-                           verbatim = False),)
+                           verbose = False),)
         r_     += (Unknown("res_%d" % grid,     # residual at level "grid"
                            phi.pos, 
                            shape_[grid], -1, 
                            per = phi.per, 
-                           verbatim = False),)
+                           verbose = False),)
         b_     += (zeros(shape_[grid]),)        # source at level "grid"
         d_     += (zeros(shape_[grid]),)        # diffusion at level "grid"
         i_     += (zeros(shape_[grid]),)        # innertia at level "grid"

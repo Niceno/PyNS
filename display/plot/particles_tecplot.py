@@ -17,12 +17,12 @@ def particles_tecplot(file_name, pt, n):
     file_id = open(file_name + ".plt", "w")
     col = 6
     # VisIt can't read Tecplot (TM) files which contain comments
-    verbatim = False
+    verbose = False
 
     # --------------------------
     # Write the file header out
     # --------------------------
-    if verbatim:
+    if verbose is True:
         file_id.write("# File header \n")
     file_id.write("title=\"PyNS Output\"\n")
     file_id.write("variables=\"xp\" \"yp\" \"zp\" \"up\" \"vp\" \"wp\" ")
@@ -37,7 +37,7 @@ def particles_tecplot(file_name, pt, n):
     # Write the coordinates out (remember - those are nodal coordinates)
     # -------------------------------------------------------------------
     
-    if verbatim:
+    if verbose is True:
         file_id.write("\n# X coordinates\n")
 
     c = 0 
@@ -51,7 +51,7 @@ def particles_tecplot(file_name, pt, n):
     if c % col != 0:                     # finish the line if necessary
         file_id.write("\n")
 
-    if verbatim:
+    if verbose is True:
         file_id.write("# Y coordinates\n")
     c = 0                                # column counter
            
@@ -64,7 +64,7 @@ def particles_tecplot(file_name, pt, n):
     if c % col != 0:                     # finish the line if necessary
         file_id.write("\n")
 
-    if verbatim:
+    if verbose is True:
         file_id.write("# Z coordinates\n")
     c = 0                                # column counter
            

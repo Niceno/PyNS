@@ -103,7 +103,7 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
     # Initialising the particles. 
     n = 10000  # number of particles 
     
-    pt = initialiser(n, verbatim = False)
+    pt = initialiser(n, verbose = False)
 #
 #    # Setting up the Plot.
 #    fig = plt.figure()

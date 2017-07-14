@@ -16,7 +16,7 @@ def adj_o_bnds(uvw, dxyz, dt):
     """
     Args:
       uvw:  Tuple with three velocity components (where each component is
-            created with "create_unknown" function.
+            an object of the type "Unknown".
       dxyz: Tuple with cell dimensions in "x", "y" and "z" direction
             (where each dimension is a three-dimensional array).
       dt:   time step.
@@ -46,7 +46,7 @@ def adj_o_bnds(uvw, dxyz, dt):
     vol_out_1 = 0.0  # outlet volume flux; positive for outflow
     vol_out_2 = 0.0  # outlet volume flux; positive for outflow
 
-    verbatim = False
+    verbose = False
 
     sx = dy * dz
     sy = dx * dz
@@ -277,7 +277,7 @@ def adj_o_bnds(uvw, dxyz, dt):
         w.bnd[T].val[:,:,:1] = w.bnd[T].val[:,:,:1] * lnot(if_t_out_w) \
                              + w_bnd_t_corr         *      if_t_out_w
 
-    if verbatim == True:
+    if verbose == True:
         print("+----------------------------+"     )
         print("|  ub_in     = %12.5e  |" %ub_in    )
         print("|  a_in      = %12.5e  |" %area_in  )
@@ -303,7 +303,7 @@ def adj_o_bnds(uvw, dxyz, dt):
     else:
         factor = 1.0
 
-    if verbatim == True:
+    if verbose == True:
         print("+----------------------------+")
         print("|  v_out_2   = %12.5e  |" %vol_out_2)
         print("|  factor    = %12.5e  |" %factor   )

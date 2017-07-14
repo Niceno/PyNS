@@ -20,16 +20,16 @@ from pyns.solvers.norm        import norm
 
 # =============================================================================
 def cg(a, phi, b, tol, 
-       verbatim = False,
+       verbose = False,
        max_iter = -1):
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        Object of the type "Matrix", holding the system matrix.
-      phi:      Object of the type "Unknown" to be solved.
-      b:        Three-dimensional array holding the source term.
-      tol:      Absolute solver tolerance
-      verbatim: Logical variable setting if solver will be verbatim (print
+      a: ...... Object of the type "Matrix", holding the system matrix.
+      phi: .... Object of the type "Unknown" to be solved.
+      b: ...... Three-dimensional array holding the source term.
+      tol: .... Absolute solver tolerance
+      verbose:  Logical variable setting if solver will be verbose (print
                 info on Python console) or not.
       max_iter: Maxiumum number of iterations.
 
@@ -37,14 +37,14 @@ def cg(a, phi, b, tol,
       x: Three-dimensional array with solution.
     """
 
-    if verbatim:
+    if verbose is True:
         write.at(__name__)
 
     # Helping variable
     x = phi.val
 
     # Intitilize arrays
-    p = Unknown("vec_p", phi.pos, x.shape, -1, per=phi.per, verbatim=False)
+    p = Unknown("vec_p", phi.pos, x.shape, -1, per=phi.per, verbose=False)
     q = zeros(x.shape)
     r = zeros(x.shape)
     z = zeros(x.shape)
@@ -60,7 +60,7 @@ def cg(a, phi, b, tol,
         
     for i in range(1, max_iter):
 
-        if verbatim:
+        if verbose is True:
             print("  iteration: %3d:" % (i), end = "" )
 
         # Solve M z = r
@@ -95,7 +95,7 @@ def cg(a, phi, b, tol,
         # Compute residual
         res = norm(r)
 
-        if verbatim:
+        if verbose is True:
             print("%12.5e" %res)
 
         # If tolerance has been reached, get out of here

@@ -9,7 +9,7 @@ from pyns.display   import write
 
 # =============================================================================
 def cfl_max(uvw, dt, dxyz,
-            verbatim = True):
+            verbose = True):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -46,7 +46,7 @@ def cfl_max(uvw, dt, dxyz,
                         abs(v.val/avg_y(dy)).max(),   \
                         abs(w.val/avg_z(dz)).max() )
 
-    if verbatim:
+    if verbose is True:
         write.at(__name__)
         print("  Maximum CFL number: %12.5e" % cfl)
 

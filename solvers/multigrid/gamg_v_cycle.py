@@ -21,24 +21,24 @@ from pyns.solvers.multigrid.gamg_coarsen_system import gamg_coarsen_system
 
 # =============================================================================
 def gamg_v_cycle(a, phi, b, tol, 
-                 verbatim = False,
+                 verbose = False,
                  max_cycles = 8,
                  max_smooth = 4):
 # -----------------------------------------------------------------------------
     """
     Args:
-      a:        Object of the type "Matrix", holding the system matrix.
-      phi:      Object of the type "Unknown" to be solved.
-      b:        Three-dimensional array holding the source term.
-      tol:      Absolute solver tolerance
-      verbatim: Logical variable setting if solver will be verbatim (print
-                info on Python console) or not.
+      a: ..... Object of the type "Matrix", holding the system matrix.
+      phi: ... Object of the type "Unknown" to be solved.
+      b: ..... Three-dimensional array holding the source term.
+      tol: ... Absolute solver tolerance
+      verbose: Logical variable setting if solver will be verbose (print
+               info on Python console) or not.
 
     Returns:
       x: Three-dimensional array with solution.
     """
 
-    if verbatim:
+    if verbose is True:
         write.at(__name__)
 
     # ------------------
@@ -58,11 +58,11 @@ def gamg_v_cycle(a, phi, b, tol,
     # -----------------------------------------------------
     grid = 0  # finest level
     phi_[grid].val = jacobi(a_[grid], phi_[grid], b_[grid], TOL, 
-                            verbatim = True, 
+                            verbose = True, 
                             max_iter = 4)
     # r = b - A * x
     r_[grid].val[:] = b_[grid][:] - mat_vec_bnd(a_[grid], phi_[grid])
-    if verbatim:
+    if verbose is True:
         print("  residual at level %d" % grid, norm(r_[grid].val))
 
     # =========================================================================
@@ -121,11 +121,11 @@ def gamg_v_cycle(a, phi, b, tol,
             # ------------------------------------------------
             phi_[grid].val[:] = 0  # nulify to forget previous corrections
             phi_[grid].val = jacobi(a_[grid], phi_[grid], b_[grid], TOL, 
-                                    verbatim = False, 
+                                    verbose = False, 
                                     max_iter = max_smooth)
             # r = b - A * x
             r_[grid].val[:] = b_[grid][:] - mat_vec_bnd(a_[grid], phi_[grid])
-            if verbatim:
+            if verbose is True:
                 print("  residual at level %d" % grid, norm(r_[grid].val))
     
         # ==================================
@@ -208,7 +208,7 @@ def gamg_v_cycle(a, phi, b, tol,
             # -----------------------------------------------
             phi_[grid].val[:] += r_[grid].val[:]
             phi_[grid].val = jacobi(a_[grid], phi_[grid], b_[grid], TOL, 
-                                    verbatim = False, 
+                                    verbose = False, 
                                     max_iter = max_smooth)
             # r = b - A * x
             r_[grid].val[:] = b_[grid][:]  \
