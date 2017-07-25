@@ -17,11 +17,15 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
       file_name: String containing name of the file to be created.
       xyzn:      Tuple containing one-dimensional arrays with "x", "y"
                  and "z" coordinates.
-      vars:      Tuple containing "Unknowns" to be exported to Tecplot (TM).
+      unknowns:  Tuple containing "Unknowns" to be exported to Tecplot (TM).
                  Individual unknowns can be either collocated or staggered.
+      arrays:    Tuple containing three-dimensional arrays to be exported.		
+                 Individual arrays can be either node-centered, cell-centered		
+                 collocated or cell-centered staggered. 
+      tracers:  Tuple containing tracers to be exported.
 
     Returns:
-      none!
+      None!
     """
 
     # ------------------------------------
@@ -35,8 +39,8 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     nz = len(zn)-1
 
     # VisIt can't read Tecplot (TM) files with
-    # comments, so keep verbatim "False"
-    verbatim = False
+    # comments, so keep verbose "False"
+    verbose = False
     
     # Number of columns in the output file
     col = 10
@@ -48,7 +52,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     # ------------------
     
     # Browse through input arguments to find their names, positions and values
-    key = namedtuple('key', 'name pos val bnd')
+    key = namedtuple("key", "name pos val bnd")
     vars = ()
 
     # First through unknowns (they have their names and positions)
@@ -97,7 +101,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     # Write the file header out
     #
     # --------------------------
-    if verbatim:
+    if verbose is True:
         file_id.write("# File header \n")
     file_id.write("title=\"PyNS Output\"\n")
     file_id.write("VARIABLES = \"x\" \"y\" \"z\"")
@@ -125,7 +129,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     # Write the coordinates out (remember - those are nodal coordinates)
     #
     # -------------------------------------------------------------------
-    if verbatim:
+    if verbose is True:
         file_id.write("# X coordinates\n")
     c = 0                                # column counter
     for k in range(0, nz+1):
@@ -138,7 +142,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     if c % col != 0:                     # finish the line if necessary
         file_id.write("\n")
 
-    if verbatim:
+    if verbose is True:
         file_id.write("# Y coordinates\n")
     c = 0                                # column counter
     for k in range(0, nz+1):
@@ -151,7 +155,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     if c % col != 0:                     # finish the line if necessary
         file_id.write("\n")
 
-    if verbatim:
+    if verbose is True:
         file_id.write("# Z coordinates\n")
     c = 0                                # column counter
     for k in range(0, nz+1):
@@ -208,7 +212,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
                                    vars[v].val,
                                    vars[v].bnd[T].val[:,:,:1])))
 
-            if verbatim:
+            if verbose is True:
                 file_id.write("# %s \n" % vars[v].name)
             c = 0
             for k in range(0, nz):
