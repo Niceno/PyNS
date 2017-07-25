@@ -8,4 +8,3 @@ Very bad, but it makes code development faster for non-IT oriendted minds.
 from .isolines          import isolines
 from .gmv               import gmv
 from .tecplot           import tecplot
-from .particles_tecplot import particles_tecplot

@@ -7,11 +7,12 @@ Very bad, but it makes code development faster for non-IT oriendted minds.
 
 from .Particles         import Particles
 from .rk4               import rk4 
-from .rk4_g             import rk4_g
 from .closest_node      import closest_node
 from .closest_cell      import closest_cell
 
 from .initialiser       import initialiser
 from .lagrange_interpol import lagrange_interpol
 from .interpol          import interpol
+
+
 

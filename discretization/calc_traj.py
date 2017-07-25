@@ -12,6 +12,7 @@ from pyns.standard import *
 #From PyNS modules
 from pyns.constants import *
 from pyns.lagrangian import * 
+from pyns.physical.constants.gravitational import G
 
 # =============================================================================
 def calc_traj(pt, uvwn, rho, mu, xyzn, xyzc, dt, obst, n):
@@ -75,9 +76,9 @@ def calc_traj(pt, uvwn, rho, mu, xyzn, xyzc, dt, obst, n):
             # Calculating the new particle velocities, 
             # using a fourth order Runge-kutta scheme. 
             # The y-component has the added gravity force. 
-            pt[p].u = rk4(u, pt[p].u, rho[i,j,k], mu[i,j,k], dt)            
-            pt[p].v = rk4(v, pt[p].v, rho[i,j,k], mu[i,j,k], dt)            
-            pt[p].w = rk4(w, pt[p].w, rho[i,j,k], mu[i,j,k], dt)
+            pt[p].u = rk4(u, pt[p].u, rho[i,j,k], mu[i,j,k], pt[p].d, pt[p].rho_p, dt)            
+            pt[p].v = rk4(v, pt[p].v, rho[i,j,k], mu[i,j,k], pt[p].d, pt[p].rho_p, dt, G)            
+            pt[p].w = rk4(w, pt[p].w, rho[i,j,k], mu[i,j,k], pt[p].d, pt[p].rho_p, dt)
                     
             # Updating the positions of the particles.         
             pt[p].x = pt[p].x + pt[p].u * dt            
