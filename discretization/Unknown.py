@@ -56,6 +56,9 @@ Unknowns in PyNS are shown below for a two-dimensional grid (for simplicity):
 
 """
 
+
+from __future__ import print_function
+
 # Standard Python modules
 from pyns.standard import *
 

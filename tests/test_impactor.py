@@ -103,19 +103,8 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
     # Initialising the particles. 
     n = 10000  # number of particles 
     
-    pt = initialiser(n, verbose = False)
-#
-#    # Setting up the Plot.
-#    fig = plt.figure()
-#    ax = plt.axes(projection="3d")
-#    ax.set_xlim(min(xn), max(xn)) 
-#    ax.set_ylim(min(yn), max(yn))
-#    ax.set_zlim(min(zn), max(zn))
-#    ax.set_xlabel("X")
-#    ax.set_ylabel("Y")
-#    ax.set_zlabel("Z")
-    
-    
+    pt = initialiser(n, rho_p = 1000, d = 2.5e-6, verbose = False)
+
 # =============================================================================
 #
 # Solution algorithm
@@ -181,20 +170,12 @@ def main(show_plot=True, time_steps=500, plot_freq=10):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-#               particles_tecplot("particles-%6.6d" % ts, pt, n)
+                
                plot.gmv("impactor-%6.6d" % ts, (xn,yn,zn), 
                         unknowns = (uf, vf, wf, p),
                         arrays   = (un, vn, wn),
                         tracers  = (pt))
-                 # Plotting for each Particle. 
-               #for i in range(0,n):
-#                    ax.scatter(pt[i].x, pt[i].y, pt[i].z)
-                   #print(pt[i].x, pt[i].y, pt[i].z, pt[i].u, pt[i].v, pt[i].w)
-
-  
-
-
-    #plt.show()
+ 
 if __name__ == "__main__":
     main()      
   

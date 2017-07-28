@@ -129,9 +129,9 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     block[3].kp = ny                 # k plus
 
     for o in range(0, 4):
-        for i in range(floor(block[o].im), floor(block[o].ip)):
-            for j in range(floor(block[o].jm), floor(block[o].jp)):
-                for k in range(floor(block[o].km), floor(block[o].kp)):
+        for i in range(int(floor(block[o].im)), int(floor(block[o].ip))):
+            for j in range(int(floor(block[o].jm)), int(floor(block[o].jp))):
+                for k in range(int(floor(block[o].km)), int(floor(block[o].kp))):
                     plates[i, j, k] = 1
 
 # =============================================================================

@@ -8,6 +8,8 @@ Note:
   It is not very fast but will serve as the basis for multigrid solver.
 """
 
+from __future__ import print_function
+
 # Standard Python modules
 from pyns.standard import *
 

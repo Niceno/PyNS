@@ -34,8 +34,8 @@ def main(show_plot=True, time_steps=180, plot_freq=180):
 
     sens = -1, +1
     test = X, Y, Z
-    SENS = sens[ floor( random() * len(sens) ) ]
-    TEST = test[ floor( random() * len(test) ) ]
+    SENS = sens[ int(floor( random() * len(sens) )) ]
+    TEST = test[ int(floor( random() * len(test) )) ]
     MIN = 10
     MAX = 20
     

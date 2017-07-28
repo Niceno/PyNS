@@ -22,7 +22,7 @@ from pyns.lagrangian     import *
 import numpy as np 
 
 
-def main(show_plot=True, time_steps=430000, plot_freq=1):
+def main(show_plot=True, time_steps=151000, plot_freq=1000):
     
     # Loading in the Fluid Flow    
     f = np.loadtxt('fluent_fluid.txt')
@@ -89,13 +89,13 @@ def main(show_plot=True, time_steps=430000, plot_freq=1):
                 wn[i,j,k] = w[d]
     
     # Time-stepping parameters
-    dt  = 3e-06        # time step <= tau/2, where tau is the relaxtion time
+    dt  = 8.6e-6        # time step <= tau/2, where tau is the relaxtion time
     ndt = time_steps     # number of time steps
 
     # Initialising the particles. 
     n = 1000  # number of particles 
 
-    pt = initialiser(n, rho_p=1000, d = 1.5e-6, verbose = False)
+    pt = initialiser(n, rho_p=1000, d = 2.5e-6, verbose = False)
     
     # Output initial conditions to Tecplot
     plot.tecplot("particle-%6.6d" % 0,(xn,yn,zn), arrays = (un,vn,wn),
