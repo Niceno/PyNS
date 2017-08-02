@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 #                                                       o ... scalars
 #                          (n)                          - ... u velocities
@@ -26,7 +27,6 @@
 #
 """
 
-#!/usr/bin/python
 
 # Standard Python modules
 from pyns.standard import *

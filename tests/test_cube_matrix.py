@@ -1,8 +1,9 @@
+#!/usr/bin/python
 """
 Case for demonstrating periodic boundary conditions in "x" direction.
 """
 
-#!/usr/bin/python
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *
@@ -14,7 +15,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=6000, plot_freq=20):
+def main(show_plot=True, time_steps=6000, plot_freq=60):
 
 # =============================================================================
 #

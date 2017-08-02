@@ -60,7 +60,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
         unk = key(u.name, u.pos, u.val, u.bnd)
         vars = vars + (unk,)
 
-    # Then through arrays (have no name, and position is implocitly defined)
+    # Then through arrays (have no name, and position is implicitly defined)
     c = 0
     for a in arrays:
       
@@ -109,7 +109,7 @@ def tecplot(file_name, xyzn, unknowns = (), arrays = (), tracers = ()):
     for v in range(0, len(vars)):
         if vars[v].pos == N:
             file_id.write("\"%s\" " % vars[v].name)
-    # Then names of the nodal variables
+    # Then names of the cell centered variables
     for v in range(0, len(vars)):
         if vars[v].pos != N:
             file_id.write("\"%s\" " % vars[v].name)

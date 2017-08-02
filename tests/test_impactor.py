@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 3D Impactor: Simplest case to illustrate how to implement Lagrangian Particle 
 tracking techniques.

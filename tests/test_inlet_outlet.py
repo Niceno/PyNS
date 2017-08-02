@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 # This scripts tests inlet and outlet conditons at various places in
 # computational domain.
@@ -8,7 +9,6 @@
 # 16 predefined cases.
 """
 
-#!/usr/bin/python
 
 # Standard Python modules
 from pyns.standard import *

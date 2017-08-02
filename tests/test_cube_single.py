@@ -1,8 +1,8 @@
+#!/usr/bin/python
 """
 Single cube placed in a square channel.
 """
 
-#!/usr/bin/python
 
 # Standard Python modules
 from pyns.standard import *

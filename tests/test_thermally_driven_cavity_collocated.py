@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 This program solves thermally driven cavity at Ra = 1.0e6, in dimensional
 and non-dimensional forms, for collocated variable arrangement.
@@ -25,7 +26,7 @@ Gr = 1.4105E+06
 Ra = 1.0000E+06
 """
 
-#!/usr/bin/python
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *
