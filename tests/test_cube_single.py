@@ -2,7 +2,7 @@
 """
 Single cube placed in a square channel.
 """
-
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *

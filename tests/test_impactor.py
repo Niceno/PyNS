@@ -7,7 +7,7 @@ The fluid flow is first solved in the domain.
 As One-way coupling is being considered, this fluid velocity is then used to 
 solve for the velocity of the particles. 
 """
-
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *

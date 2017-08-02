@@ -8,7 +8,7 @@
 # outlet. The script selects the case it will run randomply, from the
 # 16 predefined cases.
 """
-
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *
