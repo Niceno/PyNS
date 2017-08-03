@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 # This scripts tests inlet and outlet conditons at various places in
 # computational domain.
@@ -7,8 +8,7 @@
 # outlet. The script selects the case it will run randomply, from the
 # 16 predefined cases.
 """
-
-#!/usr/bin/python
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *
@@ -30,8 +30,8 @@ def main(show_plot=True, time_steps=600, plot_freq=60):
 
     planes = ("XY", "XZ", "YZ")
     tests  = array([11,12,13,14, 21,22,23,24, 31,32,33,34, 41,42,43,44])
-    TEST   = tests[ floor(random()*16) ]
-    PLANE  = planes[ floor(random()*3) ]
+    TEST   = tests[int(floor(random()*16))]
+    PLANE  = planes[int(floor(random()*3))]
 
     # Node coordinates
     xn = nodes(0, 1,    160)

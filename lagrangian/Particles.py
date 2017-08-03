@@ -17,7 +17,7 @@ class Particles(object):
     
     number = []
     
-    def __init__(self, x, y, z, u, v, w):
+    def __init__(self, x, y, z, u, v, w, rho_p, d):
         """
         Initialising a particle.
         """
@@ -27,6 +27,8 @@ class Particles(object):
         self.u = u
         self.v = v
         self.w = w
+        self.rho_p = rho_p
+        self.d = d 
       
         self.number.append(self)
 

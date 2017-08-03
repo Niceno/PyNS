@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 #                                                       o ... scalars
 #                          (n)                          - ... u velocities
@@ -25,8 +26,7 @@
 # +---> x                  (s)
 #
 """
-
-#!/usr/bin/python
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *

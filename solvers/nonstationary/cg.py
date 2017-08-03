@@ -5,6 +5,8 @@ Source:
   http://www.netlib.org/templates/templates.pdf
 """
 
+from __future__ import print_function
+
 # Standard Python modules
 from pyns.standard import *
 

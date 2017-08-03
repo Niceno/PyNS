@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 This script is to reproduce two-dimensional mixed convection case, with
 the aim of testing the outflow boundary, particularly the "convective"
@@ -8,8 +9,7 @@ There is also a staggered version of this script, called
 similar as possible to each other, to test the differences between
 staggered and collocated arrangements always possible.
 """
-
-#!/usr/bin/python
+from __future__ import division
 
 # Standard Python modules
 from pyns.standard import *

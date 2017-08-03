@@ -1,5 +1,5 @@
 """
-Lagrange interpolation.
+1st order Lagrange interpolation.
 """
 
 # Standard Python modules
@@ -13,7 +13,7 @@ from pyns.operators import *
 def lagrange_interpol(uvwn, xyzn, xyzp, iu, il, ju, jl, ku, kl,):
 # -----------------------------------------------------------------------------  
     """
-    The velocity at the particle's postition is calculted using a
+    The velocity at the particle's postition is calculted using a 1st order
     Lagrange interpolation method. 
     
     Args:
