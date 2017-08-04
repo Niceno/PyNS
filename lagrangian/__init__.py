@@ -13,6 +13,7 @@ from .closest_cell      import closest_cell
 from .initialiser       import initialiser
 from .lagrange_interpol import lagrange_interpol
 from .interpol          import interpol
+from .calc_traj         import calc_traj
 
 
 

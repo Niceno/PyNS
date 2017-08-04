@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 To calculate the trajectory of the particles, the coupled ODE's must be
 solved. A Lagrange interpolation method is used to calculate the fluid velocity 
@@ -43,11 +42,12 @@ def calc_traj(pt, uvwn, rho, mu, xyzn, xyzc, dt, obst, n):
     # Iterate through all the particles
     # ----------------------------------
     for p in range(0, n):
+            
+        (i0, i1, i2) = closest_node(xn, pt[p].x)
+        (j0, j1, j2) = closest_node(yn, pt[p].y)
+        (k0, k1, k2) = closest_node(zn, pt[p].z)
+    
         
-        (iu, il) = closest_node(xn, pt[p].x)
-        (ju, jl) = closest_node(yn, pt[p].y)
-        (ku, kl) = closest_node(zn, pt[p].z)
-                
         i = closest_cell(xc, pt[p].x)
         j = closest_cell(yc, pt[p].y)
         k = closest_cell(zc, pt[p].z)
@@ -67,15 +67,24 @@ def calc_traj(pt, uvwn, rho, mu, xyzn, xyzc, dt, obst, n):
         # If the particle hasn't ran into trouble and hit a boundary,
         # calculate its change in position and velocity.         
         else:
-    
-            # Find the Fluid velocities defined at the node.
+            
+            # Check to see if the particle's closest node is a boundary node,
+            # If so a first order interpolation scheme is implemented.
+            if i2 == None or j2 == None or k2 == None:
+                second_order = False
+                 
+            else:
+                second_order = True
+
+            # Calculate the interpolated fluid velocity at the particles center
             (u,v,w) = lagrange_interpol((un,vn,wn), (xn,yn,zn), 
                                         (pt[p].x, pt[p].y, pt[p].z), 
-                                         iu, il, ju, jl, ku, kl)
-             
+                                         i0, i1, i2, j0, j1, j2, k0, k1, k2, 
+                                         second_order)
+            
             # Calculating the new particle velocities, 
             # using a fourth order Runge-kutta scheme. 
-            # The y-component has the added gravity force. 
+            # The y-component has the added gravity term. 
             pt[p].u = rk4(u, pt[p].u, rho[i,j,k], mu[i,j,k], pt[p].d, pt[p].rho_p, dt)            
             pt[p].v = rk4(v, pt[p].v, rho[i,j,k], mu[i,j,k], pt[p].d, pt[p].rho_p, dt, G)            
             pt[p].w = rk4(w, pt[p].w, rho[i,j,k], mu[i,j,k], pt[p].d, pt[p].rho_p, dt)
@@ -84,9 +93,11 @@ def calc_traj(pt, uvwn, rho, mu, xyzn, xyzc, dt, obst, n):
             pt[p].x = pt[p].x + pt[p].u * dt            
             pt[p].y = pt[p].y + pt[p].v * dt             
             pt[p].z = pt[p].z + pt[p].w * dt
-                
+            
+        
+            
     return pt[p].x, pt[p].y, pt[p].z, pt[p].u, pt[p].v, pt[p].w  # end
-    
+
 
 
 
